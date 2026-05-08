@@ -1,0 +1,21 @@
+<header class="bg-azul-prisma text-branco-puro h-16 flex items-center justify-between px-6 shadow-md z-10 relative">
+    
+    <div class="flex items-center gap-3">
+        <button (click)="layoutService.toggleSidebar()" class="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors cursor-pointer mr-2" aria-label="Menu">
+            <i class="pi pi-bars text-2xl"></i>
+        </button>
+
+        <img src="images/logo.jpg" alt="SysClinica Logo" class="h-10 w-auto">
+        <span class="text-xl font-bold tracking-wide">SysClinica</span>
+    </div>
+    
+    <div class="flex items-center gap-4">
+        <span class="text-sm font-medium">Admin</span>
+        <button (click)="onLogout()" 
+                class="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer active:scale-95" 
+                aria-label="Logout">
+            <i class="pi pi-sign-out text-xl"></i>
+        </button>
+    </div>
+
+</header>

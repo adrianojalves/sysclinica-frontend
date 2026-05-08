@@ -1,1 +1,37 @@
-/* You can add global styles to this file, and also import other style files */
+/* Tailwind v4 Import */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PrimeIcons Import */
+@import "primeicons/primeicons.css";
+
+/* Universal CSS Variables (Guarantees colors will work even if Tailwind stumbles) */
+:root {
+  --azul-prisma: #005293;
+  --verde-teal: #009B8E;
+  --fundo-offwhite: #F4F7F8;
+  --branco-puro: #FFFFFF;
+  --cinza-chumbo: #2D3748;
+  --cinza-medio: #718096;
+  --cinza-contorno: #CBD5E0;
+  --verde-confirmacao: #2F855A;
+  --vermelho-alerta: #C53030;
+}
+
+/* Mapping standard variables to Tailwind v4 */
+@theme {
+  --color-azul-prisma: var(--azul-prisma);
+  --color-verde-teal: var(--verde-teal);
+  --color-fundo-offwhite: var(--fundo-offwhite);
+  --color-branco-puro: var(--branco-puro);
+  --color-cinza-chumbo: var(--cinza-chumbo);
+}
+
+/* Bulletproof Global Reset */
+body {
+  background-color: var(--fundo-offwhite) !important;
+  color: var(--cinza-chumbo) !important;
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}

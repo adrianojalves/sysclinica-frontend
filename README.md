@@ -1,59 +1,50 @@
-# SysClinica
+# 🏥 SysClinica - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.3.
+Professional clinical management system focused on security, high performance, and user experience (UX).
 
-## Development server
+## 🚀 Tech Stack
 
-To start a local development server, run:
+* **Angular 19**: Modern implementation utilizing Signals, native Control Flow, and Standalone Components.
+* **Tailwind CSS**: Utility-first CSS framework for responsive and customized design.
+* **PrimeNG**: Premium UI component library with the Aura theme.
+* **RxJS**: Asynchronous data stream management and reactivity.
+* **TypeScript**: Robust development with static typing.
 
-```bash
-ng serve
-```
+## 🛡️ Architecture and Security
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+This project was built following **SOLID** principles and the best security practices for enterprise applications:
 
-## Code scaffolding
+* **JWT Authentication**: Token management via authorization headers.
+* **Silent Refresh Token**: Automatic renewal flow using `HttpOnly Cookies` in the backend to prevent XSS attacks.
+* **RBAC (Role-Based Access Control)**: Access control based on user profiles (`ROLE_ADMIN`, `ROLE_CADASTROS`, `ROLE_ATENDIMENTO`, etc).
+* **Functional Interceptors**: Centralized HTTP request handling and automatic token renewal upon 401 errors.
+* **Route Guards**: Protection against direct access to sensitive URLs based on the user's role.
+* **Global Messaging System**: Custom modal component (success, error, warning, info, and question) managed by Signals.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 📦 Project Structure
 
-```bash
-ng generate component component-name
-```
+* `src/app/core`: Global services, interceptors, guards, and data models.
+* `src/app/shared`: Reusable components (modals, buttons, etc).
+* `src/app/features`: Business functionality modules (Auth, Dashboard, Registrations).
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ Installation and Execution
 
-```bash
-ng generate --help
-```
+1.  Clone the repository:
+    ```bash
+    git clone <repository-url>
+    ```
 
-## Building
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
 
-To build the project run:
+3.  Start the development server:
+    ```bash
+    ng serve
+    ```
 
-```bash
-ng build
-```
+4.  Access the application at: `http://localhost:4200`
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+*Developed with technical excellence by AJA-Software.*

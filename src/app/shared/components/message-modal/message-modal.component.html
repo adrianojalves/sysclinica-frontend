@@ -1,0 +1,53 @@
+@if (messageService.currentMessage(); as msg) {
+    <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        
+        <div class="bg-branco-puro rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all animate-fade-in-up">
+            
+            <div class="p-5 flex items-center gap-4 text-branco-puro"
+                 [class.bg-azul-prisma]="msg.type === 'info'"
+                 [class.bg-verde-confirmacao]="msg.type === 'success'"
+                 [class.bg-vermelho-alerta]="msg.type === 'error'"
+                 [class.bg-yellow-500]="msg.type === 'warning'"
+                 [class.bg-cinza-chumbo]="msg.type === 'question'">
+                
+                @switch (msg.type) {
+                    @case ('info') { <i class="pi pi-info-circle text-3xl"></i> }
+                    @case ('success') { <i class="pi pi-check-circle text-3xl"></i> }
+                    @case ('error') { <i class="pi pi-times-circle text-3xl"></i> }
+                    @case ('warning') { <i class="pi pi-exclamation-triangle text-3xl"></i> }
+                    @case ('question') { <i class="pi pi-question-circle text-3xl"></i> }
+                }
+                
+                <h3 class="text-xl font-bold">{{ msg.title }}</h3>
+            </div>
+
+            <div class="p-6 text-center">
+                <p class="text-lg text-cinza-chumbo font-medium">{{ msg.text }}</p>
+            </div>
+
+            <div class="bg-fundo-offwhite p-4 flex justify-end gap-3 border-t border-cinza-contorno">
+                
+                @if (msg.type === 'question') {
+                    <button (click)="messageService.close(false)" 
+                            class="px-6 py-2 rounded-xl font-bold text-cinza-medio hover:bg-cinza-contorno transition-colors cursor-pointer">
+                        Não
+                    </button>
+                    <button (click)="messageService.close(true)" 
+                            class="px-6 py-2 rounded-xl font-bold bg-azul-prisma text-branco-puro hover:bg-azul-prisma/90 transition-colors shadow-md cursor-pointer">
+                        Sim
+                    </button>
+                } @else {
+                    <button (click)="messageService.close()" 
+                            class="px-8 py-2 rounded-xl font-bold text-branco-puro transition-colors shadow-md cursor-pointer"
+                            [class.bg-azul-prisma]="msg.type === 'info'"
+                            [class.bg-verde-confirmacao]="msg.type === 'success'"
+                            [class.bg-vermelho-alerta]="msg.type === 'error'"
+                            [class.bg-yellow-500]="msg.type === 'warning'">
+                        OK
+                    </button>
+                }
+            </div>
+
+        </div>
+    </div>
+}

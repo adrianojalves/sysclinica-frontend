@@ -1,0 +1,98 @@
+@if (layoutService.isMobileSidebarOpen()) {
+    <div (click)="layoutService.toggleSidebar()" class="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"></div>
+}
+
+<aside 
+    class="w-64 bg-branco-puro border-r border-cinza-contorno flex flex-col h-full shadow-sm fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 md:relative md:translate-x-0"
+    [class.-translate-x-full]="!layoutService.isMobileSidebarOpen()"
+    [class.translate-x-0]="layoutService.isMobileSidebarOpen()">
+    
+    <div class="md:hidden flex justify-end p-4 border-b border-cinza-contorno">
+        <button (click)="layoutService.toggleSidebar()" class="p-2 text-cinza-chumbo hover:bg-fundo-offwhite rounded-full transition-colors cursor-pointer">
+            <i class="pi pi-times text-xl"></i>
+        </button>
+    </div>
+
+    <nav class="flex-1 p-4 flex flex-col gap-2 overflow-y-auto">
+        
+        <a routerLink="/" class="flex items-center gap-3 p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium">
+            <i class="pi pi-home text-xl"></i>
+            <span class="text-lg">Dashboard</span>
+        </a>
+
+        @if (authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_CADASTROS'])) {
+            <button (click)="toggleCadastros()" class="w-full flex items-center justify-between p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium">
+                <div class="flex items-center gap-3">
+                    <i class="pi pi-folder-open text-xl"></i>
+                    <span class="text-lg">Cadastros</span>
+                </div>
+                <i class="pi text-sm transition-transform duration-300" [class.pi-chevron-down]="!isCadastrosOpen" [class.pi-chevron-up]="isCadastrosOpen"></i>
+            </button>
+
+            <div class="overflow-hidden transition-all duration-300 ease-in-out"
+                 [class.max-h-0]="!isCadastrosOpen"
+                 [class.max-h-[500px]]="isCadastrosOpen"
+                 [class.opacity-0]="!isCadastrosOpen"
+                 [class.opacity-100]="isCadastrosOpen">
+                 
+                <div class="flex flex-col gap-1 pl-8 pr-2 pb-2">
+                    
+                    @if (authService.hasAnyRole(['ROLE_ADMIN'])) {
+                        <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                            <i class="pi pi-users text-xl"></i>
+                            <span class="text-lg">Clientes</span>
+                        </a>
+                    }
+                    
+                    <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                        <i class="pi pi-building text-xl"></i>
+                        <span class="text-lg">Clínicas</span>
+                    </a>
+                    <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                        <i class="pi pi-clipboard text-xl"></i>
+                        <span class="text-lg">Exames/Consultas</span>
+                    </a>
+                    <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                        <i class="pi pi-id-card text-xl"></i>
+                        <span class="text-lg">Médicos</span>
+                    </a>
+                    <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                        <i class="pi pi-user-edit text-xl"></i>
+                        <span class="text-lg">Usuários</span>
+                    </a>
+                </div>
+            </div>
+        }
+
+        @if (authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_CADASTROS', 'ROLE_ATENDIMENTO'])) {
+            <a class="flex items-center gap-3 p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium mt-1">
+                <i class="pi pi-desktop text-xl"></i>
+                <span class="text-lg">Atendimento</span>
+            </a>
+        }
+
+        @if (authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_RELATORIOS'])) {
+            <button (click)="toggleRelatorios()" class="w-full flex items-center justify-between p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium mt-1">
+                <div class="flex items-center gap-3">
+                    <i class="pi pi-chart-bar text-xl"></i>
+                    <span class="text-lg">Relatórios</span>
+                </div>
+                <i class="pi text-sm transition-transform duration-300" [class.pi-chevron-down]="!isRelatoriosOpen" [class.pi-chevron-up]="isRelatoriosOpen"></i>
+            </button>
+
+            <div class="overflow-hidden transition-all duration-300 ease-in-out"
+                 [class.max-h-0]="!isRelatoriosOpen"
+                 [class.max-h-[500px]]="isRelatoriosOpen"
+                 [class.opacity-0]="!isRelatoriosOpen"
+                 [class.opacity-100]="isRelatoriosOpen">
+                 
+                <div class="flex flex-col gap-1 pl-8 pr-2 pb-2">
+                    <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                        <i class="pi pi-dollar text-xl"></i>
+                        <span class="text-lg">Financeiro</span>
+                    </a>
+                </div>
+            </div>
+        }
+    </nav>
+</aside>

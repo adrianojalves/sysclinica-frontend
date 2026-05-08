@@ -1,0 +1,49 @@
+<div class="min-h-screen flex items-center justify-center bg-fundo-offwhite p-4">
+    
+    <div class="max-w-4xl w-full bg-branco-puro rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+        
+        <div class="md:w-1/2 bg-gradient-to-br from-azul-prisma to-verde-teal p-12 flex flex-col items-center justify-center text-branco-puro text-center">
+            <img src="images/logo.jpg" alt="SysClinica Logo" class="w-32 h-auto rounded-2xl mb-6 shadow-lg bg-white p-2">
+            <h1 class="text-4xl font-bold mb-4">SysClinica</h1>
+            <p class="text-lg opacity-90">Gestão inteligente e humanizada para sua clínica.</p>
+            
+            <div class="hidden md:block absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full"></div>
+        </div>
+
+       <div class="md:w-1/2 p-12 flex flex-col justify-center">
+            <div class="mb-10 text-center md:text-left">
+                <h2 class="text-3xl font-bold text-cinza-chumbo mb-2">Bem-vindo</h2>
+                <p class="text-cinza-medio">Por favor, entre com suas credenciais</p>
+            </div>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+    
+                <div class="flex flex-col gap-2">
+                    <label for="login" class="text-sm font-semibold text-cinza-chumbo ml-1">Usuário</label>
+                    <div class="relative">
+                        <i class="pi pi-user absolute left-4 top-1/2 -translate-y-1/2 text-cinza-medio"></i>
+                        <input type="text" id="login" formControlName="login"
+                            class="w-full pl-12 pr-4 py-4 bg-fundo-offwhite border-2 border-transparent rounded-xl focus:border-verde-teal outline-none transition-all text-lg"
+                            placeholder="Digite seu usuário">
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label for="password" class="text-sm font-semibold text-cinza-chumbo ml-1">Senha</label>
+                    <div class="relative">
+                        <i class="pi pi-lock absolute left-4 top-1/2 -translate-y-1/2 text-cinza-medio"></i>
+                        <input type="password" id="password" formControlName="password"
+                            class="w-full pl-12 pr-4 py-4 bg-fundo-offwhite border-2 border-transparent rounded-xl focus:border-verde-teal outline-none transition-all text-lg"
+                            placeholder="Digite sua senha">
+                    </div>
+                </div>
+
+                <button type="submit" [disabled]="loginForm.invalid"
+                        class="w-full bg-azul-prisma text-branco-puro py-4 rounded-xl font-bold text-xl shadow-lg hover:bg-azul-prisma/90 transition-all active:scale-[0.98] mt-4 disabled:opacity-50 disabled:cursor-not-allowed">
+                    ENTRAR
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
