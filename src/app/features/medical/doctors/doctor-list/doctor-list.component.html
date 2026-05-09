@@ -1,0 +1,96 @@
+<div class="p-6 w-full max-w-7xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-md border border-cinza-contorno p-6">
+    
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <div>
+        <h2 class="text-3xl font-bold text-azul-prisma">Corpo Clínico</h2>
+        <p class="text-cinza-medio text-lg">Cadastro e gerenciamento de médicos e CRMs.</p>
+      </div>
+      <button routerLink="/doctors/new"
+        class="bg-azul-prisma hover:bg-blue-800 text-branco-puro px-6 py-3 rounded-lg font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm text-lg">
+        <i class="pi pi-user-plus font-bold"></i>
+        Novo Médico
+      </button>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-4 mb-8 p-6 bg-fundo-offwhite rounded-xl border border-cinza-contorno items-end">
+      <p-floatlabel class="flex-1">
+        <input id="nameFilter" type="text" pInputText [(ngModel)]="filterName" (keyup.enter)="loadDoctors()"
+          class="w-full border-2 border-cinza-contorno bg-branco-puro text-lg py-3 px-4 rounded-lg focus:border-verde-teal outline-none transition-all" />
+        <label for="nameFilter" class="ml-2 text-cinza-chumbo font-medium text-lg">Pesquisar por nome...</label>
+      </p-floatlabel>
+
+      <button (click)="loadDoctors()"
+        class="bg-verde-teal hover:bg-teal-700 text-branco-puro px-8 rounded-lg font-bold text-lg h-[58px] flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm">
+        <i class="pi pi-search font-bold"></i>
+        Pesquisar
+      </button>
+    </div>
+
+    <p-table 
+      [value]="doctors()" 
+      [lazy]="true" 
+      (onLazyLoad)="loadDoctors($event)"
+      [paginator]="true" 
+      [rows]="10" 
+      [totalRecords]="totalRecords()" 
+      [loading]="loading()"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-lg">
+      
+      <ng-template pTemplate="header">
+        <tr class="bg-fundo-offwhite border-b-2 border-cinza-contorno">
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[8%]">ID</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg">Nome Completo</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[15%]">CRM</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[20%]">Status</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[12%]">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-doc>
+        <tr [ngClass]="{'text-vermelho-alerta font-bold italic': !doc.status}" 
+            class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
+          
+          <td class="p-4 text-center text-lg">{{ doc.id }}</td>
+          
+          <td class="p-4 text-lg font-medium">{{ doc.name }}</td>
+          
+          <td class="p-4 text-center text-lg">
+            <span class="bg-cinza-contorno/30 px-3 py-1 rounded font-mono text-sm border border-cinza-contorno">
+              {{ doc.crm }}
+            </span>
+          </td>
+          
+          <td class="p-4 text-center">
+            <p-dropdown 
+              [options]="statusOptions" 
+              [(ngModel)]="doc.status" 
+              optionLabel="label" 
+              optionValue="value"
+              (onChange)="onStatusChange(doc)"
+              [styleClass]="'w-full h-10 flex items-center text-sm font-bold ' + (doc.status ? 'text-verde-confirmação' : 'text-vermelho-alerta')">
+            </p-dropdown>
+          </td>
+          
+          <td class="p-4 text-center">
+            <button 
+              [routerLink]="['/doctors', doc.id, 'edit']"
+              class="bg-azul-prisma/10 hover:bg-azul-prisma hover:text-branco-puro text-azul-prisma p-3 rounded-full transition-all cursor-pointer shadow-sm"
+              pTooltip="Editar Médico">
+              <i class="pi pi-pencil text-xl font-bold"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="p-12 text-center text-xl text-cinza-medio font-medium">
+            Nenhum médico cadastrado com estes critérios.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

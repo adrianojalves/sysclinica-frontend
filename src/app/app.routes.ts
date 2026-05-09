@@ -8,6 +8,8 @@ import { UserFormComponent } from './features/users/user-form/user-form.componen
 import { roleGuard } from './core/guards/role.guard';
 import { ProcedureListComponent } from './features/medical/procedures/procedure-list/procedure-list.component';
 import { ProcedureFormComponent } from './features/medical/procedures/procedure-form/procedure-form.component';
+import { DoctorListComponent } from './features/medical/doctors/doctor-list/doctor-list.component';
+import { DoctorFormComponent } from './features/medical/doctors/doctor-form/doctor-form.component';
 
 export const routes: Routes = [
   {
@@ -58,6 +60,24 @@ export const routes: Routes = [
       { 
         path: 'procedures/:id/edit', 
         component: ProcedureFormComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'doctors', 
+        component: DoctorListComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'doctors/new', 
+        component: DoctorFormComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'doctors/:id/edit', 
+        component: DoctorFormComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
       }

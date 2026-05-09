@@ -1,0 +1,102 @@
+<div class="p-6 w-full max-w-5xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-sm border border-cinza-contorno p-8">
+    
+    <div class="mb-8 border-b border-cinza-contorno pb-4">
+      <h2 class="text-3xl font-bold text-azul-prisma">
+        {{ doctorId() ? 'Editar Médico' : 'Novo Médico' }}
+      </h2>
+      <p class="text-cinza-medio text-lg mt-1">Gerenciamento de dados profissionais e localização.</p>
+    </div>
+
+    <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <p-floatlabel>
+          <input id="name" type="text" pInputText formControlName="name" 
+                 class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors" />
+          <label for="name" class="text-cinza-chumbo font-medium text-lg ml-2">Nome Completo *</label>
+        </p-floatlabel>
+
+        <p-floatlabel>
+          <input id="crm" type="text" pInputText formControlName="crm" 
+                 class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors" />
+          <label for="crm" class="text-cinza-chumbo font-medium text-lg ml-2">CRM *</label>
+        </p-floatlabel>
+      </div>
+
+      <fieldset formGroupName="address" class="border-2 border-cinza-contorno/50 rounded-xl p-6">
+        <legend class="px-4 text-azul-prisma font-bold text-xl italic">Dados de Endereço</legend>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          
+          <div class="flex flex-col gap-1 md:col-span-1">
+            <label for="cep" class="text-cinza-chumbo font-bold text-base ml-1">CEP (Enter busca)</label>
+            <p-inputMask 
+              id="cep" mask="99999999" [unmask]="true" formControlName="cep" 
+              (keyup.enter)="onCepEnter()" placeholder="00000000"
+              styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[52px] px-4 focus:border-verde-teal">
+            </p-inputMask>
+          </div>
+
+          <div class="flex flex-col gap-1 md:col-span-2">
+            <label for="logradouro" class="text-cinza-chumbo font-bold text-base ml-1">Endereço / Logradouro *</label>
+            <input #logradouroInput id="logradouro" type="text" pInputText formControlName="logradouro" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-2 px-4" />
+          </div>
+
+          <div class="flex flex-col gap-1 md:col-span-1">
+            <label for="numero" class="text-cinza-chumbo font-bold text-base ml-1">Número *</label>
+            <input #numeroInput id="numero" type="text" pInputText formControlName="numero" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-2 px-4" />
+          </div>
+
+          <p-floatlabel class="md:col-span-1">
+            <input id="bairro" type="text" pInputText formControlName="bairro" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="bairro" class="text-cinza-chumbo font-medium text-lg ml-2">Bairro *</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="md:col-span-1">
+            <input id="complemento" type="text" pInputText formControlName="complemento" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="complemento" class="text-cinza-chumbo font-medium text-lg ml-2">Complemento</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="md:col-span-1">
+            <input id="cidade" type="text" pInputText formControlName="cidade" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="cidade" class="text-cinza-chumbo font-medium text-lg ml-2">Cidade *</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="md:col-span-1">
+            <input id="uf" type="text" pInputText formControlName="uf" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="uf" class="text-cinza-chumbo font-medium text-lg ml-2">UF *</label>
+          </p-floatlabel>
+        </div>
+      </fieldset>
+
+      @if (doctorId()) {
+        <div class="flex flex-col gap-2 w-full md:w-1/3">
+          <label for="status" class="text-cinza-chumbo font-bold text-lg ml-1">Status do Cadastro</label>
+          <p-dropdown id="status" [options]="statusOptions" formControlName="status" 
+                      optionLabel="label" optionValue="value"
+                      styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[58px] flex items-center px-2">
+          </p-dropdown>
+        </div>
+      }
+
+      <div class="flex justify-end gap-4 mt-6 pt-6 border-t border-cinza-contorno">
+        <button type="button" (click)="cancel()"
+                class="px-8 py-3 rounded-lg text-lg font-medium text-cinza-chumbo bg-fundo-offwhite border-2 border-cinza-contorno hover:bg-gray-200 cursor-pointer">
+          Cancelar
+        </button>
+        <button type="submit" 
+                class="px-10 py-3 rounded-lg text-lg font-medium text-branco-puro bg-verde-teal hover:bg-teal-700 flex items-center gap-2 cursor-pointer shadow-sm">
+          <i class="pi pi-check text-lg font-bold"></i>
+          Salvar Médico
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
