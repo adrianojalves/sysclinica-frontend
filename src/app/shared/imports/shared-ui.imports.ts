@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputMaskModule } from 'primeng/inputmask';
+import { InputTextarea } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { TableModule } from 'primeng/table';
@@ -23,6 +24,7 @@ export const SHARED_UI_IMPORTS = [
   FloatLabelModule,
   FormsModule,
   InputMaskModule,
+  InputTextarea,
   InputTextModule,
   ListboxModule,
   ReactiveFormsModule,
