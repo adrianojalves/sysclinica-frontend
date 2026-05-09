@@ -1,0 +1,148 @@
+<div class="p-6 w-full max-w-5xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-sm border border-cinza-contorno p-8">
+    
+    <div class="mb-8 border-b border-cinza-contorno pb-4">
+      <h2 class="text-3xl font-bold text-azul-prisma">
+        {{ userId() ? 'Editar Usuário' : 'Novo Usuário' }}
+      </h2>
+      <p class="text-cinza-medio text-lg mt-1">
+        {{ userId() ? 'Atualize as informações do colaborador abaixo.' : 'Preencha os dados abaixo para cadastrar um novo colaborador no sistema.' }}
+      </p>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-2">
+        
+        <p-floatlabel class="w-full">
+          <input 
+            id="name" 
+            type="text" 
+            pInputText 
+            formControlName="name" 
+            class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors"
+            [ngClass]="{'border-vermelho-alerta': userForm.get('name')?.invalid && userForm.get('name')?.touched}"
+          />
+          <label for="name" class="text-cinza-chumbo font-medium text-lg ml-2">Nome Completo *</label>
+        </p-floatlabel>
+
+        <p-floatlabel class="w-full">
+          <input 
+            id="email" 
+            type="email" 
+            pInputText 
+            formControlName="email" 
+            class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors"
+            [ngClass]="{'border-vermelho-alerta': userForm.get('email')?.invalid && userForm.get('email')?.touched}"
+          />
+          <label for="email" class="text-cinza-chumbo font-medium text-lg ml-2">E-mail *</label>
+        </p-floatlabel>
+
+        <p-floatlabel class="w-full">
+          <input 
+            id="login" 
+            type="text" 
+            pInputText 
+            formControlName="login" 
+            class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors"
+            [ngClass]="{'border-vermelho-alerta': userForm.get('login')?.invalid && userForm.get('login')?.touched}"
+          />
+          <label for="login" class="text-cinza-chumbo font-medium text-lg ml-2">Login de Acesso *</label>
+        </p-floatlabel>
+
+        <p-floatlabel class="w-full">
+          <p-password 
+            inputId="password"
+            formControlName="password" 
+            [toggleMask]="true" 
+            [feedback]="false"
+            styleClass="w-full"
+            inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors"
+            [ngClass]="{'ng-invalid ng-dirty': userForm.get('password')?.invalid && userForm.get('password')?.touched}">
+          </p-password>
+          <label for="password" class="text-cinza-chumbo font-medium text-lg ml-2">Senha (Mín. 6 caracteres) *</label>
+        </p-floatlabel>
+
+        <p-floatlabel class="w-full">
+          <p-inputMask 
+            inputId="phone" 
+            formControlName="phone" 
+            mask="(99) 99999-9999"
+            styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors">
+          </p-inputMask>
+          <label for="phone" class="text-cinza-chumbo font-medium text-lg ml-2">Telefone</label>
+        </p-floatlabel>
+
+        @if (userId()) {
+          <p-floatlabel class="w-full">
+            <p-dropdown 
+              id="status" 
+              [options]="statusOptions" 
+              formControlName="active" 
+              optionLabel="label" 
+              optionValue="value"
+              styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg h-[58px] flex items-center px-2">
+            </p-dropdown>
+            <label for="status" class="text-cinza-chumbo font-medium text-lg ml-2">Status do Usuário</label>
+          </p-floatlabel>
+        }
+
+        <fieldset class="md:col-span-2 mt-4 border-2 border-cinza-contorno rounded-xl p-6 bg-gray-50/30">
+          <legend class="text-cinza-chumbo text-xl font-bold px-4 bg-branco-puro border border-cinza-contorno rounded-lg">
+            Perfis de Acesso *
+          </legend>
+          
+          <p-listbox 
+            [options]="roles()" 
+            formControlName="roleIds" 
+            [checkbox]="true" 
+            [multiple]="true" 
+            optionLabel="name" 
+            optionValue="id" 
+            styleClass="w-full border border-cinza-contorno rounded-lg bg-branco-puro shadow-sm"
+            [listStyle]="{'max-height': '300px'}"
+            [ngClass]="{'border-vermelho-alerta border-2': userForm.get('roleIds')?.invalid && userForm.get('roleIds')?.touched}">
+            
+            <ng-template let-role let-i="index" pTemplate="item">
+              <div class="flex items-center w-full py-2 px-3 rounded-md transition-colors" [ngClass]="{'bg-gray-100': i % 2 !== 0}">
+                <span class="text-lg font-medium text-cinza-chumbo">{{ role.name }}</span>
+              </div>
+            </ng-template>
+
+          </p-listbox>
+          
+          @if (userForm.get('roleIds')?.invalid && userForm.get('roleIds')?.touched) {
+            <small class="text-vermelho-alerta mt-3 block font-bold text-base">
+              <i class="pi pi-exclamation-circle mr-1"></i> Selecione pelo menos um perfil de acesso.
+            </small>
+          }
+        </fieldset>
+
+      </div>
+
+      <div class="flex justify-end gap-4 mt-6 pt-6 border-t border-cinza-contorno">
+        <button 
+          type="button" 
+          (click)="cancel()"
+          class="px-6 py-3 rounded-lg text-lg font-medium text-cinza-chumbo bg-fundo-offwhite border-2 border-cinza-contorno hover:bg-gray-200 transition-colors cursor-pointer">
+          Cancelar
+        </button>
+        
+        <button 
+          type="submit" 
+          [disabled]="isSubmitting()"
+          class="px-8 py-3 rounded-lg text-lg font-medium text-branco-puro bg-verde-teal hover:bg-teal-700 transition-colors flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+          
+          @if (!isSubmitting()) {
+            <i class="pi pi-check text-lg font-bold"></i>
+          } @else {
+            <i class="pi pi-spin pi-spinner text-lg"></i>
+          }
+          Salvar Usuário
+          
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

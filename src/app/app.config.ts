@@ -27,9 +27,19 @@ export const appConfig: ApplicationConfig = {
      * We will use Tailwind CSS later to customize specific colors or layouts.
      */
     providePrimeNG({
-        theme: {
-            preset: Aura
+      theme: {
+        preset: Aura,
+        options: {
+          // ESSA É A LINHA QUE DESLIGA O FUNDO PRETO AUTOMÁTICO
+          darkModeSelector: false, 
+          // ou darkModeSelector: '.app-dark' (caso o 'false' dê erro de tipagem na sua versão)
+          
+          cssLayer: {
+            name: 'primeng',
+            options: { prepend: true }
+          }
         }
+      }
     }),
     provideHttpClient(
       withInterceptors([authInterceptor])

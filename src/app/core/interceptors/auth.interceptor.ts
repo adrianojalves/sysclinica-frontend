@@ -17,7 +17,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error) => {
       // If we get a 401 and it's NOT a login attempt, we try to refresh
-      if (error instanceof HttpErrorResponse && error.status === 401 && !authReq.url.includes('auth/login')) {
+      if (error instanceof HttpErrorResponse && 
+          error.status === 401 && 
+          !authReq.url.includes('auth/login') &&
+          !authReq.url.includes('auth/refresh')) {
         return authService.refreshToken().pipe(
           switchMap((response) => {
             // Success! We have a new token, now we retry the original request

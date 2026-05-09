@@ -35,3 +35,42 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
 }
+
+
+.aja-table-wrapper .p-datatable {
+    background-color: var(--branco-puro) !important;
+}
+
+.aja-table-wrapper .p-datatable .p-paginator {
+    background-color: var(--branco-puro) !important;
+    border-top: 1px solid var(--cinza-contorno) !important;
+    color: var(--cinza-chumbo) !important;
+}
+
+.aja-table-wrapper .p-datatable .p-paginator .p-paginator-pages .p-paginator-page {
+    color: var(--cinza-chumbo) !important;
+}
+
+.aja-table-wrapper .p-datatable .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background-color: var(--fundo-offwhite) !important;
+    border-color: var(--verde-teal) !important;
+    color: var(--verde-teal) !important;
+    font-weight: bold !important;
+}
+
+.p-inputtext,
+.p-dropdown .p-dropdown-label,
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-thead > tr > th {
+    font-size: 1.125rem !important; /* 18px */
+    line-height: 1.75rem !important;
+}
+
+.p-dropdown-item {
+    font-size: 1.125rem !important;
+    padding: 0.875rem 1.25rem !important; /* Área de clique maior */
+}
+
+.p-dropdown {
+    align-items: center;
+}
