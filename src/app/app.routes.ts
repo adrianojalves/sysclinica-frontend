@@ -10,6 +10,7 @@ import { ProcedureListComponent } from './features/medical/procedures/procedure-
 import { ProcedureFormComponent } from './features/medical/procedures/procedure-form/procedure-form.component';
 import { DoctorListComponent } from './features/medical/doctors/doctor-list/doctor-list.component';
 import { DoctorFormComponent } from './features/medical/doctors/doctor-form/doctor-form.component';
+import { CompanyFormComponent } from './features/company/company-form/company-form.component';
 
 export const routes: Routes = [
   {
@@ -78,6 +79,12 @@ export const routes: Routes = [
       { 
         path: 'doctors/:id/edit', 
         component: DoctorFormComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'company', 
+        component: CompanyFormComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
       }

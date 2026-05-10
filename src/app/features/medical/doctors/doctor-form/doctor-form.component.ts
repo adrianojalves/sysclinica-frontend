@@ -2,10 +2,10 @@ import { Component, inject, OnInit, signal, ElementRef, ViewChild } from '@angul
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SHARED_UI_IMPORTS } from '../../../../shared/imports/shared-ui.imports';
-import { DoctorService } from '../../../../core/services/medical/doctor-service';
 import { CepService } from '../../../../core/services/cep.service';
 import { MessageService } from '../../../../core/services/message.service';
 import { LoadingService } from '../../../../core/services/loading.service';
+import { DoctorService } from '../../../../core/services/medical/doctor.service';
 import { STATUS_OPTIONS } from '../../../../shared/constants/ui.constants';
 
 @Component({

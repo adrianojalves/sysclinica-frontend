@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { SHARED_UI_IMPORTS } from '../../../../shared/imports/shared-ui.imports';
-import { DoctorService } from '../../../../core/services/medical/doctor-service';
+import { DoctorService } from '../../../../core/services/medical/doctor.service';
 import { MessageService } from '../../../../core/services/message.service';
 import { Doctor } from '../../../../core/models/medical/doctor.model';
 import { STATUS_OPTIONS } from '../../../../shared/constants/ui.constants';

@@ -31,7 +31,7 @@
 
             <div class="overflow-hidden transition-all duration-300 ease-in-out"
                  [class.max-h-0]="!isCadastrosOpen"
-                 [class.max-h-[500px]]="isCadastrosOpen"
+                 [class.max-h-[600px]]="isCadastrosOpen"
                  [class.opacity-0]="!isCadastrosOpen"
                  [class.opacity-100]="isCadastrosOpen">
                  
@@ -43,6 +43,11 @@
                             <span class="text-lg">Clientes</span>
                         </a>
                     }
+
+                    <a routerLink="/company" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                        <i class="pi pi-briefcase text-xl"></i>
+                        <span class="text-lg">Empresa</span>
+                    </a>
                     
                     <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
                         <i class="pi pi-building text-xl"></i>

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 // PrimeNG Modules
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
+import { FileUploadModule } from 'primeng/fileupload';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextarea } from 'primeng/inputtextarea';
@@ -21,6 +22,7 @@ export const SHARED_UI_IMPORTS = [
   ButtonModule,
   CommonModule,
   DropdownModule,
+  FileUploadModule,
   FloatLabelModule,
   FormsModule,
   InputMaskModule,

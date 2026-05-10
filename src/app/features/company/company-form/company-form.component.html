@@ -1,0 +1,135 @@
+<div class="p-6 w-full max-w-6xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-sm border border-cinza-contorno p-8">
+    
+    <div class="flex flex-col md:flex-row justify-between items-start border-b border-cinza-contorno pb-8 mb-8 gap-6">
+      <div class="flex-1">
+        <h2 class="text-3xl font-bold text-azul-prisma">Dados da Clínica</h2>
+        <p class="text-cinza-medio text-lg mt-2">Informações institucionais e identidade visual da unidade.</p>
+      </div>
+      
+      <div class="flex flex-col items-center gap-4 bg-fundo-offwhite p-4 rounded-xl border border-cinza-contorno shadow-inner">
+        <div class="w-44 h-44 rounded-lg overflow-hidden flex items-center justify-center bg-branco-puro border border-cinza-contorno">
+          @if (logoPreview()) {
+            <img [src]="logoPreview()" class="max-w-full max-h-full object-contain" alt="Logo">
+          } @else {
+            <div class="text-center p-2 text-cinza-medio">
+              <i class="pi pi-image text-4xl mb-2"></i>
+              <p class="text-xs italic">Sem Logotipo</p>
+            </div>
+          }
+        </div>
+        
+        <p-fileUpload 
+          mode="basic" 
+          chooseLabel="Alterar Logo" 
+          chooseIcon="pi pi-camera"
+          [auto]="true" 
+          accept="image/*" 
+          [disabled]="!company()?.id"
+          (onUpload)="onLogoUpload($event)"
+          styleClass="p-button-outlined p-button-sm w-full">
+        </p-fileUpload>
+      </div>
+    </div>
+
+    <form [formGroup]="companyForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="flex flex-col gap-8">
+          <p-floatlabel>
+            <input id="corporateName" type="text" pInputText formControlName="corporateName" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors" />
+            <label for="corporateName" class="text-cinza-chumbo font-medium text-lg ml-2">Razão Social *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="tradeName" type="text" pInputText formControlName="tradeName" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors" />
+            <label for="tradeName" class="text-cinza-chumbo font-medium text-lg ml-2">Nome Fantasia *</label>
+          </p-floatlabel>
+        </div>
+
+        <div class="flex flex-col gap-8">
+          <p-floatlabel>
+            <input id="cnpj" type="text" pInputText formControlName="cnpj" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors" />
+            <label for="cnpj" class="text-cinza-chumbo font-medium text-lg ml-2">CNPJ *</label>
+          </p-floatlabel>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <p-floatlabel>
+              <input id="phone" type="text" pInputText formControlName="phone" 
+                     class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors" />
+              <label for="phone" class="text-cinza-chumbo font-medium text-lg ml-2">Telefone *</label>
+            </p-floatlabel>
+
+            <p-floatlabel>
+              <input id="email" type="email" pInputText formControlName="email" 
+                     class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors" />
+              <label for="email" class="text-cinza-chumbo font-medium text-lg ml-2">E-mail *</label>
+            </p-floatlabel>
+          </div>
+        </div>
+      </div>
+
+      <fieldset formGroupName="address" class="border-2 border-cinza-contorno/50 rounded-xl p-6">
+        <legend class="px-4 text-azul-prisma font-bold text-xl italic">Endereço da Sede</legend>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div class="flex flex-col gap-1">
+            <label class="text-cinza-chumbo font-bold text-base ml-1">CEP (Enter busca)</label>
+            <p-inputMask 
+              mask="99999999" [unmask]="true" formControlName="cep" 
+              (keydown.enter)="$event.preventDefault(); onCepEnter()" placeholder="00000000"
+              styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[52px] px-4">
+            </p-inputMask>
+          </div>
+
+          <div class="flex flex-col gap-1 md:col-span-2">
+            <label class="text-cinza-chumbo font-bold text-base ml-1">Logradouro *</label>
+            <input #logInput type="text" pInputText formControlName="logradouro" 
+                  class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-2 px-4" />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label class="text-cinza-chumbo font-bold text-base ml-1">Número *</label>
+            <input #numInput type="text" pInputText formControlName="numero" 
+                  class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-2 px-4" />
+          </div>
+
+          <p-floatlabel class="md:col-span-2">
+            <input id="bairro" type="text" pInputText formControlName="bairro" 
+                  class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="bairro" class="text-cinza-chumbo font-medium text-lg ml-2">Bairro *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="cidade" type="text" pInputText formControlName="cidade" 
+                  class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="cidade" class="text-cinza-chumbo font-medium text-lg ml-2">Cidade *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="uf" type="text" pInputText formControlName="uf" 
+                  class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="uf" class="text-cinza-chumbo font-medium text-lg ml-2">UF *</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="md:col-span-4">
+            <input id="complemento" type="text" pInputText formControlName="complemento" 
+                  class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+            <label for="complemento" class="text-cinza-chumbo font-medium text-lg ml-2">Complemento</label>
+          </p-floatlabel>
+        </div>
+      </fieldset>
+
+      <div class="flex justify-end mt-4 pt-6 border-t border-cinza-contorno">
+        <button type="submit" 
+                class="px-12 py-4 rounded-lg text-xl font-bold text-branco bg-verde-teal hover:bg-teal-700 flex items-center gap-3 cursor-pointer shadow-sm">
+          <i class="pi pi-save text-xl"></i>
+          Salvar Identidade Corporativa
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
