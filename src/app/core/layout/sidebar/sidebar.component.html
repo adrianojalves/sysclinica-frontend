@@ -37,12 +37,10 @@
                  
                 <div class="flex flex-col gap-1 pl-8 pr-2 pb-2">
                     
-                    @if (authService.hasAnyRole(['ROLE_ADMIN'])) {
-                        <a class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
-                            <i class="pi pi-users text-xl"></i>
-                            <span class="text-lg">Clientes</span>
-                        </a>
-                    }
+                    <a routerLink="/clients" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                        <i class="pi pi-users text-xl"></i>
+                        <span class="text-lg">Clientes</span>
+                    </a>
 
                     <a routerLink="/company" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
                         <i class="pi pi-briefcase text-xl"></i>
@@ -61,10 +59,13 @@
                         <i class="pi pi-id-card text-xl"></i>
                         <span class="text-lg">Médicos</span>
                     </a>
-                    <a routerLink="/users" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
-                        <i class="pi pi-user-edit text-xl"></i>
-                        <span class="text-lg">Usuários</span>
-                    </a>
+
+                    @if (authService.hasAnyRole(['ROLE_ADMIN'])) {
+                        <a routerLink="/users" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                            <i class="pi pi-user-edit text-xl"></i>
+                            <span class="text-lg">Usuários</span>
+                        </a>
+                    }
                 </div>
             </div>
         }

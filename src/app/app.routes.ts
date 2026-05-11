@@ -13,6 +13,8 @@ import { DoctorFormComponent } from './features/medical/doctors/doctor-form/doct
 import { CompanyFormComponent } from './features/company/company-form/company-form.component';
 import { ClinicListComponent } from './features/medical/clinics/clinic-list/clinic-list.component';
 import { ClinicFormComponent } from './features/medical/clinics/clinic-form/clinic-form.component';
+import { ClientListComponent } from './features/clients/client-list/client-list.component';
+import { ClientFormComponent } from './features/clients/client-form/client-form.component';
 
 export const routes: Routes = [
   {
@@ -107,7 +109,25 @@ export const routes: Routes = [
         component: ClinicFormComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
-      }
+      },
+      { 
+        path: 'clients', 
+        component: ClientListComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'clients/new', 
+        component: ClientFormComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS', 'ROLE_ATENDIMENTO'] }
+      },
+      { 
+        path: 'clients/:id/edit', 
+        component: ClientFormComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
     ], 
   },
   { path: '**', redirectTo: '' }

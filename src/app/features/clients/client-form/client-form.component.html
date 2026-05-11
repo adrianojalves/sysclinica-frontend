@@ -1,0 +1,150 @@
+<div class="p-6 w-full max-w-5xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-sm border border-cinza-contorno p-8">
+    
+    <div class="mb-8 border-b border-cinza-contorno pb-4">
+      <h2 class="text-3xl font-bold text-azul-prisma">
+        {{ clientId() ? 'Editar Cliente' : 'Novo Cliente' }}
+      </h2>
+      <p class="text-cinza-medio text-lg mt-1">Dados pessoais e localização do paciente.</p>
+    </div>
+
+    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-10">
+      
+      <section class="bg-fundo-offwhite p-6 rounded-xl border border-cinza-contorno">
+        <div class="w-full md:w-72"> 
+            <p-floatlabel>
+            <p-inputMask 
+                id="cpf" 
+                mask="999.999.999-99" 
+                formControlName="cpf" 
+                (onComplete)="checkCpf()"
+                styleClass="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-xl py-4 px-4 focus:border-verde-teal transition-colors font-bold">
+            </p-inputMask>
+            <label for="cpf" class="text-azul-prisma font-bold text-lg ml-2">CPF do Cliente *</label>
+            </p-floatlabel>
+        </div>
+        <small class="text-cinza-chumbo ml-2 mt-2 block font-medium">Informe o CPF para identificar o cliente.</small>
+      </section>
+
+      <fieldset class="border-2 border-cinza-contorno rounded-xl p-6">
+        <legend class="text-azul-prisma font-bold text-xl px-2">Dados Pessoais</legend>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+          <p-floatlabel class="md:col-span-2">
+            <input id="name" type="text" pInputText formControlName="name" #nameInput
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="name" class="text-cinza-chumbo font-medium text-lg ml-2">Nome Completo *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="socialName" type="text" pInputText formControlName="socialName" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="socialName" class="text-cinza-chumbo font-medium text-lg ml-2">Nome Social</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="rg" type="text" pInputText formControlName="rg" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="rg" class="text-cinza-chumbo font-medium text-lg ml-2">RG *</label>
+          </p-floatlabel>
+
+          <div class="flex flex-col gap-2">
+            <label for="biologicalSex" class="text-cinza-chumbo font-bold text-lg ml-1">Sexo Biológico *</label>
+            <p-dropdown 
+              id="biologicalSex" 
+              [options]="biologicalSexOptions" 
+              formControlName="biologicalSex" 
+              optionLabel="label" 
+              optionValue="value"
+              placeholder="Selecione..."
+              styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal text-lg h-[58px] flex items-center px-2 transition-colors">
+            </p-dropdown>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="sexualOrientation" class="text-cinza-chumbo font-bold text-lg ml-1">Orientação Sexual</label>
+            <p-dropdown 
+              id="sexualOrientation" 
+              [options]="orientationOptions" 
+              formControlName="sexualOrientation" 
+              optionLabel="label" 
+              optionValue="value"
+              placeholder="Selecione..."
+              styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal text-lg h-[58px] flex items-center px-2 transition-colors">
+            </p-dropdown>
+          </div>
+
+          <p-floatlabel>
+            <p-inputMask id="phone" mask="(99) 99999-9999" formControlName="phone"
+                         styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors"></p-inputMask>
+            <label for="phone" class="text-cinza-chumbo font-medium text-lg ml-2">Telefone Principal *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="email" type="email" pInputText formControlName="email" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="email" class="text-cinza-chumbo font-medium text-lg ml-2">E-mail</label>
+          </p-floatlabel>
+        </div>
+      </fieldset>
+
+      <fieldset formGroupName="address" class="border-2 border-cinza-contorno rounded-xl p-6">
+        <legend class="text-azul-prisma font-bold text-xl px-2">Endereço Residencial</legend>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+          <p-floatlabel>
+            <p-inputMask id="cep" mask="99.999-999" formControlName="cep" (keydown.enter)="handleCepKeydown($event)"
+                         styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors"></p-inputMask>
+            <label for="cep" class="text-cinza-chumbo font-medium text-lg ml-2">CEP *</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="md:col-span-2">
+            <input #logradouroInput id="logradouro" type="text" pInputText formControlName="logradouro" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="logradouro" class="text-cinza-chumbo font-medium text-lg ml-2">Logradouro *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input #numeroInput id="numero" type="text" pInputText formControlName="numero" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="numero" class="text-cinza-chumbo font-medium text-lg ml-2">Número *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="bairro" type="text" pInputText formControlName="bairro" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="bairro" class="text-cinza-chumbo font-medium text-lg ml-2">Bairro *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="complemento" type="text" pInputText formControlName="complemento" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="complemento" class="text-cinza-chumbo font-medium text-lg ml-2">Complemento</label>
+          </p-floatlabel>
+
+          <p-floatlabel class="md:col-span-2">
+            <input id="cidade" type="text" pInputText formControlName="cidade" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="cidade" class="text-cinza-chumbo font-medium text-lg ml-2">Cidade *</label>
+          </p-floatlabel>
+
+          <p-floatlabel>
+            <input id="uf" type="text" pInputText formControlName="uf" 
+                   class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
+            <label for="uf" class="text-cinza-chumbo font-medium text-lg ml-2">UF *</label>
+          </p-floatlabel>
+        </div>
+      </fieldset>
+
+      <div class="flex justify-end gap-4 mt-6 pt-6 border-t border-cinza-contorno">
+        <button type="button" (click)="cancel()"
+                class="px-8 py-3 rounded-lg text-lg font-medium text-cinza-chumbo bg-fundo-offwhite border-2 border-cinza-contorno hover:bg-gray-200 cursor-pointer transition-all">
+          Cancelar
+        </button>
+        <button type="submit" [disabled]="clientForm.invalid"
+                class="px-10 py-3 rounded-lg text-lg font-bold text-branco-puro bg-azul-prisma hover:bg-blue-800 transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+          {{ clientId() ? 'Atualizar Cliente' : 'Finalizar Cadastro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
