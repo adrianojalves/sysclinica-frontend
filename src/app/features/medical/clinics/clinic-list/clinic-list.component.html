@@ -1,0 +1,112 @@
+<div class="p-6 w-full max-w-7xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-md border border-cinza-contorno p-6">
+    
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <div>
+        <h2 class="text-3xl font-bold text-azul-prisma">Clínicas Parceiras</h2>
+        <p class="text-cinza-medio text-lg">Gerenciamento de unidades e parceiros de negócio.</p>
+      </div>
+      <button (click)="goToNew()"
+        class="bg-azul-prisma hover:bg-blue-800 text-branco-puro px-6 py-3 rounded-lg font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm text-lg">
+        <i class="pi pi-building font-bold"></i>
+        Nova Clínica
+      </button>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-4 mb-8 p-6 bg-fundo-offwhite rounded-xl border border-cinza-contorno items-end">
+      <p-floatlabel class="flex-1">
+        <input id="nameFilter" type="text" pInputText [(ngModel)]="filter.name" (keyup.enter)="loadClinics()"
+          class="w-full border-2 border-cinza-contorno bg-branco-puro text-lg py-3 px-4 rounded-lg focus:border-verde-teal outline-none transition-all" />
+        <label for="nameFilter" class="ml-2 text-cinza-chumbo font-medium text-lg">Pesquisar por nome...</label>
+      </p-floatlabel>
+
+      <p-floatlabel class="w-full md:w-64">
+        <p-inputMask id="cnpjFilter" mask="99.999.999/9999-99" [(ngModel)]="filter.cnpj" 
+          (keyup.enter)="loadClinics()" [unmask]="true"
+          styleClass="w-full border-2 border-cinza-contorno bg-branco-puro text-lg py-3 px-4 rounded-lg focus:border-verde-teal outline-none transition-all">
+        </p-inputMask>
+        <label for="cnpjFilter" class="ml-2 text-cinza-chumbo font-medium text-lg">CNPJ</label>
+      </p-floatlabel>
+
+      <button (click)="loadClinics()"
+        class="bg-verde-teal hover:bg-teal-700 text-branco-puro px-8 rounded-lg font-bold text-lg h-[58px] flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm">
+        <i class="pi pi-search font-bold"></i>
+        Pesquisar
+      </button>
+    </div>
+
+    <p-table 
+      [value]="clinics()" 
+      [lazy]="true" 
+      (onLazyLoad)="onPageChange($event)"
+      [paginator]="true" 
+      [rows]="10" 
+      [totalRecords]="totalRecords()" 
+      [loading]="loading()"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-lg">
+      
+      <ng-template pTemplate="header">
+        <tr class="bg-fundo-offwhite border-b-2 border-cinza-contorno">
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[8%]">ID</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg">Nome da Clínica</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center">CNPJ</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center">Contato</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[18%]">Status</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[10%]">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-clinic>
+        <tr [ngClass]="{'text-vermelho-alerta font-bold italic': !clinic.active}" 
+            class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
+          
+          <td class="p-4 text-center text-lg">{{ clinic.id }}</td>
+          
+          <td class="p-4 text-lg font-medium">{{ clinic.name }}</td>
+          
+          <td class="p-4 text-center text-lg">
+            <span class="bg-cinza-contorno/30 px-3 py-1 rounded font-mono text-sm border border-cinza-contorno">
+              {{ clinic.cnpj }}
+            </span>
+          </td>
+
+          <td class="p-4 text-center text-lg">
+            <div class="flex flex-col text-sm">
+              <span class="font-bold">{{ clinic.fone1 }}</span>
+              <span class="text-cinza-medio">{{ clinic.email }}</span>
+            </div>
+          </td>
+          
+          <td class="p-4 text-center">
+            <p-dropdown 
+              [options]="statusOptions" 
+              [(ngModel)]="clinic.active" 
+              optionLabel="label" 
+              optionValue="value"
+              (onChange)="onStatusChange(clinic, $event.value)"
+              [styleClass]="'w-full h-10 flex items-center text-sm font-bold ' + (clinic.active ? 'text-verde-confirmação' : 'text-vermelho-alerta')">
+            </p-dropdown>
+          </td>
+          
+          <td class="p-4 text-center">
+            <button 
+              (click)="editClinic(clinic.id)"
+              class="bg-azul-prisma/10 hover:bg-azul-prisma hover:text-branco-puro text-azul-prisma p-3 rounded-full transition-all cursor-pointer shadow-sm"
+              pTooltip="Editar Clínica">
+              <i class="pi pi-pencil text-xl font-bold"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="p-12 text-center text-xl text-cinza-medio font-medium">
+            Nenhuma clínica encontrada com estes critérios.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

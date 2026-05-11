@@ -8,10 +8,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputMaskModule } from 'primeng/inputmask';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextarea } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { TableModule } from 'primeng/table';
+import { TabViewModule } from 'primeng/tabview';
 
 /**
  * Centralized array of commonly used UI modules for Standalone Components.
@@ -26,10 +28,12 @@ export const SHARED_UI_IMPORTS = [
   FloatLabelModule,
   FormsModule,
   InputMaskModule,
+  InputNumberModule,
   InputTextarea,
   InputTextModule,
   ListboxModule,
   ReactiveFormsModule,
   RouterModule,
-  TableModule
+  TableModule,
+  TabViewModule
 ] as const;

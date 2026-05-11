@@ -1,0 +1,218 @@
+<div class="p-6 w-full max-w-6xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-sm border border-cinza-contorno p-8">
+    
+    <div class="mb-8 border-b border-cinza-contorno pb-4 flex justify-between items-center">
+      <div>
+        <h2 class="text-3xl font-bold text-azul-prisma">
+          {{ clinicId() ? 'Editar Clínica' : 'Nova Clínica' }}
+        </h2>
+        <p class="text-cinza-medio text-lg mt-1">Configuração de parceiros e procedimentos.</p>
+      </div>
+      <button (click)="cancel()" class="p-button-text p-button-secondary" pButton icon="pi pi-arrow-left" label="Voltar"></button>
+    </div>
+
+    <p-tabView>
+      <p-tabPanel header="Dados Gerais" leftIcon="pi pi-file mr-2">
+        <form [formGroup]="clinicForm" (ngSubmit)="onSubmitClinic()" class="flex flex-col gap-8 mt-6">
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <p-floatlabel class="md:col-span-2">
+              <input id="name" type="text" pInputText formControlName="name" 
+                     class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-all" />
+              <label for="name" class="ml-2 text-cinza-chumbo font-medium text-lg">Nome da Clínica *</label>
+            </p-floatlabel>
+
+            <p-floatlabel>
+              <p-inputMask id="cnpj" mask="99.999.999/9999-99" [unmask]="true" formControlName="cnpj" (onBlur)="onCnpjBlur()"
+                styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[58px] px-4">
+              </p-inputMask>
+              <label for="cnpj" class="ml-2 text-cinza-chumbo font-medium text-lg">CNPJ *</label>
+            </p-floatlabel>
+
+            <p-floatlabel>
+              <input id="fone1" type="text" pInputText formControlName="fone1" 
+                     class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+              <label for="fone1" class="ml-2 text-cinza-chumbo font-medium text-lg">Telefone Principal *</label>
+            </p-floatlabel>
+
+            <p-floatlabel>
+              <input id="email" type="email" pInputText formControlName="email" 
+                     class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+              <label for="email" class="ml-2 text-cinza-chumbo font-medium text-lg">E-mail para Contato *</label>
+            </p-floatlabel>
+
+            <p-floatlabel>
+              <p-inputNumber id="percentual" formControlName="percentual" suffix="%" min="0" max="100"
+                inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[58px] px-4 font-bold">
+              </p-inputNumber>
+              <label for="percentual" class="ml-2 text-cinza-chumbo font-medium text-lg">Percentual Repasse</label>
+            </p-floatlabel>
+          </div>
+
+          <fieldset formGroupName="address" class="border-2 border-cinza-contorno/50 rounded-xl p-6">
+            <legend class="px-4 text-azul-prisma font-bold text-xl italic">Endereço da Unidade</legend>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+              
+              <div class="flex flex-col gap-1">
+                <label class="text-cinza-chumbo font-bold text-base ml-1">CEP (Enter para busca)</label>
+                <p-inputMask mask="99999999" [unmask]="true" formControlName="cep" (keydown.enter)="$event.preventDefault(); onCepEnter()"
+                    styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[58px] px-4"></p-inputMask>
+              </div>
+
+              <p-floatlabel class="md:col-span-2 self-end">
+                <input #logInput id="logradouro" type="text" pInputText formControlName="logradouro" 
+                        class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+                <label for="logradouro" class="ml-2 text-cinza-chumbo font-medium text-lg">Logradouro *</label>
+              </p-floatlabel>
+
+              <p-floatlabel class="self-end">
+                <input #numInput id="numero" type="text" pInputText formControlName="numero" 
+                        class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+                <label for="numero" class="ml-2 text-cinza-chumbo font-medium text-lg">Número *</label>
+              </p-floatlabel>
+
+              <p-floatlabel>
+                <input id="bairro" type="text" pInputText formControlName="bairro" 
+                        class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+                <label for="bairro" class="ml-2 text-cinza-chumbo font-medium text-lg">Bairro *</label>
+              </p-floatlabel>
+
+              <p-floatlabel class="md:col-span-2">
+                <input id="cidade" type="text" pInputText formControlName="cidade" 
+                        class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+                <label for="cidade" class="ml-2 text-cinza-chumbo font-medium text-lg">Cidade *</label>
+              </p-floatlabel>
+
+              <p-floatlabel>
+                <input id="uf" type="text" pInputText formControlName="uf" 
+                        class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+                <label for="uf" class="ml-2 text-cinza-chumbo font-medium text-lg">UF *</label>
+              </p-floatlabel>
+
+              <p-floatlabel class="md:col-span-4">
+                <input id="comp" type="text" pInputText formControlName="complemento" 
+                        class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4" />
+                <label for="comp" class="ml-2 text-cinza-chumbo font-medium text-lg">Complemento</label>
+              </p-floatlabel>
+            </div>
+          </fieldset>
+
+          <div class="flex justify-end gap-4 border-t border-cinza-contorno pt-6">
+            <button type="submit" class="bg-verde-teal text-branco-puro px-12 py-4 rounded-lg font-bold text-xl flex items-center gap-2 shadow-md cursor-pointer transition-transform active:scale-95 hover:bg-teal-700">
+                <i class="pi pi-save text-xl"></i> Salvar Clínica
+            </button>
+          </div>
+        </form>
+      </p-tabPanel>
+
+      <p-tabPanel header="Procedimentos" leftIcon="pi pi-list mr-2" [disabled]="!clinicId()">
+        <form [formGroup]="procForm" class="bg-fundo-offwhite p-8 rounded-xl border border-cinza-contorno mb-8 mt-4 shadow-inner">
+            <h3 class="text-azul-prisma font-bold text-2xl mb-8 flex items-center gap-2">
+            <i class="pi pi-plus-circle text-2xl"></i> 
+            {{ editingProcId() ? 'Editar Associação' : 'Nova Associação' }}
+            </h3>
+
+            <div class="flex flex-col gap-8 mb-8">
+            
+            <div class="flex flex-col gap-1 w-full">
+                <label class="text-cinza-chumbo font-bold text-lg ml-1">Médico *</label>
+                <div class="flex w-full h-[58px]">
+                <input type="text" pInputText formControlName="doctorName" 
+                        class="flex-1 border-2 border-r-0 border-cinza-contorno bg-white rounded-l-lg text-lg px-4 outline-none" 
+                        placeholder="Pesquisar médico..." />
+                <button type="button" pButton icon="pi pi-search" 
+                        class="bg-azul-prisma px-6 text-branco-puro rounded-r-lg border-2 border-azul-prisma" 
+                        (click)="openDoctorSearch()"></button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1 w-full">
+                <label class="text-cinza-chumbo font-bold text-lg ml-1">Procedimento *</label>
+                <div class="flex w-full h-[58px]">
+                <input type="text" pInputText formControlName="procedureName" 
+                        class="flex-1 border-2 border-r-0 border-cinza-contorno bg-white rounded-l-lg text-lg px-4 outline-none" 
+                        placeholder="Pesquisar procedimento..." />
+                <button type="button" pButton icon="pi pi-search" 
+                        class="bg-azul-prisma px-6 text-branco-puro rounded-r-lg border-2 border-azul-prisma" 
+                        (click)="openProcedureSearch()"></button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                <p-floatlabel>
+                <p-inputNumber id="valRep" (onFocus)="selectOnFocus($event)" formControlName="transferValue" mode="currency" currency="BRL" locale="pt-BR"
+                    inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold text-verde-confirmacao"></p-inputNumber>
+                <label for="valRep" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Repasse *</label>
+                </p-floatlabel>
+
+                <p-floatlabel>
+                <p-inputNumber id="valTot" (onFocus)="selectOnFocus($event)" formControlName="price" mode="currency" currency="BRL" locale="pt-BR"
+                    inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold"></p-inputNumber>
+                <label for="valTot" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Total *</label>
+                </p-floatlabel>
+            </div>
+            </div>
+            
+            <div class="flex justify-end gap-4">
+            <button *ngIf="editingProcId()" type="button" 
+                    class="px-6 py-3 rounded-lg font-bold border-2 border-cinza-medio text-cinza-medio hover:bg-gray-100 cursor-pointer" 
+                    (click)="resetProcForm()">Cancelar Edição</button>
+
+            <button type="button" 
+                    class="bg-verde-teal text-branco-puro px-12 py-4 rounded-lg font-bold text-xl flex items-center gap-2 shadow-md hover:bg-teal-700 cursor-pointer" 
+                    (click)="saveProcedure()">
+                <i class="pi pi-plus-circle text-xl"></i>
+                {{ editingProcId() ? 'Atualizar' : 'Adicionar' }}
+            </button>
+            </div>
+        </form>
+
+        <p-table 
+          [value]="procedures()" 
+          [lazy]="true" 
+          (onLazyLoad)="onPageChange($event)"
+          [paginator]="true" 
+          [rows]="rows()" 
+          [totalRecords]="totalRecords()"
+          [loading]="false"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+          styleClass="p-datatable-lg p-datatable-striped border border-cinza-contorno rounded-lg overflow-hidden mt-8">
+          <ng-template pTemplate="header">
+            <tr class="bg-fundo-offwhite">
+              <th class="p-4 text-azul-prisma font-bold text-lg">Médico</th>
+              <th class="p-4 text-azul-prisma font-bold text-lg">Procedimento</th>
+              <th class="p-4 text-azul-prisma font-bold text-lg text-center">Repasse</th>
+              <th class="p-4 text-azul-prisma font-bold text-lg text-center">Total</th>
+              <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[120px]">Ações</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
+              <td class="p-4 text-lg font-medium">{{ item.doctorName }}</td>
+              <td class="p-4 text-lg">{{ item.procedureName }}</td>
+              <td class="p-4 text-center text-lg text-verde-confirmacao font-bold">{{ item.transferValue | currency:'BRL'}}</td>
+              <td class="p-4 text-center text-lg font-bold">{{ item.price | currency:'BRL'}}</td>
+              <td class="p-4 text-center flex gap-3 justify-center">
+                <button type="button" (click)="editProc(item)" 
+                        class="text-azul-prisma hover:bg-azul-prisma/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
+                  <i class="pi pi-pencil text-xl font-bold"></i>
+                </button>
+                <button type="button" (click)="deleteProc(item.id)" 
+                        class="text-vermelho-alerta hover:bg-vermelho-alerta/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
+                  <i class="pi pi-trash text-xl font-bold"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5" class="p-8 text-center text-lg text-cinza-medio italic">Nenhum procedimento associado.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

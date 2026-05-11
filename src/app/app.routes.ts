@@ -11,6 +11,8 @@ import { ProcedureFormComponent } from './features/medical/procedures/procedure-
 import { DoctorListComponent } from './features/medical/doctors/doctor-list/doctor-list.component';
 import { DoctorFormComponent } from './features/medical/doctors/doctor-form/doctor-form.component';
 import { CompanyFormComponent } from './features/company/company-form/company-form.component';
+import { ClinicListComponent } from './features/medical/clinics/clinic-list/clinic-list.component';
+import { ClinicFormComponent } from './features/medical/clinics/clinic-form/clinic-form.component';
 
 export const routes: Routes = [
   {
@@ -85,6 +87,24 @@ export const routes: Routes = [
       { 
         path: 'company', 
         component: CompanyFormComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'clinics', 
+        component: ClinicListComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'clinics/new', 
+        component: ClinicFormComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
+      },
+      { 
+        path: 'clinics/:id', 
+        component: ClinicFormComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS'] }
       }

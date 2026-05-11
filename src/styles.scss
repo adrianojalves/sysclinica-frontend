@@ -74,3 +74,108 @@ body {
 .p-dropdown {
     align-items: center;
 }
+
+/* Custom constraint for search dialogs */
+.sysclinica-search-dialog {
+    max-width: 900px;
+    min-width: 320px;
+}
+
+/* Target the "Adicionar" button globally to guarantee white text on green */
+button.bg-verde-teal, button.bg-verde-teal * {
+    color: var(--branco-puro) !important;
+}
+
+.p-inputtext, 
+.p-dropdown, 
+.p-inputmask, 
+.p-inputnumber-input {
+    height: 58px !important;
+    font-size: 1.25rem !important;
+    font-weight: 500 !important;
+}
+
+/* Fixes the InputGroup (Search Magnifiers) that went wrong */
+.p-inputgroup {
+    height: 58px !important;
+}
+
+.p-inputgroup .p-inputtext {
+    height: 58px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.p-inputgroup .p-button {
+    height: 58px !important;
+    padding: 0 1.5rem !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.p-inputnumber-input {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+}
+
+/* --- TABS OVERRIDE (SYSCLINICA - PRIMENG V18+ PATTERN) --- */
+
+/* 1. Container and spacing for the tab bar  */
+.p-tablist-content {
+    border: none !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.p-tablist-tab-list {
+    display: flex !important;
+    gap: 1rem !important; /* Adjusted gap for better balance */
+    background: transparent !important;
+    border: none !important;
+}
+
+/* 2. Style for each Tab (Button)  */
+.p-tab {
+    background: var(--branco-puro) !important;
+    border: 2px solid var(--cinza-contorno) !important;
+    border-radius: 10px !important;
+    color: var(--cinza-chumbo) !important;
+    padding: 0.75rem 1.75rem !important; /* Reduced padding from 1.25/2.5 to be less bulky */
+    font-weight: 700 !important;
+    font-size: 1.15rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 50px !important; /* Defined minimum height */
+}
+
+/* 3. ACTIVE TAB - High Contrast Azul Prisma  */
+.p-tab.p-tab-active {
+    background: var(--azul-prisma) !important;
+    border-color: var(--azul-prisma) !important;
+    color: var(--branco-puro) !important;
+    box-shadow: 0 4px 10px rgba(0, 82, 147, 0.25) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 4. Ensure icons inside tabs match the theme  */
+.p-tab .p-tabview-left-icon, 
+.p-tab .pi {
+    font-size: 1.2rem !important;
+    color: inherit !important;
+    margin-right: 0.5rem !important;
+}
+
+/* 5. Hide the default PrimeNG animated ink-bar  */
+.p-tablist-active-bar {
+    display: none !important;
+}
+
+/* 6. Hover state for inactive tabs  */
+.p-tab:not(.p-tab-active):hover {
+    background: var(--fundo-offwhite) !important;
+    border-color: var(--azul-prisma) !important;
+    color: var(--azul-prisma) !important;
+}
