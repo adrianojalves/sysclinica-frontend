@@ -53,7 +53,7 @@ public currentPage = signal<number>(0);
   private initForms(): void {
     this.clinicForm = this.fb.group({
       name: ['', [Validators.required]],
-      cnpj: ['', [Validators.required]],
+      cnpj: [''],
       fone1: ['', [Validators.required]],
       fone2: [''],
       site: [''],
@@ -72,12 +72,14 @@ public currentPage = signal<number>(0);
     });
 
     this.procForm = this.fb.group({
-      doctorId: [null, [Validators.required]],
+      doctorId: [null],
       doctorName: [{ value: '', disabled: true }],
       medicalProcedureId: [null, [Validators.required]],
       procedureName: [{ value: '', disabled: true }],
       transferValue: [0, [Validators.required, Validators.min(0)]],
-      price: [0, [Validators.required, Validators.min(0)]]
+      price: [0, [Validators.required, Validators.min(0)]],
+      transferValueCard: [0, [Validators.required, Validators.min(0)]],
+      priceCard: [0, [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -106,6 +108,19 @@ public currentPage = signal<number>(0);
       if (exists) {
         this.messageService.show('warning', 'Atenção', 'Este CNPJ já está cadastrado no sistema.');
         this.clinicForm.get('cnpj')?.setValue('');
+      }
+    });
+  }
+
+  public onNameBlur(): void {
+    const name = this.clinicForm.get('name')?.value;
+
+    if (this.clinicId() || !name) return;
+
+    this.clinicService.checkNameExists(name).subscribe(exists => {
+      if (exists) {
+        this.messageService.show('warning', 'Atenção', 'Este nome já está cadastrado no sistema.');
+        this.clinicForm.get('name')?.setValue('');
       }
     });
   }
@@ -259,7 +274,7 @@ public currentPage = signal<number>(0);
 
   public resetProcForm(): void {
     this.editingProcId.set(null);
-    this.procForm.reset({ transferValue: 0, price: 0 });
+    this.procForm.reset({ transferValue: 0, price: 0, transferValueCard: 0, priceCard: 0 });
   }
 
   private loadClinic(): void {

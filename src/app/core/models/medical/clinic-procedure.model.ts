@@ -9,6 +9,8 @@ export interface ClinicDoctorProcedure {
   procedureType?: string;
   transferValue: number;
   price: number;
+  transferValueCard: number;
+  priceCard: number;
 }
 
 export interface ClinicDoctorProcedureFilter {

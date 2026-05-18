@@ -17,7 +17,7 @@
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <p-floatlabel class="md:col-span-2">
-              <input id="name" type="text" pInputText formControlName="name" 
+              <input id="name" type="text" pInputText formControlName="name" (blur)="onNameBlur()"
                      class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-all" />
               <label for="name" class="ml-2 text-cinza-chumbo font-medium text-lg">Nome da Clínica *</label>
             </p-floatlabel>
@@ -26,7 +26,7 @@
               <p-inputMask id="cnpj" mask="99.999.999/9999-99" [unmask]="true" formControlName="cnpj" (onBlur)="onCnpjBlur()"
                 styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[58px] px-4">
               </p-inputMask>
-              <label for="cnpj" class="ml-2 text-cinza-chumbo font-medium text-lg">CNPJ *</label>
+              <label for="cnpj" class="ml-2 text-cinza-chumbo font-medium text-lg">CNPJ</label>
             </p-floatlabel>
 
             <p-floatlabel>
@@ -115,43 +115,57 @@
 
             <div class="flex flex-col gap-8 mb-8">
             
-            <div class="flex flex-col gap-1 w-full">
-                <label class="text-cinza-chumbo font-bold text-lg ml-1">Médico *</label>
-                <div class="flex w-full h-[58px]">
-                <input type="text" pInputText formControlName="doctorName" 
-                        class="flex-1 border-2 border-r-0 border-cinza-contorno bg-white rounded-l-lg text-lg px-4 outline-none" 
-                        placeholder="Pesquisar médico..." />
-                <button type="button" pButton icon="pi pi-search" 
-                        class="bg-azul-prisma px-6 text-branco-puro rounded-r-lg border-2 border-azul-prisma" 
-                        (click)="openDoctorSearch()"></button>
-                </div>
-            </div>
+              <div class="flex flex-col gap-1 w-full">
+                  <label class="text-cinza-chumbo font-bold text-lg ml-1">Médico </label>
+                  <div class="flex w-full h-[58px]">
+                  <input type="text" pInputText formControlName="doctorName" 
+                          class="flex-1 border-2 border-r-0 border-cinza-contorno bg-white rounded-l-lg text-lg px-4 outline-none" 
+                          placeholder="Pesquisar médico..." />
+                  <button type="button" pButton icon="pi pi-search" 
+                          class="bg-azul-prisma px-6 text-branco-puro rounded-r-lg border-2 border-azul-prisma" 
+                          (click)="openDoctorSearch()"></button>
+                  </div>
+              </div>
 
-            <div class="flex flex-col gap-1 w-full">
-                <label class="text-cinza-chumbo font-bold text-lg ml-1">Procedimento *</label>
-                <div class="flex w-full h-[58px]">
-                <input type="text" pInputText formControlName="procedureName" 
-                        class="flex-1 border-2 border-r-0 border-cinza-contorno bg-white rounded-l-lg text-lg px-4 outline-none" 
-                        placeholder="Pesquisar procedimento..." />
-                <button type="button" pButton icon="pi pi-search" 
-                        class="bg-azul-prisma px-6 text-branco-puro rounded-r-lg border-2 border-azul-prisma" 
-                        (click)="openProcedureSearch()"></button>
-                </div>
-            </div>
+              <div class="flex flex-col gap-1 w-full">
+                  <label class="text-cinza-chumbo font-bold text-lg ml-1">Procedimento *</label>
+                  <div class="flex w-full h-[58px]">
+                  <input type="text" pInputText formControlName="procedureName" 
+                          class="flex-1 border-2 border-r-0 border-cinza-contorno bg-white rounded-l-lg text-lg px-4 outline-none" 
+                          placeholder="Pesquisar procedimento..." />
+                  <button type="button" pButton icon="pi pi-search" 
+                          class="bg-azul-prisma px-6 text-branco-puro rounded-r-lg border-2 border-azul-prisma" 
+                          (click)="openProcedureSearch()"></button>
+                  </div>
+              </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-                <p-floatlabel>
-                <p-inputNumber id="valRep" (onFocus)="selectOnFocus($event)" formControlName="transferValue" mode="currency" currency="BRL" locale="pt-BR"
-                    inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold text-verde-confirmacao"></p-inputNumber>
-                <label for="valRep" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Repasse *</label>
-                </p-floatlabel>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                  <p-floatlabel>
+                  <p-inputNumber id="valRep" (onFocus)="selectOnFocus($event)" formControlName="transferValue" mode="currency" currency="BRL" locale="pt-BR"
+                      inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold text-verde-confirmacao"></p-inputNumber>
+                  <label for="valRep" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Repasse *</label>
+                  </p-floatlabel>
 
-                <p-floatlabel>
-                <p-inputNumber id="valTot" (onFocus)="selectOnFocus($event)" formControlName="price" mode="currency" currency="BRL" locale="pt-BR"
-                    inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold"></p-inputNumber>
-                <label for="valTot" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Total *</label>
-                </p-floatlabel>
-            </div>
+                  <p-floatlabel>
+                  <p-inputNumber id="valTot" (onFocus)="selectOnFocus($event)" formControlName="price" mode="currency" currency="BRL" locale="pt-BR"
+                      inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold"></p-inputNumber>
+                  <label for="valTot" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Total *</label>
+                  </p-floatlabel>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                  <p-floatlabel>
+                  <p-inputNumber id="valRepCard" (onFocus)="selectOnFocus($event)" formControlName="transferValueCard" mode="currency" currency="BRL" locale="pt-BR"
+                      inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold text-verde-confirmacao"></p-inputNumber>
+                  <label for="valRepCard" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Repasse Cartão*</label>
+                  </p-floatlabel>
+
+                  <p-floatlabel>
+                  <p-inputNumber id="valTotCard" (onFocus)="selectOnFocus($event)" formControlName="priceCard" mode="currency" currency="BRL" locale="pt-BR"
+                      inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold"></p-inputNumber>
+                  <label for="valTotCard" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Total Cartão*</label>
+                  </p-floatlabel>
+              </div>
             </div>
             
             <div class="flex justify-end gap-4">
@@ -185,6 +199,7 @@
               <th class="p-4 text-azul-prisma font-bold text-lg">Procedimento</th>
               <th class="p-4 text-azul-prisma font-bold text-lg text-center">Repasse</th>
               <th class="p-4 text-azul-prisma font-bold text-lg text-center">Total</th>
+              <th class="p-4 text-azul-prisma font-bold text-lg text-center">Total Cartão</th>
               <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[120px]">Ações</th>
             </tr>
           </ng-template>
@@ -194,6 +209,7 @@
               <td class="p-4 text-lg">{{ item.procedureName }}</td>
               <td class="p-4 text-center text-lg text-verde-confirmacao font-bold">{{ item.transferValue | currency:'BRL'}}</td>
               <td class="p-4 text-center text-lg font-bold">{{ item.price | currency:'BRL'}}</td>
+              <td class="p-4 text-center text-lg font-bold">{{ item.priceCard | currency:'BRL'}}</td>
               <td class="p-4 text-center flex gap-3 justify-center">
                 <button type="button" (click)="editProc(item)" 
                         class="text-azul-prisma hover:bg-azul-prisma/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
@@ -208,7 +224,7 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="5" class="p-8 text-center text-lg text-cinza-medio italic">Nenhum procedimento associado.</td>
+              <td colspan="6" class="p-8 text-center text-lg text-cinza-medio italic">Nenhum procedimento associado.</td>
             </tr>
           </ng-template>
         </p-table>

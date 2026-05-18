@@ -62,6 +62,7 @@ export class UserFormComponent implements OnInit {
           email: user.email,
           phone: user.phone,
           active: user.active,
+          percentualDesconto: user.percentualDesconto,
           roleIds: user.roles?.map(r => r.id) || []
         });
         
@@ -92,6 +93,7 @@ export class UserFormComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
+      percentualDesconto: [0],
       roleIds: [[], [Validators.required]],
       active: [true]
     });

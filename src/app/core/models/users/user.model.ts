@@ -10,5 +10,6 @@ export interface User {
   email: string;
   phone: string;
   active: boolean;
+  percentualDesconto: number,
   roles: Role[];
 }

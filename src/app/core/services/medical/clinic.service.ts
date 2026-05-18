@@ -37,6 +37,12 @@ export class ClinicService extends BaseCrudService<Clinic, number> {
     });
   }
 
+  public checkNameExists(name: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/exists/name`, { 
+      params: new HttpParams().set('name', name) 
+    });
+  }
+
   /**
    * Patch only the status of the clinic
    */

@@ -73,6 +73,13 @@
           <label for="phone" class="text-cinza-chumbo font-medium text-lg ml-2">Telefone</label>
         </p-floatlabel>
 
+        <p-floatlabel>
+          <p-inputNumber id="percentualDesconto" formControlName="percentualDesconto" suffix="%" min="0" max="100"
+            inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[58px] px-4 font-bold">
+          </p-inputNumber>
+          <label for="percentualDesconto" class="ml-2 text-cinza-chumbo font-medium text-lg">Percentual Desconto</label>
+        </p-floatlabel>
+
         @if (userId()) {
           <p-floatlabel class="w-full">
             <p-dropdown 
