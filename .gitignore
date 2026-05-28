@@ -44,3 +44,8 @@ Thumbs.db
 # Local Environment variables
 .env
 .env.*
+
+# Claude Code
+CLAUDE.md
+
+/docs
