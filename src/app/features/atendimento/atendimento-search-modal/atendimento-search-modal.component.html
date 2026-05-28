@@ -1,0 +1,104 @@
+<div class="flex flex-col gap-6">
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="flex flex-col gap-1">
+      <label class="text-cinza-chumbo font-medium text-base ml-1">Cliente</label>
+      <input
+        type="text"
+        pInputText
+        placeholder="Nome do cliente..."
+        [(ngModel)]="filterCliente"
+        (keyup.enter)="search()"
+        class="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg py-3 px-4 focus:border-verde-teal outline-none transition-all" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-cinza-chumbo font-medium text-base ml-1">Clínica</label>
+      <input
+        type="text"
+        pInputText
+        placeholder="Nome da clínica..."
+        [(ngModel)]="filterClinica"
+        (keyup.enter)="search()"
+        class="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg py-3 px-4 focus:border-verde-teal outline-none transition-all" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-cinza-chumbo font-medium text-base ml-1">Usuário</label>
+      <input
+        type="text"
+        pInputText
+        placeholder="Nome do usuário..."
+        [(ngModel)]="filterUsuario"
+        (keyup.enter)="search()"
+        class="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg py-3 px-4 focus:border-verde-teal outline-none transition-all" />
+    </div>
+  </div>
+
+  <div class="flex justify-end">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-search"
+      label="Pesquisar"
+      [disabled]="!hasAnyFilter()"
+      (click)="search()"
+      class="bg-verde-teal text-branco-puro px-8 py-3 rounded-lg font-bold text-lg flex items-center gap-2 cursor-pointer shadow-sm transition-all hover:bg-teal-700">
+    </button>
+  </div>
+
+  <p-table
+    [value]="atendimentos()"
+    [loading]="loading()"
+    [paginator]="true"
+    [rows]="8"
+    responsiveLayout="scroll"
+    styleClass="p-datatable-lg p-datatable-striped border border-cinza-contorno rounded-lg overflow-hidden">
+
+    <ng-template pTemplate="header">
+      <tr class="bg-fundo-offwhite">
+        <th class="text-azul-prisma font-bold py-3 px-4 text-lg w-16">ID</th>
+        <th class="text-azul-prisma font-bold py-3 px-4 text-lg">Cliente</th>
+        <th class="text-azul-prisma font-bold py-3 px-4 text-lg">Clínica</th>
+        <th class="text-azul-prisma font-bold py-3 px-4 text-lg text-center">Data Consulta</th>
+        <th class="text-azul-prisma font-bold py-3 px-4 text-lg text-center">Status</th>
+        <th style="width: 80px"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item>
+      <tr class="hover:bg-gray-50 transition-colors border-b border-cinza-contorno">
+        <td class="py-3 px-4 text-lg font-bold text-cinza-medio">#{{ item.id }}</td>
+        <td class="py-3 px-4 text-lg font-medium text-cinza-chumbo">{{ item.nomeCliente }}</td>
+        <td class="py-3 px-4 text-lg text-cinza-medio">{{ item.nomeClinica }}</td>
+        <td class="py-3 px-4 text-lg text-center font-mono">{{ formatDate(item.dataConsultaExame) }}</td>
+        <td class="py-3 px-4 text-center">
+          <span class="px-3 py-1 rounded-full text-sm font-bold" [ngClass]="getStatusClass(item.status)">
+            {{ getStatusLabel(item.status) }}
+          </span>
+        </td>
+        <td class="py-3 px-4 text-center">
+          <button
+            pButton
+            icon="pi pi-check"
+            class="p-button-rounded p-button-success shadow-sm"
+            (click)="selectAtendimento(item)"
+            pTooltip="Selecionar este atendimento">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center p-10 text-xl text-cinza-medio italic">
+          @if (hasSearched()) {
+            Nenhum atendimento encontrado.
+          } @else {
+            Use os filtros acima para pesquisar atendimentos.
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

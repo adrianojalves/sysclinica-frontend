@@ -15,6 +15,9 @@ export interface ClinicDoctorProcedure {
 
 export interface ClinicDoctorProcedureFilter {
   clinicId?: number;
+  clinicName?: string;
   doctorId?: number;
+  doctorName?: string;
   medicalProcedureId?: number;
+  procedureName?: string;
 }

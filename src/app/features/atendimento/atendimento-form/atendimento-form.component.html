@@ -1,0 +1,424 @@
+<div class="p-6 w-full max-w-7xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-md border border-cinza-contorno p-4 md:p-6">
+
+    <!-- ===== CABEÇALHO ===== -->
+    <div class="mb-6 pb-4 border-b border-cinza-contorno">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-bold text-azul-prisma">Atendimento</h2>
+          <p class="text-cinza-medio text-base md:text-lg mt-1">Registro de consultas e exames.</p>
+        </div>
+      </div>
+
+      <!-- Botões de ação — 2 colunas no mobile, linha única no desktop -->
+      <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
+        <button
+          type="button"
+          pButton
+          icon="pi pi-plus"
+          label="Novo"
+          (click)="novoAtendimento()"
+          class="justify-center border-2 border-cinza-contorno text-cinza-chumbo bg-branco-puro hover:bg-fundo-offwhite font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer">
+        </button>
+
+        <button
+          type="button"
+          pButton
+          icon="pi pi-search"
+          label="Pesquisar"
+          (click)="openSearch()"
+          class="justify-center bg-azul-prisma hover:bg-blue-800 text-branco-puro font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer shadow-sm">
+        </button>
+
+        <button
+          type="button"
+          pButton
+          icon="pi pi-save"
+          label="Salvar"
+          [loading]="loading()"
+          (click)="salvar()"
+          class="justify-center bg-verde-teal hover:bg-teal-700 text-branco-puro font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer shadow-sm">
+        </button>
+
+        <p-splitButton
+          label="Imprimir"
+          icon="pi pi-print"
+          [model]="printItems"
+          (onClick)="print('guia')"
+          styleClass="p-button-outlined w-full sm:w-auto">
+        </p-splitButton>
+      </div>
+    </div>
+
+    <!-- ===== NAVEGAÇÃO DAS ABAS ===== -->
+
+    <!-- Mobile / Tablet pequeno: select nativo -->
+    <div class="block md:hidden mb-4">
+      <select
+        class="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base py-3 px-4 text-cinza-chumbo font-medium focus:border-verde-teal outline-none cursor-pointer"
+        [value]="activeTabIndex()"
+        (change)="activeTabIndex.set(+$any($event.target).value)">
+        <option value="0">Dados Gerais</option>
+        <option value="1">Procedimentos</option>
+        <option value="2">Itens Selecionados</option>
+        <option value="3">Financeiro</option>
+      </select>
+    </div>
+
+    <!-- Desktop (md+): barra de abas horizontal -->
+    <div class="hidden md:flex border-b-2 border-cinza-contorno mb-6">
+      @for (tab of tabs; track tab.index) {
+        <button
+          type="button"
+          (click)="activeTabIndex.set(tab.index)"
+          class="flex items-center gap-2 px-5 py-3.5 font-bold text-base lg:text-lg whitespace-nowrap border-b-2 -mb-px transition-all duration-200 cursor-pointer bg-transparent"
+          [class.text-azul-prisma]="activeTabIndex() === tab.index"
+          [class.border-azul-prisma]="activeTabIndex() === tab.index"
+          [class.text-cinza-medio]="activeTabIndex() !== tab.index"
+          [class.border-transparent]="activeTabIndex() !== tab.index"
+          [class.hover:text-cinza-chumbo]="activeTabIndex() !== tab.index">
+          <i [class]="tab.icon + ' text-base'"></i>
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+
+    <!-- ===== CONTEÚDO DAS ABAS ===== -->
+
+    <!-- TAB 1: Dados Gerais -->
+    @if (activeTabIndex() === 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+
+        <!-- Data de Emissão -->
+        <div class="flex flex-col gap-1">
+          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Data de Emissão</label>
+          <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base md:text-lg py-3 px-4 text-cinza-medio font-mono select-none min-h-[52px] flex items-center">
+            {{ formatDataEmissao() }}
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="flex flex-col gap-1">
+          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Status</label>
+          <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg py-3 px-4 flex items-center min-h-[52px]">
+            <span class="px-3 py-1 rounded-full text-sm font-bold" [ngClass]="getStatusClass()">
+              {{ getStatusLabel() }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Data da Consulta -->
+        <div class="flex flex-col gap-1" [formGroup]="form">
+          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Data da Consulta *</label>
+          <p-datepicker
+            formControlName="dataConsulta"
+            dateFormat="dd/mm/yy"
+            [showIcon]="true"
+            appendTo="body"
+            placeholder="dd/mm/aaaa"
+            inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base md:text-lg h-[52px] px-4">
+          </p-datepicker>
+        </div>
+
+        <!-- Cliente -->
+        <div class="flex flex-col gap-1 sm:col-span-2">
+          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Cliente *</label>
+          <div class="flex w-full h-[52px]">
+            <input
+              type="text"
+              pInputText
+              [value]="clienteNome()"
+              readonly
+              placeholder="Pesquisar cliente..."
+              class="flex-1 border-2 border-r-0 border-cinza-contorno bg-fundo-offwhite rounded-l-lg text-base md:text-lg px-4 outline-none cursor-default" />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              (click)="openClientSearch()"
+              class="bg-azul-prisma px-5 text-branco-puro rounded-r-lg border-2 border-azul-prisma hover:bg-blue-800 transition-all cursor-pointer flex-none">
+            </button>
+          </div>
+        </div>
+
+        <!-- Clínica (somente após clínica ser definida) -->
+        @if (clinicaId()) {
+          <div class="flex flex-col gap-1">
+            <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Clínica</label>
+            <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base md:text-lg py-3 px-4 text-cinza-chumbo font-medium min-h-[52px] flex items-center">
+              {{ clinicaNome() || '---' }}
+            </div>
+          </div>
+        }
+
+      </div>
+    }
+
+    <!-- TAB 2: Pesquisa de Procedimentos -->
+    @if (activeTabIndex() === 1) {
+      <div>
+
+        <!-- Filtros -->
+        <div class="bg-fundo-offwhite rounded-xl border border-cinza-contorno p-4 md:p-6 mb-6">
+          <h3 class="text-azul-prisma font-bold text-lg md:text-xl mb-4 flex items-center gap-2">
+            <i class="pi pi-filter"></i>
+            Filtros de Pesquisa
+          </h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+
+            <!-- Clínica (somente se ainda não há clínica definida) -->
+            @if (!clinicaId()) {
+              <div class="flex flex-col gap-1 sm:col-span-2 md:col-span-1">
+                <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Nome da Clínica</label>
+                <input
+                  type="text"
+                  pInputText
+                  placeholder="Filtrar por clínica..."
+                  [(ngModel)]="filterClinicaNome"
+                  (keyup.enter)="searchProcedures()"
+                  class="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base md:text-lg py-3 px-4 focus:border-verde-teal outline-none transition-all" />
+              </div>
+            }
+
+            <!-- Procedimento -->
+            <div class="flex flex-col gap-1">
+              <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Nome do Procedimento</label>
+              <input
+                type="text"
+                pInputText
+                placeholder="Filtrar por procedimento..."
+                [(ngModel)]="filterProcedureNome"
+                (keyup.enter)="searchProcedures()"
+                class="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base md:text-lg py-3 px-4 focus:border-verde-teal outline-none transition-all" />
+            </div>
+
+            <!-- Médico -->
+            <div class="flex flex-col gap-1">
+              <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Nome do Médico</label>
+              <input
+                type="text"
+                pInputText
+                placeholder="Filtrar por médico..."
+                [(ngModel)]="filterDoctorNome"
+                (keyup.enter)="searchProcedures()"
+                class="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base md:text-lg py-3 px-4 focus:border-verde-teal outline-none transition-all" />
+            </div>
+
+          </div>
+
+          @if (clinicaId()) {
+            <div class="mt-3 flex items-center gap-2 text-cinza-medio text-sm">
+              <i class="pi pi-info-circle"></i>
+              <span>Buscando procedimentos da clínica: <strong class="text-azul-prisma">{{ clinicaNome() }}</strong></span>
+            </div>
+          }
+
+          <div class="flex justify-end mt-4">
+            <button
+              type="button"
+              pButton
+              icon="pi pi-search"
+              label="Pesquisar"
+              (click)="searchProcedures()"
+              [loading]="procedureSearchLoading()"
+              class="w-full sm:w-auto justify-center bg-verde-teal hover:bg-teal-700 text-branco-puro px-8 py-3 rounded-lg font-bold text-base md:text-lg cursor-pointer shadow-sm transition-all">
+            </button>
+          </div>
+        </div>
+
+        <!-- Resultados -->
+        <p-table
+          [value]="procedureResults()"
+          [loading]="procedureSearchLoading()"
+          [paginator]="true"
+          [rows]="10"
+          responsiveLayout="scroll"
+          styleClass="p-datatable-lg p-datatable-striped border border-cinza-contorno rounded-lg overflow-hidden">
+
+          <ng-template pTemplate="header">
+            <tr class="bg-fundo-offwhite">
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Clínica</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Ação</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-proc>
+            <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
+              <td class="p-3 md:p-4 text-base text-cinza-medio">{{ proc.clinicName }}</td>
+              <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">
+                {{ proc.procedureName }}
+                <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ proc.doctorName || '---' }}</div>
+              </td>
+              <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ proc.doctorName || '---' }}</td>
+              <td class="p-3 md:p-4 text-center">
+                <button
+                  type="button"
+                  pButton
+                  icon="pi pi-plus"
+                  (click)="addProcedure(proc)"
+                  pTooltip="Adicionar ao atendimento"
+                  class="p-button-rounded p-button-success shadow-sm">
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" class="p-8 text-center text-lg text-cinza-medio italic">
+                @if (procedureSearched()) {
+                  Nenhum procedimento encontrado.
+                } @else {
+                  Use os filtros acima para pesquisar procedimentos.
+                }
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    }
+
+    <!-- TAB 3: Itens Selecionados -->
+    @if (activeTabIndex() === 2) {
+      <div>
+        @if (!hasItems()) {
+          <div class="flex flex-col items-center justify-center py-12 md:py-16 text-cinza-medio">
+            <i class="pi pi-inbox text-5xl mb-4 opacity-40"></i>
+            <p class="text-lg md:text-xl italic text-center">Nenhum procedimento adicionado.</p>
+            <p class="text-sm md:text-base mt-1 text-center px-4">Vá para a aba <strong>Procedimentos</strong> e adicione itens ao atendimento.</p>
+          </div>
+        } @else {
+          <p-table
+            [value]="selectedItems()"
+            responsiveLayout="scroll"
+            styleClass="p-datatable-lg p-datatable-striped border border-cinza-contorno rounded-lg overflow-hidden">
+
+            <ng-template pTemplate="header">
+              <tr class="bg-fundo-offwhite">
+                <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
+                <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
+                <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Excluir</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+              <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
+                <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">
+                  {{ item.nomeMedicalProcedure }}
+                  <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ item.nomeMedico || '---' }}</div>
+                </td>
+                <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ item.nomeMedico || '---' }}</td>
+                <td class="p-3 md:p-4 text-center">
+                  <button
+                    type="button"
+                    (click)="removeProcedure(i)"
+                    pTooltip="Remover procedimento"
+                    class="text-vermelho-alerta hover:bg-vermelho-alerta/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
+                    <i class="pi pi-trash text-lg font-bold"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <div class="mt-4 flex justify-end">
+            <div class="bg-fundo-offwhite border border-cinza-contorno rounded-lg px-5 py-3 text-cinza-medio text-base">
+              Total de itens: <strong class="text-azul-prisma">{{ selectedItems().length }}</strong>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- TAB 4: Financeiro -->
+    @if (activeTabIndex() === 3) {
+      <div [formGroup]="form">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+
+          <!-- Tipo de Pagamento -->
+          <div class="flex flex-col gap-1">
+            <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Tipo de Pagamento *</label>
+            <p-dropdown
+              formControlName="tipoPagamento"
+              [options]="tipoPagamentoOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecione..."
+              styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base h-[52px]">
+            </p-dropdown>
+          </div>
+
+          <!-- Parcelas (somente crédito) -->
+          @if (isCreditCard()) {
+            <div class="flex flex-col gap-1">
+              <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Número de Parcelas</label>
+              <p-inputNumber
+                formControlName="parcelas"
+                [min]="1"
+                [showButtons]="true"
+                inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base h-[52px] px-4 font-bold text-center">
+              </p-inputNumber>
+            </div>
+          }
+
+          <!-- Total -->
+          <div class="flex flex-col gap-1">
+            <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Total do Atendimento</label>
+            <div class="w-full border-2 border-verde-teal/40 bg-verde-teal/5 rounded-lg text-xl md:text-2xl font-bold py-3 px-4 text-verde-teal min-h-[52px] flex items-center">
+              {{ totalValor() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Resumo de itens -->
+        @if (hasItems()) {
+          <div class="mt-6 md:mt-8 border-t border-cinza-contorno pt-5 md:pt-6">
+            <h3 class="text-azul-prisma font-bold text-lg md:text-xl mb-4">Resumo dos Itens</h3>
+            <p-table
+              [value]="selectedItems()"
+              responsiveLayout="scroll"
+              styleClass="p-datatable-lg border border-cinza-contorno rounded-lg overflow-hidden">
+
+              <ng-template pTemplate="header">
+                <tr class="bg-fundo-offwhite">
+                  <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
+                  <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
+                  <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right">Valor</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-item>
+                <tr class="border-b border-cinza-contorno">
+                  <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">
+                    {{ item.nomeMedicalProcedure }}
+                    <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ item.nomeMedico || '---' }}</div>
+                  </td>
+                  <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ item.nomeMedico || '---' }}</td>
+                  <td class="p-3 md:p-4 text-base font-bold text-right" [ngClass]="isCartao() ? 'text-azul-prisma' : 'text-cinza-chumbo'">
+                    {{ (isCartao() ? item.priceCard : item.price) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="footer">
+                <tr class="bg-fundo-offwhite border-t-2 border-cinza-contorno">
+                  <td colspan="2" class="p-3 md:p-4 text-base font-bold text-right text-cinza-chumbo">Total:</td>
+                  <td class="p-3 md:p-4 text-lg md:text-xl font-bold text-right text-verde-teal">
+                    {{ totalValor() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        }
+
+      </div>
+    }
+
+  </div>
+</div>

@@ -10,6 +10,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { DialogService } from 'primeng/dynamicdialog';
+import { PRIMENG_PT_BR } from './core/config/primeng-pt-br';
 
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
      * We will use Tailwind CSS later to customize specific colors or layouts.
      */
     providePrimeNG({
+      translation: PRIMENG_PT_BR,
       theme: {
         preset: Aura,
         options: {
