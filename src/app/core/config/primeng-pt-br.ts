@@ -18,7 +18,7 @@ export const PRIMENG_PT_BR: Translation = {
   today:         'Hoje',
   clear:         'Limpar',
 
-  // --- Navegação do DatePicker ---
+  // --- DatePicker navigation ---
   chooseDate:  'Escolher data',
   chooseMonth: 'Escolher mês',
   chooseYear:  'Escolher ano',
@@ -37,7 +37,7 @@ export const PRIMENG_PT_BR: Translation = {
   am: 'AM',
   pm: 'PM',
 
-  // --- Botões de ação gerais ---
+  // --- General action buttons ---
   accept:  'Sim',
   reject:  'Não',
   apply:   'Aplicar',

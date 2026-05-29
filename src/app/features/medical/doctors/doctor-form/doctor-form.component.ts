@@ -90,7 +90,7 @@ export class DoctorFormComponent implements OnInit {
             cidade: res.localidade,
             uf: res.uf
           });
-          // Focus on "Número" if CEP was found
+          // Focus on "Number" field if CEP was found
           setTimeout(() => this.numeroInput.nativeElement.focus(), 100);
         } else {
           // Focus on "Logradouro" if CEP was NOT found

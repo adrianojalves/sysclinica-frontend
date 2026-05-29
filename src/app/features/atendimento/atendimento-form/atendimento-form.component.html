@@ -1,16 +1,18 @@
 <div class="p-6 w-full max-w-7xl mx-auto">
   <div class="bg-branco-puro rounded-2xl shadow-md border border-cinza-contorno p-4 md:p-6">
 
-    <!-- ===== CABEÇALHO ===== -->
+    <!-- ===== HEADER ===== -->
     <div class="mb-6 pb-4 border-b border-cinza-contorno">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
         <div>
-          <h2 class="text-2xl md:text-3xl font-bold text-azul-prisma">Atendimento</h2>
+          <h2 class="text-2xl md:text-3xl font-bold text-azul-prisma">
+            Atendimento@if (atendimentoId()) { <span class="text-cinza-medio font-normal">#{{ atendimentoId() }}</span>}
+          </h2>
           <p class="text-cinza-medio text-base md:text-lg mt-1">Registro de consultas e exames.</p>
         </div>
       </div>
 
-      <!-- Botões de ação — 2 colunas no mobile, linha única no desktop -->
+      <!-- Action buttons -->
       <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
         <button
           type="button"
@@ -36,8 +38,20 @@
           icon="pi pi-save"
           label="Salvar"
           [loading]="loading()"
+          [disabled]="!isAberto()"
           (click)="salvar()"
-          class="justify-center bg-verde-teal hover:bg-teal-700 text-branco-puro font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer shadow-sm">
+          class="justify-center bg-verde-teal hover:bg-teal-700 text-branco-puro font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+        </button>
+
+        <button
+          type="button"
+          pButton
+          icon="pi pi-check-circle"
+          label="Finalizar"
+          [loading]="loading()"
+          [disabled]="!isAberto() || !atendimentoId()"
+          (click)="finalizar()"
+          class="justify-center bg-azul-prisma hover:bg-blue-800 text-branco-puro font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
         </button>
 
         <p-splitButton
@@ -50,9 +64,17 @@
       </div>
     </div>
 
-    <!-- ===== NAVEGAÇÃO DAS ABAS ===== -->
+    <!-- Read-only banner for finalized appointments -->
+    @if (!isAberto()) {
+      <div class="mb-4 flex items-center gap-3 bg-azul-prisma/10 border border-azul-prisma/30 rounded-lg px-4 py-3 text-azul-prisma">
+        <i class="pi pi-lock text-lg"></i>
+        <span class="font-semibold">Atendimento finalizado — somente leitura.</span>
+      </div>
+    }
 
-    <!-- Mobile / Tablet pequeno: select nativo -->
+    <!-- ===== TAB NAVIGATION ===== -->
+
+    <!-- Mobile / small tablet: native select -->
     <div class="block md:hidden mb-4">
       <select
         class="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base py-3 px-4 text-cinza-chumbo font-medium focus:border-verde-teal outline-none cursor-pointer"
@@ -65,7 +87,7 @@
       </select>
     </div>
 
-    <!-- Desktop (md+): barra de abas horizontal -->
+    <!-- Desktop (md+): horizontal tab bar -->
     <div class="hidden md:flex border-b-2 border-cinza-contorno mb-6">
       @for (tab of tabs; track tab.index) {
         <button
@@ -83,13 +105,13 @@
       }
     </div>
 
-    <!-- ===== CONTEÚDO DAS ABAS ===== -->
+    <!-- ===== TAB CONTENT ===== -->
 
-    <!-- TAB 1: Dados Gerais -->
+    <!-- TAB 1: General data -->
     @if (activeTabIndex() === 0) {
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
 
-        <!-- Data de Emissão -->
+        <!-- Issue date -->
         <div class="flex flex-col gap-1">
           <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Data de Emissão</label>
           <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base md:text-lg py-3 px-4 text-cinza-medio font-mono select-none min-h-[52px] flex items-center">
@@ -97,7 +119,7 @@
           </div>
         </div>
 
-        <!-- Status -->
+        <!-- Status (read-only) -->
         <div class="flex flex-col gap-1">
           <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Status</label>
           <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg py-3 px-4 flex items-center min-h-[52px]">
@@ -107,7 +129,7 @@
           </div>
         </div>
 
-        <!-- Data da Consulta -->
+        <!-- Appointment date -->
         <div class="flex flex-col gap-1" [formGroup]="form">
           <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Data da Consulta *</label>
           <p-datepicker
@@ -120,7 +142,7 @@
           </p-datepicker>
         </div>
 
-        <!-- Cliente -->
+        <!-- Client -->
         <div class="flex flex-col gap-1 sm:col-span-2">
           <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Cliente *</label>
           <div class="flex w-full h-[52px]">
@@ -135,13 +157,14 @@
               type="button"
               pButton
               icon="pi pi-search"
+              [disabled]="!isAberto()"
               (click)="openClientSearch()"
-              class="bg-azul-prisma px-5 text-branco-puro rounded-r-lg border-2 border-azul-prisma hover:bg-blue-800 transition-all cursor-pointer flex-none">
+              class="bg-azul-prisma px-5 text-branco-puro rounded-r-lg border-2 border-azul-prisma hover:bg-blue-800 transition-all cursor-pointer flex-none disabled:opacity-50 disabled:cursor-not-allowed">
             </button>
           </div>
         </div>
 
-        <!-- Clínica (somente após clínica ser definida) -->
+        <!-- Clinic (shown only after a clinic is set) -->
         @if (clinicaId()) {
           <div class="flex flex-col gap-1">
             <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Clínica</label>
@@ -154,11 +177,11 @@
       </div>
     }
 
-    <!-- TAB 2: Pesquisa de Procedimentos -->
+    <!-- TAB 2: Procedure search -->
     @if (activeTabIndex() === 1) {
       <div>
 
-        <!-- Filtros -->
+        <!-- Filters -->
         <div class="bg-fundo-offwhite rounded-xl border border-cinza-contorno p-4 md:p-6 mb-6">
           <h3 class="text-azul-prisma font-bold text-lg md:text-xl mb-4 flex items-center gap-2">
             <i class="pi pi-filter"></i>
@@ -167,7 +190,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
-            <!-- Clínica (somente se ainda não há clínica definida) -->
+            <!-- Clinic (hidden once a clinic is already set) -->
             @if (!clinicaId()) {
               <div class="flex flex-col gap-1 sm:col-span-2 md:col-span-1">
                 <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Nome da Clínica</label>
@@ -181,7 +204,7 @@
               </div>
             }
 
-            <!-- Procedimento -->
+            <!-- Procedure -->
             <div class="flex flex-col gap-1">
               <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Nome do Procedimento</label>
               <input
@@ -193,7 +216,7 @@
                 class="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base md:text-lg py-3 px-4 focus:border-verde-teal outline-none transition-all" />
             </div>
 
-            <!-- Médico -->
+            <!-- Doctor -->
             <div class="flex flex-col gap-1">
               <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Nome do Médico</label>
               <input
@@ -227,7 +250,7 @@
           </div>
         </div>
 
-        <!-- Resultados -->
+        <!-- Results -->
         <p-table
           [value]="procedureResults()"
           [loading]="procedureSearchLoading()"
@@ -256,11 +279,11 @@
               <td class="p-3 md:p-4 text-center">
                 <button
                   type="button"
-                  pButton
-                  icon="pi pi-plus"
+                  [disabled]="!isAberto()"
                   (click)="addProcedure(proc)"
                   pTooltip="Adicionar ao atendimento"
-                  class="p-button-rounded p-button-success shadow-sm">
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-verde-teal/10 text-verde-teal border-2 border-verde-teal/30 hover:bg-verde-teal hover:text-branco-puro hover:border-verde-teal active:scale-90 active:bg-teal-700 transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+                  <i class="pi pi-plus-circle text-lg"></i>
                 </button>
               </td>
             </tr>
@@ -281,7 +304,7 @@
       </div>
     }
 
-    <!-- TAB 3: Itens Selecionados -->
+    <!-- TAB 3: Selected items -->
     @if (activeTabIndex() === 2) {
       <div>
         @if (!hasItems()) {
@@ -300,7 +323,9 @@
               <tr class="bg-fundo-offwhite">
                 <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
                 <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
-                <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Excluir</th>
+                @if (isAberto()) {
+                  <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Excluir</th>
+                }
               </tr>
             </ng-template>
 
@@ -311,15 +336,17 @@
                   <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ item.nomeMedico || '---' }}</div>
                 </td>
                 <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ item.nomeMedico || '---' }}</td>
-                <td class="p-3 md:p-4 text-center">
-                  <button
-                    type="button"
-                    (click)="removeProcedure(i)"
-                    pTooltip="Remover procedimento"
-                    class="text-vermelho-alerta hover:bg-vermelho-alerta/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
-                    <i class="pi pi-trash text-lg font-bold"></i>
-                  </button>
-                </td>
+                @if (isAberto()) {
+                  <td class="p-3 md:p-4 text-center">
+                    <button
+                      type="button"
+                      (click)="removeProcedure(i)"
+                      pTooltip="Remover procedimento"
+                      class="text-vermelho-alerta hover:bg-vermelho-alerta/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
+                      <i class="pi pi-trash text-lg font-bold"></i>
+                    </button>
+                  </td>
+                }
               </tr>
             </ng-template>
           </p-table>
@@ -333,89 +360,148 @@
       </div>
     }
 
-    <!-- TAB 4: Financeiro -->
+    <!-- TAB 4: Financial -->
     @if (activeTabIndex() === 3) {
-      <div [formGroup]="form">
+      <div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-
-          <!-- Tipo de Pagamento -->
-          <div class="flex flex-col gap-1">
-            <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Tipo de Pagamento *</label>
-            <p-dropdown
-              formControlName="tipoPagamento"
-              [options]="tipoPagamentoOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Selecione..."
-              styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base h-[52px]">
-            </p-dropdown>
-          </div>
-
-          <!-- Parcelas (somente crédito) -->
-          @if (isCreditCard()) {
-            <div class="flex flex-col gap-1">
-              <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Número de Parcelas</label>
-              <p-inputNumber
-                formControlName="parcelas"
-                [min]="1"
-                [showButtons]="true"
-                inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base h-[52px] px-4 font-bold text-center">
-              </p-inputNumber>
-            </div>
-          }
-
-          <!-- Total -->
-          <div class="flex flex-col gap-1">
-            <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Total do Atendimento</label>
-            <div class="w-full border-2 border-verde-teal/40 bg-verde-teal/5 rounded-lg text-xl md:text-2xl font-bold py-3 px-4 text-verde-teal min-h-[52px] flex items-center">
-              {{ totalValor() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+        <!-- Totals -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div class="bg-fundo-offwhite border border-cinza-contorno rounded-xl p-4">
+            <div class="text-cinza-medio text-sm font-medium mb-1">Total em Dinheiro</div>
+            <div class="text-verde-teal text-2xl font-bold">
+              {{ totalDinheiro() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
             </div>
           </div>
-
+          <div class="bg-fundo-offwhite border border-cinza-contorno rounded-xl p-4">
+            <div class="text-cinza-medio text-sm font-medium mb-1">Total em Cartão</div>
+            <div class="text-azul-prisma text-2xl font-bold">
+              {{ totalCartao() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            </div>
+          </div>
         </div>
 
-        <!-- Resumo de itens -->
-        @if (hasItems()) {
-          <div class="mt-6 md:mt-8 border-t border-cinza-contorno pt-5 md:pt-6">
-            <h3 class="text-azul-prisma font-bold text-lg md:text-xl mb-4">Resumo dos Itens</h3>
-            <p-table
-              [value]="selectedItems()"
-              responsiveLayout="scroll"
-              styleClass="p-datatable-lg border border-cinza-contorno rounded-lg overflow-hidden">
+        <!-- Payment add form -->
+        @if (isAberto()) {
+          @if (atendimentoId()) {
+            <div class="bg-fundo-offwhite rounded-xl border border-cinza-contorno p-4 md:p-6 mb-6" [formGroup]="pagamentoForm">
+              <h3 class="text-azul-prisma font-bold text-lg mb-4 flex items-center gap-2">
+                <i class="pi pi-plus-circle"></i>
+                Adicionar Pagamento
+              </h3>
 
-              <ng-template pTemplate="header">
-                <tr class="bg-fundo-offwhite">
-                  <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
-                  <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
-                  <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right">Valor</th>
-                </tr>
-              </ng-template>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
 
-              <ng-template pTemplate="body" let-item>
-                <tr class="border-b border-cinza-contorno">
-                  <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">
-                    {{ item.nomeMedicalProcedure }}
-                    <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ item.nomeMedico || '---' }}</div>
-                  </td>
-                  <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ item.nomeMedico || '---' }}</td>
-                  <td class="p-3 md:p-4 text-base font-bold text-right" [ngClass]="isCartao() ? 'text-azul-prisma' : 'text-cinza-chumbo'">
-                    {{ (isCartao() ? item.priceCard : item.price) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
-                  </td>
-                </tr>
-              </ng-template>
+                <!-- Payment type -->
+                <div class="flex flex-col gap-1">
+                  <label class="text-cinza-chumbo font-bold text-sm ml-1">Tipo de Pagamento *</label>
+                  <p-dropdown
+                    formControlName="tipoPagamento"
+                    [options]="tipoPagamentoOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Selecione..."
+                    styleClass="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base h-[52px]">
+                  </p-dropdown>
+                </div>
 
-              <ng-template pTemplate="footer">
-                <tr class="bg-fundo-offwhite border-t-2 border-cinza-contorno">
-                  <td colspan="2" class="p-3 md:p-4 text-base font-bold text-right text-cinza-chumbo">Total:</td>
-                  <td class="p-3 md:p-4 text-lg md:text-xl font-bold text-right text-verde-teal">
-                    {{ totalValor() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
+                <!-- Amount -->
+                <div class="flex flex-col gap-1">
+                  <label class="text-cinza-chumbo font-bold text-sm ml-1">Valor *</label>
+                  <p-inputNumber
+                    formControlName="valor"
+                    mode="currency"
+                    currency="BRL"
+                    locale="pt-BR"
+                    [min]="0.01"
+                    placeholder="0,00"
+                    inputStyleClass="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base h-[52px] px-4">
+                  </p-inputNumber>
+                </div>
+
+                <!-- Installments (credit card only) -->
+                @if (isCreditCardPagamento()) {
+                  <div class="flex flex-col gap-1">
+                    <label class="text-cinza-chumbo font-bold text-sm ml-1">Parcelas</label>
+                    <p-inputNumber
+                      formControlName="parcelas"
+                      [min]="1"
+                      [showButtons]="true"
+                      inputStyleClass="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base h-[52px] px-4 text-center font-bold">
+                    </p-inputNumber>
+                  </div>
+                }
+
+                <!-- Add button -->
+                <div class="flex items-end">
+                  <button
+                    type="button"
+                    pButton
+                    icon="pi pi-plus"
+                    label="Adicionar"
+                    [loading]="loadingPagamento()"
+                    (click)="adicionarPagamento()"
+                    class="w-full justify-center bg-verde-teal hover:bg-teal-700 text-branco-puro font-bold rounded-lg px-6 h-[52px] text-base transition-all cursor-pointer shadow-sm">
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          } @else {
+            <div class="bg-fundo-offwhite rounded-xl border border-cinza-contorno p-6 mb-6 flex flex-col items-center gap-2 text-cinza-medio text-center">
+              <i class="pi pi-info-circle text-2xl"></i>
+              <span>Salve o atendimento para gerenciar os pagamentos.</span>
+            </div>
+          }
         }
+
+        <!-- Payments table -->
+        <p-table
+          [value]="pagamentos()"
+          [loading]="loadingPagamento()"
+          responsiveLayout="scroll"
+          styleClass="p-datatable-lg p-datatable-striped border border-cinza-contorno rounded-lg overflow-hidden">
+
+          <ng-template pTemplate="header">
+            <tr class="bg-fundo-offwhite">
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Tipo de Pagamento</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center">Parcelas</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right">Valor</th>
+              @if (isAberto()) {
+                <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Excluir</th>
+              }
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-pagamento let-i="rowIndex">
+            <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
+              <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">{{ getTipoPagamentoLabel(pagamento.tipoPagamento) }}</td>
+              <td class="p-3 md:p-4 text-base text-center text-cinza-medio">{{ pagamento.parcelas ?? 1 }}</td>
+              <td class="p-3 md:p-4 text-base font-bold text-right text-cinza-chumbo">
+                {{ pagamento.valor | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+              </td>
+              @if (isAberto()) {
+                <td class="p-3 md:p-4 text-center">
+                  <button
+                    type="button"
+                    (click)="removerPagamento(pagamento, i)"
+                    pTooltip="Remover pagamento"
+                    class="text-vermelho-alerta hover:bg-vermelho-alerta/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
+                    <i class="pi pi-trash text-lg font-bold"></i>
+                  </button>
+                </td>
+              }
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td [attr.colspan]="isAberto() ? 4 : 3" class="p-8 text-center text-lg text-cinza-medio italic">
+                Nenhum pagamento adicionado.
+              </td>
+            </tr>
+          </ng-template>
+
+        </p-table>
 
       </div>
     }

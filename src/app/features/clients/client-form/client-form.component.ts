@@ -141,7 +141,7 @@ export class ClientFormComponent implements OnInit {
             cidade: res.localidade, // Maps 'localidade' to 'cidade'
             uf: res.uf
           });
-          // Focus on "Número" as the address was successfully filled
+          // Focus on "Number" field as the address was successfully filled
           setTimeout(() => this.numeroInput.nativeElement.focus(), 100);
         } else {
           // If null (not found or error), clear and focus on logradouro for manual input

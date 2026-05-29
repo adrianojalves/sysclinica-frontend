@@ -1,6 +1,7 @@
 /* Development Environment Configuration */
 export const environment = {
   production: false,
-  // Full URL needed because 'ng serve' runs on port 4200 and Spring on 8080
-  apiUrl: 'http://localhost:8080/api'
+  // Relative path: the browser calls /api/* on the same host:port (4200).
+  // ng serve proxies those requests to localhost:8080 via proxy.conf.json.
+  apiUrl: '/api'
 };

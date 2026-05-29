@@ -1,0 +1,16 @@
+<div class="fixed bottom-6 right-6 z-[9998] flex flex-col gap-3 pointer-events-none">
+  @for (toast of messageService.toasts(); track toast.id) {
+    <div
+      class="flex items-center gap-3 rounded-xl shadow-lg px-4 py-3 min-w-[260px] max-w-sm pointer-events-auto animate-fade-in-up"
+      [ngClass]="colorClasses(toast)">
+      <i [class]="iconClass(toast) + ' text-xl flex-none'"></i>
+      <span class="flex-1 text-sm font-semibold">{{ toast.text }}</span>
+      <button
+        type="button"
+        (click)="dismiss(toast.id)"
+        class="flex-none opacity-70 hover:opacity-100 transition-opacity cursor-pointer bg-transparent border-none text-inherit">
+        <i class="pi pi-times text-sm"></i>
+      </button>
+    </div>
+  }
+</div>

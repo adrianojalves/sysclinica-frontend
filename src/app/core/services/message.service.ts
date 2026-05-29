@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
-import { MessageData, MessageType } from '../models/message.model';
+import { MessageData, MessageType, ToastData, ToastType } from '../models/message.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
   
-  // Signal to hold the current message state globally
   currentMessage = signal<MessageData | null>(null);
+  toasts = signal<ToastData[]>([]);
 
   /* Triggers a standard message (info, success, warning, error) */
   show(type: MessageType, title: string, text: string): void {
@@ -22,6 +22,15 @@ export class MessageService {
     return new Promise((resolve) => {
       this.currentMessage.set({ type: 'question', title, text, resolve });
     });
+  }
+
+  /* Shows a self-dismissing toast notification */
+  toast(type: ToastType, text: string, duration = 3000): void {
+    const id = Date.now();
+    this.toasts.update(list => [...list, { id, type, text }]);
+    setTimeout(() => {
+      this.toasts.update(list => list.filter(t => t.id !== id));
+    }, duration);
   }
 
   /* Closes the modal and resolves the Promise if it's a question */

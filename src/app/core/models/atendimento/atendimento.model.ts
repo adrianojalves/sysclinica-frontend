@@ -27,7 +27,6 @@ export interface AtendimentoRequest {
   dataConsultaExame: string;
   codCliente: number;
   codClinica: number;
-  tipoPagamento: TipoPagamento;
   parcelas: number;
   itens: AtendimentoItemRequest[];
 }
@@ -42,19 +41,43 @@ export interface AtendimentoResponse {
   nomeCliente: string;
   codClinica: number;
   nomeClinica: string;
-  tipoPagamento: TipoPagamento;
   parcelas: number;
   status: StatusAtendimento;
   totalTransferValue: number;
   totalPrice: number;
   totalTransferValueCard: number;
   totalPriceCard: number;
+  valorDesconto: number;
+  valorAcrescimo: number;
 }
 
 export interface AtendimentoFilter {
+  id?: number;
   nomeCliente?: string;
+  clienteId?: number;
   nomeClinica?: string;
+  clinicaId?: number;
   nomeUsuario?: string;
+  usuarioId?: number;
+  status?: StatusAtendimento;
+  dataConsultaExameInicio?: string;
+  dataConsultaExameFim?: string;
+}
+
+export interface AtendimentoPagamentoRequest {
+  tipoPagamento: TipoPagamento;
+  valor: number;
+  parcelas?: number;
+  valorDesconto?: number;
+}
+
+export interface AtendimentoPagamentoResponse {
+  id: number;
+  codAtendimento: number;
+  tipoPagamento: TipoPagamento;
+  valor: number;
+  parcelas?: number;
+  valorDesconto?: number;
 }
 
 export interface AtendimentoItemLocal {

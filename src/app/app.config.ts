@@ -39,9 +39,9 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura,
         options: {
-          // ESSA É A LINHA QUE DESLIGA O FUNDO PRETO AUTOMÁTICO
-          darkModeSelector: false, 
-          // ou darkModeSelector: '.app-dark' (caso o 'false' dê erro de tipagem na sua versão)
+          // This disables the automatic dark background applied by PrimeNG
+          darkModeSelector: false,
+          // or darkModeSelector: '.app-dark' (if 'false' causes a type error in your version)
           
           cssLayer: {
             name: 'primeng',

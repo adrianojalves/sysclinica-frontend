@@ -95,7 +95,7 @@ export class CompanyFormComponent implements OnInit {
             cidade: res.localidade,
             uf: res.uf
           });
-          // Focus on "Número" if CEP found
+          // Focus on "Number" field if CEP was found
           setTimeout(() => this.numInput.nativeElement.focus(), 100);
         } else {
           // Focus on "Logradouro" for manual input if not found
