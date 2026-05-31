@@ -207,9 +207,9 @@
             <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
               <td class="p-4 text-lg font-medium">{{ item.doctorName }}</td>
               <td class="p-4 text-lg">{{ item.procedureName }}</td>
-              <td class="p-4 text-center text-lg text-verde-confirmacao font-bold">{{ item.transferValue | currency:'BRL'}}</td>
-              <td class="p-4 text-center text-lg font-bold">{{ item.price | currency:'BRL'}}</td>
-              <td class="p-4 text-center text-lg font-bold">{{ item.priceCard | currency:'BRL'}}</td>
+              <td class="p-4 text-center text-lg text-verde-confirmacao font-bold">{{ item.transferValue | brlCurrency}}</td>
+              <td class="p-4 text-center text-lg font-bold">{{ item.price | brlCurrency}}</td>
+              <td class="p-4 text-center text-lg font-bold">{{ item.priceCard | brlCurrency}}</td>
               <td class="p-4 text-center flex gap-3 justify-center">
                 <button type="button" (click)="editProc(item)" 
                         class="text-azul-prisma hover:bg-azul-prisma/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">

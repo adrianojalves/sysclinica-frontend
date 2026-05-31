@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthResponse, LoginRequest } from '../models/auth.model';
 import { tap } from 'rxjs';
@@ -18,6 +18,11 @@ export class AuthService {
   
   // Signal now holds an array of strings
   userRoles = signal<string[]>(this.getStoredRoles());
+
+  /** Reactive computed signals for role checks — use these in templates instead of hasAnyRole() */
+  readonly isAdmin = computed(() => this.userRoles().includes('ROLE_ADMIN'));
+  readonly isCadastros = computed(() => this.userRoles().includes('ROLE_CADASTROS'));
+  readonly isAtendimento = computed(() => this.userRoles().includes('ROLE_ATENDIMENTO'));
 
   login(credentials: LoginRequest) {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials, {

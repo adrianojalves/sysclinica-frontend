@@ -61,6 +61,19 @@
           (onClick)="print('guia')"
           styleClass="p-button-outlined w-full sm:w-auto">
         </p-splitButton>
+
+        @if (isAdmin()) {
+          <button
+            type="button"
+            pButton
+            icon="pi pi-trash"
+            label="Excluir"
+            [loading]="loading()"
+            [disabled]="!isAberto() || !atendimentoId()"
+            (click)="excluir()"
+            class="justify-center bg-vermelho-alerta hover:bg-red-700 text-branco-puro font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+          </button>
+        }
       </div>
     </div>
 
@@ -159,8 +172,23 @@
               icon="pi pi-search"
               [disabled]="!isAberto()"
               (click)="openClientSearch()"
-              class="bg-azul-prisma px-5 text-branco-puro rounded-r-lg border-2 border-azul-prisma hover:bg-blue-800 transition-all cursor-pointer flex-none disabled:opacity-50 disabled:cursor-not-allowed">
+              pTooltip="Pesquisar cliente"
+              tooltipPosition="top"
+              class="bg-azul-prisma px-5 text-branco-puro border-2 border-r-0 border-azul-prisma hover:bg-blue-800 transition-all cursor-pointer flex-none disabled:opacity-50 disabled:cursor-not-allowed"
+              [class.rounded-r-lg]="!isAberto()"
+              [class.border-r-0]="isAberto()">
             </button>
+            @if (isAberto()) {
+              <button
+                type="button"
+                pButton
+                icon="pi pi-plus"
+                (click)="openClientRegister()"
+                pTooltip="Cadastrar novo cliente"
+                tooltipPosition="top"
+                class="bg-verde-teal px-5 text-branco-puro rounded-r-lg border-2 border-verde-teal hover:bg-teal-700 transition-all cursor-pointer flex-none">
+              </button>
+            }
           </div>
         </div>
 
@@ -264,6 +292,8 @@
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Clínica</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Dinheiro</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Cartão</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Ação</th>
             </tr>
           </ng-template>
@@ -276,6 +306,8 @@
                 <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ proc.doctorName || '---' }}</div>
               </td>
               <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ proc.doctorName || '---' }}</td>
+              <td class="p-3 md:p-4 text-base font-semibold text-verde-teal text-right hidden md:table-cell">{{ proc.price | brlCurrency }}</td>
+              <td class="p-3 md:p-4 text-base font-semibold text-azul-prisma text-right hidden md:table-cell">{{ proc.priceCard | brlCurrency }}</td>
               <td class="p-3 md:p-4 text-center">
                 <button
                   type="button"
@@ -291,7 +323,7 @@
 
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="4" class="p-8 text-center text-lg text-cinza-medio italic">
+              <td colspan="6" class="p-8 text-center text-lg text-cinza-medio italic">
                 @if (procedureSearched()) {
                   Nenhum procedimento encontrado.
                 } @else {
@@ -323,6 +355,8 @@
               <tr class="bg-fundo-offwhite">
                 <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
                 <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
+                <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Dinheiro</th>
+                <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Cartão</th>
                 @if (isAberto()) {
                   <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Excluir</th>
                 }
@@ -336,6 +370,8 @@
                   <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ item.nomeMedico || '---' }}</div>
                 </td>
                 <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ item.nomeMedico || '---' }}</td>
+                <td class="p-3 md:p-4 text-base font-semibold text-verde-teal text-right hidden md:table-cell">{{ item.price | brlCurrency }}</td>
+                <td class="p-3 md:p-4 text-base font-semibold text-azul-prisma text-right hidden md:table-cell">{{ item.priceCard | brlCurrency }}</td>
                 @if (isAberto()) {
                   <td class="p-3 md:p-4 text-center">
                     <button
@@ -351,9 +387,18 @@
             </ng-template>
           </p-table>
 
-          <div class="mt-4 flex justify-end">
-            <div class="bg-fundo-offwhite border border-cinza-contorno rounded-lg px-5 py-3 text-cinza-medio text-base">
-              Total de itens: <strong class="text-azul-prisma">{{ selectedItems().length }}</strong>
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-fundo-offwhite border border-cinza-contorno rounded-lg px-5 py-3 flex items-center justify-between sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-cinza-medio text-sm font-medium">Total de itens</span>
+              <strong class="text-azul-prisma text-lg">{{ selectedItems().length }}</strong>
+            </div>
+            <div class="bg-fundo-offwhite border border-cinza-contorno rounded-lg px-5 py-3 flex items-center justify-between sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-cinza-medio text-sm font-medium">Total Dinheiro</span>
+              <strong class="text-verde-teal text-lg">{{ totalDinheiro() | brlCurrency }}</strong>
+            </div>
+            <div class="bg-fundo-offwhite border border-cinza-contorno rounded-lg px-5 py-3 flex items-center justify-between sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-cinza-medio text-sm font-medium">Total Cartão</span>
+              <strong class="text-azul-prisma text-lg">{{ totalCartao() | brlCurrency }}</strong>
             </div>
           </div>
         }
@@ -369,13 +414,13 @@
           <div class="bg-fundo-offwhite border border-cinza-contorno rounded-xl p-4">
             <div class="text-cinza-medio text-sm font-medium mb-1">Total em Dinheiro</div>
             <div class="text-verde-teal text-2xl font-bold">
-              {{ totalDinheiro() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+              {{ totalDinheiro() | brlCurrency }}
             </div>
           </div>
           <div class="bg-fundo-offwhite border border-cinza-contorno rounded-xl p-4">
             <div class="text-cinza-medio text-sm font-medium mb-1">Total em Cartão</div>
             <div class="text-azul-prisma text-2xl font-bold">
-              {{ totalCartao() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+              {{ totalCartao() | brlCurrency }}
             </div>
           </div>
         </div>
@@ -477,7 +522,7 @@
               <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">{{ getTipoPagamentoLabel(pagamento.tipoPagamento) }}</td>
               <td class="p-3 md:p-4 text-base text-center text-cinza-medio">{{ pagamento.parcelas ?? 1 }}</td>
               <td class="p-3 md:p-4 text-base font-bold text-right text-cinza-chumbo">
-                {{ pagamento.valor | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                {{ pagamento.valor | brlCurrency }}
               </td>
               @if (isAberto()) {
                 <td class="p-3 md:p-4 text-center">

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { BrlCurrencyPipe } from '../pipes/brl-currency.pipe';
 
 // PrimeNG Modules
 import { ButtonModule } from 'primeng/button';
@@ -21,6 +22,7 @@ import { TabViewModule } from 'primeng/tabview';
  * the component decorator clean and maintainable.
  */
 export const SHARED_UI_IMPORTS = [
+  BrlCurrencyPipe,
   ButtonModule,
   CommonModule,
   DropdownModule,

@@ -4,11 +4,14 @@ import { DatePipe } from '@angular/common';
 import { SHARED_UI_IMPORTS } from '../../../shared/imports/shared-ui.imports';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { DialogService } from 'primeng/dynamicdialog';
 import { AtendimentoService } from '../../../core/services/atendimento/atendimento.service';
 import { ClinicProcedureService } from '../../../core/services/medical/clinic-procedure.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SearchDialogService } from '../../../core/services/common/search-dialog.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { ClientSearchModalComponent } from '../../../shared/components/client-search-modal/client-search-modal.component';
+import { ClientRegisterModalComponent } from '../../../shared/components/client-register-modal/client-register-modal.component';
 import { AtendimentoSearchModalComponent } from '../atendimento-search-modal/atendimento-search-modal.component';
 import {
   AtendimentoResponse,
@@ -36,7 +39,11 @@ export class AtendimentoFormComponent implements OnInit {
   private readonly clinicProcService = inject(ClinicProcedureService);
   private readonly messageService = inject(MessageService);
   private readonly searchService = inject(SearchDialogService);
+  private readonly dialogService = inject(DialogService);
+  private readonly authService = inject(AuthService);
   private readonly datePipe = inject(DatePipe);
+
+  public readonly isAdmin = this.authService.isAdmin;
 
   // --- State ---
   public form!: FormGroup;
@@ -233,6 +240,25 @@ export class AtendimentoFormComponent implements OnInit {
           this.clienteNome.set(client.name);
         }
       });
+  }
+
+  public openClientRegister(): void {
+    const ref = this.dialogService.open(ClientRegisterModalComponent, {
+      header: 'Cadastrar Novo Cliente',
+      width: '90%',
+      style: { 'max-width': '860px' },
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+      dismissableMask: false,
+      closable: true
+    });
+
+    ref.onClose.subscribe((client: Client | null) => {
+      if (client) {
+        this.clienteId.set(client.id);
+        this.clienteNome.set(client.name);
+      }
+    });
   }
 
   // --- Tab 2: Pesquisa de procedimentos ---
@@ -443,6 +469,30 @@ export class AtendimentoFormComponent implements OnInit {
         this.form.disable();
         this.pagamentoForm.disable();
         this.messageService.show('success', 'Sucesso', 'Atendimento finalizado com sucesso!');
+      }
+    });
+  }
+
+  // --- Excluir ---
+
+  public async excluir(): Promise<void> {
+    if (!this.atendimentoId()) return;
+
+    if (!this.isAberto()) {
+      this.messageService.show('warning', 'Atenção', 'Não é possível excluir um atendimento com status ' + this.getStatusLabel() + '.');
+      return;
+    }
+
+    const confirmed = await this.messageService.question(
+      'Excluir Atendimento',
+      `Deseja realmente excluir o atendimento #${this.atendimentoId()}? Esta ação não pode ser desfeita.`
+    );
+    if (!confirmed) return;
+
+    this.atendimentoService.delete(this.atendimentoId()!).subscribe({
+      next: () => {
+        this.messageService.show('success', 'Sucesso', `Atendimento #${this.atendimentoId()} excluído com sucesso.`);
+        this.resetForm();
       }
     });
   }
