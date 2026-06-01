@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { SHARED_UI_IMPORTS } from '../../../shared/imports/shared-ui.imports';
 import { DatePickerModule } from 'primeng/datepicker';
-import { SplitButtonModule } from 'primeng/splitbutton';
+import { MenuModule } from 'primeng/menu';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AtendimentoService } from '../../../core/services/atendimento/atendimento.service';
 import { ClinicProcedureService } from '../../../core/services/medical/clinic-procedure.service';
@@ -28,7 +28,7 @@ import { MenuItem } from 'primeng/api';
 @Component({
   selector: 'app-atendimento-form',
   standalone: true,
-  imports: [...SHARED_UI_IMPORTS, DatePickerModule, SplitButtonModule],
+  imports: [...SHARED_UI_IMPORTS, DatePickerModule, MenuModule],
   providers: [DatePipe],
   templateUrl: './atendimento-form.component.html',
   styleUrl: './atendimento-form.component.scss'
@@ -107,6 +107,7 @@ export class AtendimentoFormComponent implements OnInit {
 
   public loading = this.atendimentoService.loading;
   public loadingPagamento = this.atendimentoService.loadingPagamento;
+  public loadingPrint = signal<boolean>(false);
 
   // --- Computeds ---
 
@@ -500,8 +501,41 @@ export class AtendimentoFormComponent implements OnInit {
   // --- Print ---
 
   public print(tipo: 'guia' | 'recibo'): void {
-    const labels = { guia: 'Guia de Encaminhamento', recibo: 'Recibo de Pagamento' };
-    console.log(`[Imprimir] ${labels[tipo]} - Atendimento ID: ${this.atendimentoId() ?? 'Novo'}`);
+    const id = this.atendimentoId();
+    if (!id) {
+      this.messageService.show('warning', 'Atenção', 'Salve o atendimento antes de imprimir.');
+      return;
+    }
+
+    this.loadingPrint.set(true);
+    const request$ = tipo === 'recibo'
+      ? this.atendimentoService.getRecibo(id)
+      : this.atendimentoService.getEncaminhamento(id);
+
+    request$.subscribe({
+      next: (response) => {
+        const blob = response.body!;
+        const filename = this.extractFilename(response.headers.get('content-disposition'), tipo, id);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.download = filename;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        this.loadingPrint.set(false);
+      },
+      error: () => this.loadingPrint.set(false)
+    });
+  }
+
+  private extractFilename(disposition: string | null, tipo: 'guia' | 'recibo', id: number): string {
+    if (disposition) {
+      const match = disposition.match(/filename=([^;]+)/i);
+      if (match) return match[1].trim();
+    }
+    return tipo === 'recibo' ? `recibo-${id}.pdf` : `encaminhamento-${id}.pdf`;
   }
 
   // --- Helpers ---

@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { BaseCrudService } from '../base-crud.service';
@@ -84,6 +84,20 @@ export class AtendimentoService extends BaseCrudService<AtendimentoResponse, num
       catchError(this.handleHttpError),
       finalize(() => this.loadingPagamento.set(false))
     );
+  }
+
+  getRecibo(atendimentoId: number): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.apiUrl}/${atendimentoId}/recibo`, {
+      responseType: 'blob',
+      observe: 'response'
+    }).pipe(catchError(this.handleHttpError));
+  }
+
+  getEncaminhamento(atendimentoId: number): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.apiUrl}/${atendimentoId}/encaminhamento`, {
+      responseType: 'blob',
+      observe: 'response'
+    }).pipe(catchError(this.handleHttpError));
   }
 
   finalizar(atendimentoId: number): Observable<AtendimentoResponse> {
