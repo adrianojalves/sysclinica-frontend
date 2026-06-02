@@ -135,41 +135,55 @@
 
     <!-- TAB 1: General data -->
     @if (activeTabIndex() === 0) {
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" [formGroup]="form">
 
         <!-- Issue date -->
         <div class="flex flex-col gap-1">
           <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Data de Emissão</label>
-          <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base md:text-lg py-3 px-4 text-cinza-medio font-mono select-none min-h-[52px] flex items-center">
+          <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base py-3 px-4 text-cinza-medio font-mono select-none min-h-[52px] flex items-center">
             {{ formatDataEmissao() }}
           </div>
         </div>
 
-        <!-- Status (read-only) -->
+        <!-- Status (read-only, compact) -->
         <div class="flex flex-col gap-1">
           <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Status</label>
-          <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg py-3 px-4 flex items-center min-h-[52px]">
-            <span class="px-3 py-1 rounded-full text-sm font-bold" [ngClass]="getStatusClass()">
+          <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg py-3 px-3 flex items-center min-h-[52px]">
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold" [ngClass]="getStatusClass()">
               {{ getStatusLabel() }}
             </span>
           </div>
         </div>
 
         <!-- Appointment date -->
-        <div class="flex flex-col gap-1" [formGroup]="form">
-          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Data da Consulta *</label>
+        <div class="flex flex-col gap-1">
+          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Data da Consulta</label>
           <p-datepicker
             formControlName="dataConsulta"
             dateFormat="dd/mm/yy"
             [showIcon]="true"
             appendTo="body"
             placeholder="dd/mm/aaaa"
-            inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base md:text-lg h-[52px] px-4">
+            inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base h-[52px] px-4">
           </p-datepicker>
         </div>
 
+        <!-- Turno -->
+        <div class="flex flex-col gap-1">
+          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Turno</label>
+          <p-dropdown
+            formControlName="turno"
+            [options]="turnoOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione..."
+            [showClear]="true"
+            styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base h-[52px]">
+          </p-dropdown>
+        </div>
+
         <!-- Client -->
-        <div class="flex flex-col gap-1 sm:col-span-2">
+        <div class="flex flex-col gap-1 sm:col-span-2 lg:col-span-3">
           <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Cliente *</label>
           <div class="flex w-full h-[52px]">
             <input
@@ -209,11 +223,23 @@
         @if (clinicaId()) {
           <div class="flex flex-col gap-1">
             <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Clínica</label>
-            <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base md:text-lg py-3 px-4 text-cinza-chumbo font-medium min-h-[52px] flex items-center">
+            <div class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base py-3 px-4 text-cinza-chumbo font-medium min-h-[52px] flex items-center">
               {{ clinicaNome() || '---' }}
             </div>
           </div>
         }
+
+        <!-- Observation -->
+        <div class="flex flex-col gap-1 col-span-full">
+          <label class="text-cinza-chumbo font-bold text-sm md:text-base ml-1">Observação</label>
+          <textarea
+            pInputTextarea
+            formControlName="observacao"
+            rows="3"
+            placeholder="Observações sobre o atendimento..."
+            class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-base px-4 py-3 outline-none transition-all resize-none focus:border-verde-teal">
+          </textarea>
+        </div>
 
       </div>
     }

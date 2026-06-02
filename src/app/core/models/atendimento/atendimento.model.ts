@@ -1,5 +1,6 @@
 export type TipoPagamento = 'DINHEIRO' | 'CARTAO_CREDITO' | 'CARTAO_DEBITO' | 'PIX';
 export type StatusAtendimento = 'ABERTO' | 'ENCAMINHADO';
+export type Turno = 'MATUTINO' | 'VESPERTINO' | 'NOTURNO';
 
 export interface AtendimentoItemRequest {
   codMedico?: number;
@@ -24,7 +25,9 @@ export interface AtendimentoItemResponse {
 }
 
 export interface AtendimentoRequest {
-  dataConsultaExame: string;
+  dataConsultaExame?: string;
+  turno?: Turno;
+  observacao?: string;
   codCliente: number;
   codClinica: number;
   parcelas: number;
@@ -36,7 +39,9 @@ export interface AtendimentoResponse {
   dataEmissao: string;
   codUsuario: number;
   nomeUsuario: string;
-  dataConsultaExame: string;
+  dataConsultaExame?: string;
+  turno?: Turno;
+  observacao?: string;
   codCliente: number;
   nomeCliente: string;
   codClinica: number;

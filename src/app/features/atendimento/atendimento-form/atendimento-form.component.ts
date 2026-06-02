@@ -19,7 +19,8 @@ import {
   AtendimentoItemLocal,
   AtendimentoPagamentoResponse,
   AtendimentoPagamentoRequest,
-  TipoPagamento
+  TipoPagamento,
+  Turno
 } from '../../../core/models/atendimento/atendimento.model';
 import { Client } from '../../../core/models/client/client.model';
 import { ClinicDoctorProcedure, ClinicDoctorProcedureFilter } from '../../../core/models/medical/clinic-procedure.model';
@@ -92,6 +93,12 @@ export class AtendimentoFormComponent implements OnInit {
     { label: 'PIX',               value: 'PIX'             }
   ];
 
+  public readonly turnoOptions = [
+    { label: 'Matutino',   value: 'MATUTINO'   },
+    { label: 'Vespertino', value: 'VESPERTINO' },
+    { label: 'Noturno',    value: 'NOTURNO'    }
+  ];
+
   public printItems: MenuItem[] = [
     {
       label: 'Guia de Encaminhamento',
@@ -131,7 +138,9 @@ export class AtendimentoFormComponent implements OnInit {
 
   private initForm(): void {
     this.form = this.fb.group({
-      dataConsulta: [null, Validators.required]
+      dataConsulta: [null],
+      turno: [null],
+      observacao: [null]
     });
 
     this.pagamentoForm = this.fb.group({
@@ -198,7 +207,11 @@ export class AtendimentoFormComponent implements OnInit {
       : null;
 
     this.form.enable();
-    this.form.patchValue({ dataConsulta: dateObj });
+    this.form.patchValue({
+      dataConsulta: dateObj,
+      turno: atendimento.turno ?? null,
+      observacao: atendimento.observacao ?? null
+    });
 
     if (atendimento.status !== 'ABERTO') {
       this.form.disable();
@@ -402,11 +415,6 @@ export class AtendimentoFormComponent implements OnInit {
       return;
     }
 
-    if (!this.form.get('dataConsulta')?.value) {
-      this.messageService.show('warning', 'Validação', 'Informe a data da consulta.');
-      return;
-    }
-
     if (!this.selectedItems().length) {
       this.messageService.show('warning', 'Validação', 'Adicione ao menos um procedimento na aba Procedimentos.');
       return;
@@ -417,11 +425,18 @@ export class AtendimentoFormComponent implements OnInit {
       return;
     }
 
-    const dataConsulta: Date = this.form.get('dataConsulta')!.value;
-    const dataFormatada = this.datePipe.transform(dataConsulta, 'yyyy-MM-dd') || '';
+    const dataConsulta: Date | null = this.form.get('dataConsulta')!.value;
+    const dataFormatada = dataConsulta
+      ? (this.datePipe.transform(dataConsulta, 'yyyy-MM-dd') ?? undefined)
+      : undefined;
+
+    const turno: Turno | null = this.form.get('turno')!.value;
+    const observacao: string | null = this.form.get('observacao')!.value;
 
     const request: AtendimentoRequest = {
       dataConsultaExame: dataFormatada,
+      turno: turno ?? undefined,
+      observacao: observacao ?? undefined,
       codCliente: this.clienteId()!,
       codClinica: this.clinicaId()!,
       parcelas: this.parcelas(),
