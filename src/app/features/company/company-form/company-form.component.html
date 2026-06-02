@@ -19,14 +19,15 @@
           }
         </div>
         
-        <p-fileUpload 
-          mode="basic" 
-          chooseLabel="Alterar Logo" 
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="Alterar Logo"
           chooseIcon="pi pi-camera"
-          [auto]="true" 
-          accept="image/*" 
+          [auto]="true"
+          [customUpload]="true"
+          accept="image/*"
           [disabled]="!company()?.id"
-          (onUpload)="onLogoUpload($event)"
+          (uploadHandler)="onLogoUpload($event)"
           styleClass="p-button-outlined p-button-sm w-full">
         </p-fileUpload>
       </div>
