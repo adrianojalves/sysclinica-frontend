@@ -1,7 +1,9 @@
 // Enum matching the Backend ProcedureType
 export enum ProcedureType {
+  CONSULTA = 'CONSULTA',
   EXAME = 'EXAME',
-  CONSULTA = 'CONSULTA'
+  CIRURGIA = 'CIRURGIA',
+  MEDICACAO = 'MEDICACAO'
 }
 
 // Interface representing the ProcedureResponseDTO

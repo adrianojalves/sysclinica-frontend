@@ -16,6 +16,7 @@ import { ClinicFormComponent } from './features/medical/clinics/clinic-form/clin
 import { ClientListComponent } from './features/clients/client-list/client-list.component';
 import { ClientFormComponent } from './features/clients/client-form/client-form.component';
 import { AtendimentoFormComponent } from './features/atendimento/atendimento-form/atendimento-form.component';
+import { ImportarTabelaComponent } from './features/administracao/importar-tabela/importar-tabela.component';
 
 export const routes: Routes = [
   {
@@ -134,6 +135,12 @@ export const routes: Routes = [
         component: AtendimentoFormComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS', 'ROLE_ATENDIMENTO'] }
+      },
+      {
+        path: 'administracao',
+        component: ImportarTabelaComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN'] }
       },
     ],
   },

@@ -38,7 +38,7 @@ export class ClientListComponent implements OnInit {
     this.clientService.findFiltered(page, size, filter)
       .subscribe(response => {
         this.clients.set(response.content);
-        this.totalRecords.set(response.totalElements);
+        this.totalRecords.set(response.page.totalElements);
       });
   }
 }

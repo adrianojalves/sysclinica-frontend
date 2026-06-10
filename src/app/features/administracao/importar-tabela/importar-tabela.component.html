@@ -1,0 +1,108 @@
+<div class="p-6 w-full max-w-3xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-sm border border-cinza-contorno p-8">
+
+    <div class="border-b border-cinza-contorno pb-6 mb-8">
+      <h2 class="text-3xl font-bold text-azul-prisma">Importação de Tabela</h2>
+      <p class="text-cinza-medio text-lg mt-2">Envie um arquivo CSV para importar clínicas, médicos, procedimentos e vínculos.</p>
+    </div>
+
+    <div class="flex flex-col gap-6">
+
+      <div class="bg-fundo-offwhite rounded-xl border-2 border-dashed border-cinza-contorno p-8 flex flex-col items-center gap-4">
+        <i class="pi pi-file-excel text-5xl text-verde-teal"></i>
+        <p class="text-cinza-chumbo font-medium text-center">Selecione o arquivo <span class="font-bold">.csv</span> para importação</p>
+
+        <p-fileUpload
+          mode="basic"
+          chooseLabel="Selecionar Arquivo CSV"
+          chooseIcon="pi pi-upload"
+          accept=".csv"
+          [auto]="false"
+          [customUpload]="true"
+          (uploadHandler)="onArquivoSelecionado($event)"
+          (onSelect)="onArquivoSelecionado($event)"
+          styleClass="w-full">
+        </p-fileUpload>
+
+        @if (arquivoSelecionado()) {
+          <div class="flex items-center gap-3 bg-verde-teal/10 border border-verde-teal/30 rounded-lg px-4 py-3 w-full">
+            <i class="pi pi-check-circle text-verde-teal text-xl"></i>
+            <span class="text-cinza-chumbo font-medium flex-1 truncate">{{ arquivoSelecionado()!.name }}</span>
+            <button type="button" (click)="onLimpar()"
+                    class="text-vermelho-alerta hover:text-red-700 cursor-pointer">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button type="button" (click)="onLimpar()"
+                class="px-6 py-3 rounded-lg font-semibold text-cinza-chumbo border-2 border-cinza-contorno hover:bg-fundo-offwhite cursor-pointer transition-colors">
+          <i class="pi pi-refresh mr-2"></i>Limpar
+        </button>
+        <button type="button" (click)="onEnviar()"
+                [disabled]="!arquivoSelecionado() || adminService.loading()"
+                class="px-8 py-3 rounded-lg font-bold text-branco bg-azul-prisma hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors flex items-center gap-2">
+          @if (adminService.loading()) {
+            <i class="pi pi-spin pi-spinner"></i>
+          } @else {
+            <i class="pi pi-cloud-upload"></i>
+          }
+          Importar
+        </button>
+      </div>
+
+    </div>
+
+    @if (resultado()) {
+      <div class="mt-8 border-t border-cinza-contorno pt-8">
+        <h3 class="text-xl font-bold text-azul-prisma mb-6 flex items-center gap-2">
+          <i class="pi pi-chart-bar"></i>
+          Resultado da Importação
+        </h3>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+          <div class="bg-fundo-offwhite rounded-xl border border-cinza-contorno p-5 flex flex-col items-center gap-1">
+            <span class="text-3xl font-bold text-azul-prisma">{{ resultado()!.totalLinhas }}</span>
+            <span class="text-cinza-medio text-sm font-medium text-center">Total de Linhas</span>
+          </div>
+
+          <div class="bg-verde-teal/10 rounded-xl border border-verde-teal/30 p-5 flex flex-col items-center gap-1">
+            <span class="text-3xl font-bold text-verde-teal">{{ resultado()!.clinicasCriadas }}</span>
+            <span class="text-cinza-medio text-sm font-medium text-center">Clínicas Criadas</span>
+          </div>
+
+          <div class="bg-verde-teal/10 rounded-xl border border-verde-teal/30 p-5 flex flex-col items-center gap-1">
+            <span class="text-3xl font-bold text-verde-teal">{{ resultado()!.medicosCriados }}</span>
+            <span class="text-cinza-medio text-sm font-medium text-center">Médicos Criados</span>
+          </div>
+
+          <div class="bg-verde-teal/10 rounded-xl border border-verde-teal/30 p-5 flex flex-col items-center gap-1">
+            <span class="text-3xl font-bold text-verde-teal">{{ resultado()!.procedimentosCriados }}</span>
+            <span class="text-cinza-medio text-sm font-medium text-center">Procedimentos Criados</span>
+          </div>
+
+          <div class="bg-verde-teal/10 rounded-xl border border-verde-teal/30 p-5 flex flex-col items-center gap-1">
+            <span class="text-3xl font-bold text-verde-teal">{{ resultado()!.vinculosCriados }}</span>
+            <span class="text-cinza-medio text-sm font-medium text-center">Vínculos Criados</span>
+          </div>
+
+          <div class="rounded-xl border p-5 flex flex-col items-center gap-1"
+               [class]="resultado()!.linhasIgnoradas > 0
+                 ? 'bg-vermelho-alerta/10 border-vermelho-alerta/30'
+                 : 'bg-fundo-offwhite border-cinza-contorno'">
+            <span class="text-3xl font-bold"
+                  [class]="resultado()!.linhasIgnoradas > 0 ? 'text-vermelho-alerta' : 'text-cinza-chumbo'">
+              {{ resultado()!.linhasIgnoradas }}
+            </span>
+            <span class="text-cinza-medio text-sm font-medium text-center">Linhas Ignoradas</span>
+          </div>
+
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

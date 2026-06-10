@@ -33,7 +33,7 @@ export class DoctorListComponent implements OnInit {
     this.doctorService.findFiltered(page, size, this.filterName())
       .subscribe(response => {
         this.doctors.set(response.content);
-        this.totalRecords.set(response.totalElements);
+        this.totalRecords.set(response.page.totalElements);
       });
   }
 

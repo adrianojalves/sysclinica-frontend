@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { SHARED_UI_IMPORTS } from '../../../../shared/imports/shared-ui.imports';
 import { MedicalProcedureService } from '../../../../core/services/medical/procedure.service';
 import { MedicalProcedure, ProcedureType } from '../../../../core/models/medical/procedure.model';
+import { PROCEDURE_TYPE_FILTER_OPTIONS } from '../../../../shared/constants/ui.constants';
 
 @Component({
   selector: 'app-procedure-list',
@@ -21,11 +22,7 @@ export class ProcedureListComponent implements OnInit {
   public filterName = signal<string>('');
   public filterType = signal<ProcedureType | undefined>(undefined);
   
-  public typeOptions = [
-    { label: 'Todos', value: undefined },
-    { label: 'Exame', value: ProcedureType.EXAME },
-    { label: 'Consulta', value: ProcedureType.CONSULTA }
-  ];
+  public readonly typeOptions = PROCEDURE_TYPE_FILTER_OPTIONS;
 
   ngOnInit(): void {
     this.loadProcedures();
@@ -38,7 +35,7 @@ export class ProcedureListComponent implements OnInit {
     this.procedureService.findFiltered(page, size, this.filterName(), this.filterType())
       .subscribe(response => {
         this.procedures.set(response.content);
-        this.totalRecords.set(response.totalElements);
+        this.totalRecords.set(response.page.totalElements);
       });
   }
 

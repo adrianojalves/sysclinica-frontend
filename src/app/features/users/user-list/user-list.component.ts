@@ -61,7 +61,7 @@ export class UserListComponent implements OnInit {
     this.userService.findPaginated(this.currentPage, this.currentSize, this.searchQuery()).subscribe({
       next: (pageData) => {
         this.users.set(pageData.content);
-        this.totalRecords.set(pageData.totalElements);
+        this.totalRecords.set(pageData.page.totalElements);
       },
       error: () => {
         this.messageService.show('error', 'Erro', 'Não foi possível carregar a lista de usuários.');

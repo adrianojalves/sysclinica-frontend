@@ -4,7 +4,7 @@ import { ProcedureFilter } from '../../../core/models/medical/procedure-filter.m
 import { SHARED_UI_IMPORTS } from '../../imports/shared-ui.imports';
 import { MedicalProcedureService } from '../../../core/services/medical/procedure.service';
 import { MedicalProcedure } from '../../../core/models/medical/procedure.model';
-import { PROCEDURE_TYPE_OPTIONS } from '../../constants/ui.constants';
+import { PROCEDURE_TYPE_FILTER_OPTIONS } from '../../constants/ui.constants';
 
 @Component({
   selector: 'app-procedure-search-modal',
@@ -18,12 +18,12 @@ export class ProcedureSearchModalComponent implements OnInit {
 
   public procedures = signal<MedicalProcedure[]>([]);
   public loading = signal<boolean>(false);
-  public typeOptions = PROCEDURE_TYPE_OPTIONS;
+  public readonly typeOptions = PROCEDURE_TYPE_FILTER_OPTIONS;
 
   // Initializing filter with status true for search modal
   public filter: ProcedureFilter = {
     name: '',
-    type: '',
+    type: undefined,
     status: true
   };
 

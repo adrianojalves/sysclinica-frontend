@@ -33,7 +33,7 @@ export class ClinicListComponent implements OnInit {
     this.clinicService.listAll(page, size, this.filter).subscribe({
       next: (response) => {
         this.clinics.set(response.content);
-        this.totalRecords.set(response.totalElements);
+        this.totalRecords.set(response.page.totalElements);
         this.loading.set(false);
       },
       error: () => {
@@ -57,7 +57,9 @@ export class ClinicListComponent implements OnInit {
   }
 
   public onPageChange(event: any): void {
-    this.loadClinics(event.page, event.rows);
+    const page = event.first ? Math.floor(event.first / (event.rows || 10)) : 0;
+    const size = event.rows || 10;
+    this.loadClinics(page, size);
   }
 
   public goToNew(): void {

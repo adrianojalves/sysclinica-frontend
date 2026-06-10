@@ -5,7 +5,7 @@ import { SHARED_UI_IMPORTS } from '../../../../shared/imports/shared-ui.imports'
 import { MedicalProcedureService } from '../../../../core/services/medical/procedure.service';
 import { MessageService } from '../../../../core/services/message.service';
 import { LoadingService } from '../../../../core/services/loading.service';
-import { STATUS_OPTIONS } from '../../../../shared/constants/ui.constants';
+import { STATUS_OPTIONS, PROCEDURE_TYPE_OPTIONS } from '../../../../shared/constants/ui.constants';
 import { ProcedureType } from '../../../../core/models/medical/procedure.model';
 
 @Component({
@@ -27,10 +27,7 @@ export class ProcedureFormComponent implements OnInit {
   
   // UI Options
   public readonly statusOptions = STATUS_OPTIONS;
-  public readonly typeOptions = [
-    { label: 'Exame', value: ProcedureType.EXAME },
-    { label: 'Consulta', value: ProcedureType.CONSULTA }
-  ];
+  public readonly typeOptions = PROCEDURE_TYPE_OPTIONS;
 
   ngOnInit(): void {
     this.initForm();
