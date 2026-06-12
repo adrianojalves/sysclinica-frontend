@@ -8,5 +8,6 @@ export interface Company {
   phone: string;
   email: string;
   logoUrl?: string;
+  observacao?: string;
   address: AddressData;
 }

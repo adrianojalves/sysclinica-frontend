@@ -40,6 +40,7 @@ export class CompanyFormComponent implements OnInit {
       cnpj: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
+      observacao: [''],
       address: this.fb.group({
         cep: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
         logradouro: ['', [Validators.required]],

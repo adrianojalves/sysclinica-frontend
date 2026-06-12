@@ -124,6 +124,13 @@
         </div>
       </fieldset>
 
+      <div class="flex flex-col gap-1">
+        <label for="observacao" class="text-cinza-chumbo font-bold text-base ml-1">Observações</label>
+        <textarea id="observacao" pTextarea formControlName="observacao" rows="4"
+                  class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-colors resize-none"
+                  placeholder="Observações padrão para encaminhamentos..."></textarea>
+      </div>
+
       <div class="flex justify-end mt-4 pt-6 border-t border-cinza-contorno">
         <button type="submit" 
                 class="px-12 py-4 rounded-lg text-xl font-bold text-branco bg-verde-teal hover:bg-teal-700 flex items-center gap-3 cursor-pointer shadow-sm">
