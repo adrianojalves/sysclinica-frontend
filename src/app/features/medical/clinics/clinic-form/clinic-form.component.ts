@@ -57,7 +57,7 @@ public currentPage = signal<number>(0);
       fone1: ['', [Validators.required]],
       fone2: [''],
       site: [''],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.email]],
       percentual: [0, [Validators.min(0), Validators.max(100)]],
       active: [true],
       address: this.fb.group({

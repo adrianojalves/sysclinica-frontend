@@ -502,6 +502,22 @@
                   </p-inputNumber>
                 </div>
 
+                <!-- Discount (non-card only) -->
+                @if (isDescontoAllowed()) {
+                  <div class="flex flex-col gap-1">
+                    <label class="text-cinza-chumbo font-bold text-sm ml-1">Desconto</label>
+                    <p-inputNumber
+                      formControlName="valorDesconto"
+                      mode="currency"
+                      currency="BRL"
+                      locale="pt-BR"
+                      [min]="0"
+                      placeholder="0,00"
+                      inputStyleClass="w-full border-2 border-cinza-contorno bg-branco-puro rounded-lg text-base h-[52px] px-4">
+                    </p-inputNumber>
+                  </div>
+                }
+
                 <!-- Installments (credit card only) -->
                 @if (isCreditCardPagamento()) {
                   <div class="flex flex-col gap-1">
@@ -550,6 +566,8 @@
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Tipo de Pagamento</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center">Parcelas</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right">Valor</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right">Desconto</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right">Total</th>
               @if (isAberto()) {
                 <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Excluir</th>
               }
@@ -560,8 +578,12 @@
             <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
               <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">{{ getTipoPagamentoLabel(pagamento.tipoPagamento) }}</td>
               <td class="p-3 md:p-4 text-base text-center text-cinza-medio">{{ pagamento.parcelas ?? 1 }}</td>
-              <td class="p-3 md:p-4 text-base font-bold text-right text-cinza-chumbo">
-                {{ pagamento.valor | brlCurrency }}
+              <td class="p-3 md:p-4 text-base font-bold text-right text-cinza-chumbo">{{ pagamento.valor | brlCurrency }}</td>
+              <td class="p-3 md:p-4 text-base text-right text-vermelho-alerta font-semibold">
+                {{ (pagamento.valorDesconto ?? 0) > 0 ? (pagamento.valorDesconto | brlCurrency) : '—' }}
+              </td>
+              <td class="p-3 md:p-4 text-base font-bold text-right text-verde-teal">
+                {{ (pagamento.valor - (pagamento.valorDesconto ?? 0)) | brlCurrency }}
               </td>
               @if (isAberto()) {
                 <td class="p-3 md:p-4 text-center">
@@ -579,13 +601,30 @@
 
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td [attr.colspan]="isAberto() ? 4 : 3" class="p-8 text-center text-lg text-cinza-medio italic">
+              <td [attr.colspan]="isAberto() ? 6 : 5" class="p-8 text-center text-lg text-cinza-medio italic">
                 Nenhum pagamento adicionado.
               </td>
             </tr>
           </ng-template>
 
         </p-table>
+
+        @if (pagamentos().length > 0) {
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-fundo-offwhite border border-cinza-contorno rounded-lg px-5 py-3 flex items-center justify-between sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-cinza-medio text-sm font-medium">Total Valor</span>
+              <strong class="text-cinza-chumbo text-lg">{{ totalValorPagamentos() | brlCurrency }}</strong>
+            </div>
+            <div class="bg-fundo-offwhite border border-cinza-contorno rounded-lg px-5 py-3 flex items-center justify-between sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-cinza-medio text-sm font-medium">Total Descontos</span>
+              <strong class="text-vermelho-alerta text-lg">{{ totalDescontoPagamentos() | brlCurrency }}</strong>
+            </div>
+            <div class="bg-fundo-offwhite border border-verde-teal/40 rounded-lg px-5 py-3 flex items-center justify-between sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-cinza-medio text-sm font-medium">Total Geral</span>
+              <strong class="text-verde-teal text-xl">{{ totalGeralPagamentos() | brlCurrency }}</strong>
+            </div>
+          </div>
+        }
 
       </div>
     }

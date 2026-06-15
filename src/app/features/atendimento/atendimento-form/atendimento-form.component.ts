@@ -122,6 +122,11 @@ export class AtendimentoFormComponent implements OnInit {
 
   public isCreditCardPagamento = computed(() => this.tipoPagamentoPagamento() === 'CARTAO_CREDITO');
 
+  public isDescontoAllowed = computed(() => {
+    const tipo = this.tipoPagamentoPagamento();
+    return tipo !== 'CARTAO_CREDITO' && tipo !== 'CARTAO_DEBITO';
+  });
+
   public hasItems = computed(() => this.selectedItems().length > 0);
 
   public totalDinheiro = computed(() =>
@@ -130,6 +135,18 @@ export class AtendimentoFormComponent implements OnInit {
 
   public totalCartao = computed(() =>
     this.selectedItems().reduce((sum, i) => sum + (i.priceCard ?? 0), 0)
+  );
+
+  public totalValorPagamentos = computed(() =>
+    this.pagamentos().reduce((sum, p) => sum + (p.valor ?? 0), 0)
+  );
+
+  public totalDescontoPagamentos = computed(() =>
+    this.pagamentos().reduce((sum, p) => sum + (p.valorDesconto ?? 0), 0)
+  );
+
+  public totalGeralPagamentos = computed(() =>
+    this.totalValorPagamentos() - this.totalDescontoPagamentos()
   );
 
   ngOnInit(): void {
@@ -146,6 +163,7 @@ export class AtendimentoFormComponent implements OnInit {
     this.pagamentoForm = this.fb.group({
       tipoPagamento: ['DINHEIRO', Validators.required],
       valor: [null, [Validators.required, Validators.min(0.01)]],
+      valorDesconto: [0],
       parcelas: [1, [Validators.required, Validators.min(1)]]
     });
 
@@ -153,6 +171,9 @@ export class AtendimentoFormComponent implements OnInit {
       this.tipoPagamentoPagamento.set(val);
       if (val !== 'CARTAO_CREDITO') {
         this.pagamentoForm.get('parcelas')!.setValue(1);
+      }
+      if (val === 'CARTAO_CREDITO' || val === 'CARTAO_DEBITO') {
+        this.pagamentoForm.get('valorDesconto')!.setValue(0);
       }
     });
   }
@@ -186,7 +207,7 @@ export class AtendimentoFormComponent implements OnInit {
     this.form.enable();
     this.form.reset();
     this.pagamentoForm.enable();
-    this.pagamentoForm.reset({ tipoPagamento: 'DINHEIRO', parcelas: 1 });
+    this.pagamentoForm.reset({ tipoPagamento: 'DINHEIRO', parcelas: 1, valorDesconto: 0 });
     this.tipoPagamentoPagamento.set('DINHEIRO');
     this.activeTabIndex.set(0);
   }
@@ -372,8 +393,11 @@ export class AtendimentoFormComponent implements OnInit {
     const parcelas: number = tipoPagamento === 'CARTAO_CREDITO'
       ? (this.pagamentoForm.get('parcelas')!.value || 1)
       : 1;
+    const valorDesconto: number = this.isDescontoAllowed()
+      ? (this.pagamentoForm.get('valorDesconto')!.value || 0)
+      : 0;
 
-    const request: AtendimentoPagamentoRequest = { tipoPagamento, valor, parcelas };
+    const request: AtendimentoPagamentoRequest = { tipoPagamento, valor, parcelas, valorDesconto };
 
     this.atendimentoService.addPagamento(this.atendimentoId()!, request).subscribe({
       next: (res) => {
@@ -383,7 +407,7 @@ export class AtendimentoFormComponent implements OnInit {
           this.parcelas.set(parcelas);
         }
 
-        this.pagamentoForm.patchValue({ tipoPagamento: 'DINHEIRO', valor: null, parcelas: 1 });
+        this.pagamentoForm.patchValue({ tipoPagamento: 'DINHEIRO', valor: null, parcelas: 1, valorDesconto: 0 });
         this.tipoPagamentoPagamento.set('DINHEIRO');
       }
     });
