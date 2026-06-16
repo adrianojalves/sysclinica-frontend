@@ -9,9 +9,17 @@ export class AdminService {
   private readonly http = inject(HttpClient);
 
   public loading = signal<boolean>(false);
+  public loadingDelete = signal<boolean>(false);
 
   private get baseUrl(): string {
     return `${environment.apiUrl}/admin`;
+  }
+
+  public deletarDados(): Observable<void> {
+    this.loadingDelete.set(true);
+    return this.http.delete<void>(`${this.baseUrl}/deletar-dados`).pipe(
+      finalize(() => this.loadingDelete.set(false))
+    );
   }
 
   public importarTabela(file: File): Observable<ImportResult> {

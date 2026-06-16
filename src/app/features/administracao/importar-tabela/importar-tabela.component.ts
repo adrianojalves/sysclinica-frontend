@@ -50,6 +50,25 @@ export class ImportarTabelaComponent {
     });
   }
 
+  public async onDeletarDados(): Promise<void> {
+    const confirmed = await this.messageService.question(
+      'Deletar Todos os Dados',
+      'Esta ação irá remover permanentemente todas as clínicas, médicos, procedimentos e vínculos cadastrados. Deseja continuar?'
+    );
+    if (!confirmed) return;
+
+    this.adminService.deletarDados().subscribe({
+      next: () => {
+        this.resultado.set(null);
+        this.messageService.show('success', 'Dados Deletados', 'Todos os dados foram removidos com sucesso.');
+      },
+      error: (err: any) => {
+        const msg = err.error?.message || 'Erro ao deletar os dados.';
+        this.messageService.show('error', 'Erro', msg);
+      }
+    });
+  }
+
   public onLimpar(): void {
     this.arquivoSelecionado.set(null);
     this.resultado.set(null);
