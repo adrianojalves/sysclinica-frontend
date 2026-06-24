@@ -17,6 +17,7 @@ import { ClientListComponent } from './features/clients/client-list/client-list.
 import { ClientFormComponent } from './features/clients/client-form/client-form.component';
 import { AtendimentoFormComponent } from './features/atendimento/atendimento-form/atendimento-form.component';
 import { ImportarTabelaComponent } from './features/administracao/importar-tabela/importar-tabela.component';
+import { AtendimentoReportComponent } from './features/relatorios/atendimento-report/atendimento-report.component';
 
 export const routes: Routes = [
   {
@@ -135,6 +136,12 @@ export const routes: Routes = [
         component: AtendimentoFormComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_CADASTROS', 'ROLE_ATENDIMENTO'] }
+      },
+      {
+        path: 'relatorios/atendimentos',
+        component: AtendimentoReportComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_RELATORIOS'] }
       },
       {
         path: 'administracao',

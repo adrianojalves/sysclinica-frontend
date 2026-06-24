@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseCrudService } from '../base-crud.service';
 import { User } from '../../models/users/user.model';
+import { UserSummary } from '../../models/users/user-summary.model';
 import { Page } from '../../models/page.model';
 import { HttpParams } from '@angular/common/http';
 import { Observable, finalize } from 'rxjs';
@@ -26,6 +27,22 @@ export class UserService extends BaseCrudService<User, number> {
     }
 
     return this.http.get<Page<User>>(this.apiUrl, { params }).pipe(
+      finalize(() => this.loading.set(false))
+    );
+  }
+
+  findSummary(page: number, size: number, name?: string): Observable<Page<UserSummary>> {
+    this.loading.set(true);
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    if (name) {
+      params = params.set('name', name);
+    }
+
+    return this.http.get<Page<UserSummary>>(`${this.apiUrl}/summary`, { params }).pipe(
       finalize(() => this.loading.set(false))
     );
   }

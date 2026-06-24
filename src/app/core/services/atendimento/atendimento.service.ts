@@ -8,6 +8,7 @@ import {
   AtendimentoItemResponse,
   AtendimentoPagamentoRequest,
   AtendimentoPagamentoResponse,
+  AtendimentoReportFilter,
   AtendimentoRequest,
   AtendimentoResponse
 } from '../../models/atendimento/atendimento.model';
@@ -103,6 +104,28 @@ export class AtendimentoService extends BaseCrudService<AtendimentoResponse, num
   finalizar(atendimentoId: number): Observable<AtendimentoResponse> {
     this.loading.set(true);
     return this.http.post<AtendimentoResponse>(`${this.apiUrl}/${atendimentoId}/finalizar`, null).pipe(
+      catchError(this.handleHttpError),
+      finalize(() => this.loading.set(false))
+    );
+  }
+
+  getRelatorio(filter: AtendimentoReportFilter): Observable<HttpResponse<Blob>> {
+    this.loading.set(true);
+    let params = new HttpParams()
+      .set('status', filter.status)
+      .set('tipo', filter.tipo);
+
+    if (filter.clinicaId) params = params.set('clinicaId', filter.clinicaId.toString());
+    if (filter.clienteId) params = params.set('clienteId', filter.clienteId.toString());
+    if (filter.usuarioId) params = params.set('usuarioId', filter.usuarioId.toString());
+    if (filter.dataEmissaoInicial) params = params.set('dataEmissaoInicial', filter.dataEmissaoInicial);
+    if (filter.dataEmissaoFinal) params = params.set('dataEmissaoFinal', filter.dataEmissaoFinal);
+
+    return this.http.get(`${this.apiUrl}/relatorios`, {
+      params,
+      responseType: 'blob',
+      observe: 'response'
+    }).pipe(
       catchError(this.handleHttpError),
       finalize(() => this.loading.set(false))
     );

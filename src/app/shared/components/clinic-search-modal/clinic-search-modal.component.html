@@ -1,0 +1,60 @@
+<div class="flex flex-col gap-6">
+  <div class="flex w-full h-[58px]">
+    <input
+      type="text"
+      pInputText
+      placeholder="Pesquisar por nome da clínica..."
+      (keyup.enter)="search()"
+      [(ngModel)]="searchTerm"
+      class="flex-1 border-2 border-r-0 border-cinza-contorno bg-white rounded-l-lg text-lg px-4 outline-none focus:border-verde-teal transition-all" />
+
+    <button
+      type="button"
+      pButton
+      icon="pi pi-search"
+      (click)="search()"
+      class="bg-azul-prisma px-6 text-branco-puro rounded-r-lg border-2 border-azul-prisma hover:bg-opacity-90 active:scale-95 transition-all">
+    </button>
+  </div>
+
+  <p-table
+    [value]="clinics()"
+    [loading]="loading()"
+    [paginator]="true"
+    [rows]="5"
+    responsiveLayout="scroll"
+    styleClass="p-datatable-lg p-datatable-striped border border-cinza-contorno rounded-lg overflow-hidden">
+
+    <ng-template pTemplate="header">
+      <tr class="bg-fundo-offwhite">
+        <th class="text-azul-prisma font-bold py-4 px-4 text-xl">Nome</th>
+        <th class="text-azul-prisma font-bold py-4 px-4 text-xl">CNPJ</th>
+        <th style="width: 100px"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-clinic>
+      <tr class="hover:bg-gray-50 transition-colors border-b border-cinza-contorno">
+        <td class="font-bold py-4 px-4 text-lg text-cinza-chumbo">{{ clinic.name }}</td>
+        <td class="py-4 px-4 text-lg text-cinza-medio">{{ clinic.cnpj }}</td>
+        <td class="py-4 px-4 text-center">
+          <button
+            pButton
+            icon="pi pi-check"
+            class="p-button-rounded p-button-success p-button-lg shadow-sm"
+            (click)="selectClinic(clinic)"
+            pTooltip="Selecionar esta clínica">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center p-10 text-xl text-cinza-medio italic">
+          Nenhuma clínica encontrada.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
