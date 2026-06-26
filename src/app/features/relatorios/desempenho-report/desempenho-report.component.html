@@ -1,0 +1,82 @@
+<div class="p-6 w-full max-w-3xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-md border border-cinza-contorno p-4 md:p-8">
+
+    <div class="mb-6 pb-4 border-b border-cinza-contorno">
+      <h2 class="text-2xl md:text-3xl font-bold text-azul-prisma">Desempenho por Clínica</h2>
+      <p class="text-cinza-medio text-base md:text-lg mt-1">Preencha os filtros e gere o relatório em PDF.</p>
+    </div>
+
+    <div class="flex flex-col gap-5">
+
+      <!-- Clínica -->
+      <div class="flex flex-col gap-1">
+        <label class="text-cinza-chumbo font-bold text-lg">Clínica</label>
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            pInputText
+            [ngModel]="clinicaNome()"
+            readonly
+            placeholder="Selecione uma clínica..."
+            class="flex-1 border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg px-4 py-3 outline-none" />
+          <button
+            type="button"
+            pButton
+            icon="pi pi-search"
+            (click)="openClinicSearch()"
+            class="bg-azul-prisma text-branco-puro rounded-lg px-4 py-3 hover:bg-opacity-90 transition-all cursor-pointer">
+          </button>
+          @if (clinicaId()) {
+            <button
+              type="button"
+              pButton
+              icon="pi pi-times"
+              (click)="clearClinic()"
+              class="p-button-danger rounded-lg px-4 py-3 transition-all cursor-pointer">
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Período -->
+      <div class="flex flex-col gap-1">
+        <label class="text-cinza-chumbo font-bold text-lg">Período de Emissão</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <p-datePicker
+            [(ngModel)]="dataInicial"
+            dateFormat="dd/mm/yy"
+            placeholder="Data inicial"
+            [showIcon]="true"
+            styleClass="w-full"
+            inputStyleClass="border-2 border-cinza-contorno rounded-lg text-lg px-4 py-3 w-full">
+          </p-datePicker>
+          <p-datePicker
+            [(ngModel)]="dataFinal"
+            dateFormat="dd/mm/yy"
+            placeholder="Data final"
+            [showIcon]="true"
+            styleClass="w-full"
+            inputStyleClass="border-2 border-cinza-contorno rounded-lg text-lg px-4 py-3 w-full">
+          </p-datePicker>
+        </div>
+      </div>
+
+      <!-- Botão Imprimir -->
+      <div class="flex justify-center pt-4">
+        <button
+          type="button"
+          (click)="generate()"
+          [disabled]="loading()"
+          class="flex items-center gap-3 bg-azul-prisma hover:bg-blue-800 text-branco-puro font-bold rounded-xl px-8 py-4 text-xl transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+          @if (loading()) {
+            <i class="pi pi-spinner pi-spin text-2xl"></i>
+          } @else {
+            <app-printer-icon [size]="32"></app-printer-icon>
+          }
+          <span>Gerar Relatório</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

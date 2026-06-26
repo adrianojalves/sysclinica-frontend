@@ -18,6 +18,10 @@ import { ClientFormComponent } from './features/clients/client-form/client-form.
 import { AtendimentoFormComponent } from './features/atendimento/atendimento-form/atendimento-form.component';
 import { ImportarTabelaComponent } from './features/administracao/importar-tabela/importar-tabela.component';
 import { AtendimentoReportComponent } from './features/relatorios/atendimento-report/atendimento-report.component';
+import { RepasseReportComponent } from './features/relatorios/repasse-report/repasse-report.component';
+import { AbcReportComponent } from './features/relatorios/abc-report/abc-report.component';
+import { DesempenhoReportComponent } from './features/relatorios/desempenho-report/desempenho-report.component';
+import { HistoricoReportComponent } from './features/relatorios/historico-report/historico-report.component';
 
 export const routes: Routes = [
   {
@@ -140,6 +144,30 @@ export const routes: Routes = [
       {
         path: 'relatorios/atendimentos',
         component: AtendimentoReportComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_RELATORIOS'] }
+      },
+      {
+        path: 'relatorios/repasse',
+        component: RepasseReportComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_RELATORIOS'] }
+      },
+      {
+        path: 'relatorios/abc',
+        component: AbcReportComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_RELATORIOS'] }
+      },
+      {
+        path: 'relatorios/desempenho',
+        component: DesempenhoReportComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN', 'ROLE_RELATORIOS'] }
+      },
+      {
+        path: 'relatorios/historico-paciente',
+        component: HistoricoReportComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_RELATORIOS'] }
       },
