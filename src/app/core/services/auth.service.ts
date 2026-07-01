@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthResponse, LoginRequest } from '../models/auth.model';
-import { tap } from 'rxjs';
+import { Observable, finalize, shareReplay, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -13,6 +13,14 @@ export class AuthService {
   private readonly API_URL = `${environment.apiUrl}/auth`;
   private readonly TOKEN_KEY = 'sysclinica-token';
   private readonly ROLES_KEY = 'sysclinica-roles';
+
+  /**
+   * Caches the in-flight refresh call so concurrent 401s share a single
+   * POST /auth/refresh instead of racing each other. The backend rotates
+   * the refresh cookie on every call, so parallel calls would invalidate
+   * one another and force an unwanted logout.
+   */
+  private refreshInProgress$: Observable<AuthResponse> | null = null;
 
   isAuthenticated = signal<boolean>(this.hasToken());
   
@@ -81,14 +89,19 @@ export class AuthService {
     return currentRoles.some(role => allowedRoles.includes(role));
   }
 
-  refreshToken() {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/refresh`, {}, {
-      withCredentials: true
-    }).pipe(
-      tap(response => {
-        localStorage.setItem(this.TOKEN_KEY, response.accessToken);
-        this.isAuthenticated.set(true);
-      })
-    );
+  refreshToken(): Observable<AuthResponse> {
+    if (!this.refreshInProgress$) {
+      this.refreshInProgress$ = this.http.post<AuthResponse>(`${environment.apiUrl}/auth/refresh`, {}, {
+        withCredentials: true
+      }).pipe(
+        tap(response => {
+          localStorage.setItem(this.TOKEN_KEY, response.accessToken);
+          this.isAuthenticated.set(true);
+        }),
+        shareReplay(1),
+        finalize(() => { this.refreshInProgress$ = null; })
+      );
+    }
+    return this.refreshInProgress$;
   }
 }
