@@ -322,7 +322,11 @@
           [value]="procedureResults()"
           [loading]="procedureSearchLoading()"
           [paginator]="true"
-          [rows]="10"
+          [rows]="20"
+          [lazy]="true"
+          [first]="firstProcedures()"
+          [totalRecords]="totalProcedures()"
+          (onLazyLoad)="searchProcedures($event)"
           responsiveLayout="scroll"
           styleClass="p-datatable-lg p-datatable-striped border border-cinza-contorno rounded-lg overflow-hidden">
 

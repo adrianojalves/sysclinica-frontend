@@ -6,17 +6,30 @@
         <h2 class="text-3xl font-bold text-azul-prisma">Importação de Tabela</h2>
         <p class="text-cinza-medio text-lg mt-2">Envie um arquivo CSV para importar clínicas, médicos, procedimentos e vínculos.</p>
       </div>
-      <button
-        type="button"
-        pButton
-        [icon]="adminService.loadingDelete() ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"
-        label="Deletar Dados"
-        [disabled]="adminService.loadingDelete() || adminService.loading()"
-        (click)="onDeletarDados()"
-        pTooltip="Remove todas as clínicas, médicos, procedimentos e vínculos"
-        tooltipPosition="left"
-        class="justify-center whitespace-nowrap bg-vermelho-alerta hover:bg-red-700 text-branco-puro font-bold rounded-lg px-5 py-3 text-base transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0">
-      </button>
+      <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0 w-full sm:w-auto">
+        <button
+          type="button"
+          pButton
+          [icon]="adminService.loadingBackup() ? 'pi pi-spin pi-spinner' : 'pi pi-download'"
+          label="Baixar Backup"
+          [disabled]="adminService.loadingBackup() || adminService.loadingDelete() || adminService.loading()"
+          (click)="onDownloadBackup()"
+          pTooltip="Faz o download do backup do banco de dados"
+          tooltipPosition="left"
+          class="justify-center whitespace-nowrap bg-verde-teal hover:bg-teal-700 text-branco-puro font-bold rounded-lg px-5 py-3 text-base transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto flex-shrink-0">
+        </button>
+        <button
+          type="button"
+          pButton
+          [icon]="adminService.loadingDelete() ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"
+          label="Deletar Dados"
+          [disabled]="adminService.loadingDelete() || adminService.loadingBackup() || adminService.loading()"
+          (click)="onDeletarDados()"
+          pTooltip="Remove todas as clínicas, médicos, procedimentos e vínculos"
+          tooltipPosition="left"
+          class="justify-center whitespace-nowrap bg-vermelho-alerta hover:bg-red-700 text-branco-puro font-bold rounded-lg px-5 py-3 text-base transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto flex-shrink-0">
+        </button>
+      </div>
     </div>
 
     <div class="flex flex-col gap-6">

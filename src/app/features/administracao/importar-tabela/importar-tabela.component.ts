@@ -69,6 +69,45 @@ export class ImportarTabelaComponent {
     });
   }
 
+  public onDownloadBackup(): void {
+    this.loadingService.show();
+    this.adminService.downloadBackup().subscribe({
+      next: (response) => {
+        this.loadingService.hide();
+        const blob = response.body;
+        if (!blob) {
+          this.messageService.show('error', 'Erro', 'O arquivo de backup retornado está vazio.');
+          return;
+        }
+
+        const disposition = response.headers.get('content-disposition');
+        let filename = `backup-${new Date().toISOString().split('T')[0]}.sql`;
+        if (disposition) {
+          const match = disposition.match(/filename=([^;]+)/i);
+          if (match) {
+            filename = match[1].trim().replace(/['"]/g, '');
+          }
+        }
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        this.messageService.show('success', 'Backup Concluído', 'O download do backup foi iniciado.');
+      },
+      error: (err: any) => {
+        this.loadingService.hide();
+        const msg = err.error?.message || 'Erro ao gerar o backup do banco de dados.';
+        this.messageService.show('error', 'Erro ao Baixar Backup', msg);
+      }
+    });
+  }
+
   public onLimpar(): void {
     this.arquivoSelecionado.set(null);
     this.resultado.set(null);

@@ -70,6 +70,8 @@ export class AtendimentoFormComponent implements OnInit {
   public procedureResults = signal<ClinicDoctorProcedure[]>([]);
   public procedureSearchLoading = signal<boolean>(false);
   public procedureSearched = signal<boolean>(false);
+  public totalProcedures = signal<number>(0);
+  public firstProcedures = signal<number>(0);
 
   // Tab 3 - selected items
   public selectedItems = signal<AtendimentoItemLocal[]>([]);
@@ -204,6 +206,8 @@ export class AtendimentoFormComponent implements OnInit {
     this.parcelas.set(1);
     this.procedureResults.set([]);
     this.procedureSearched.set(false);
+    this.totalProcedures.set(0);
+    this.firstProcedures.set(0);
     this.form.enable();
     this.form.reset();
     this.pagamentoForm.enable();
@@ -221,6 +225,10 @@ export class AtendimentoFormComponent implements OnInit {
     this.clinicaId.set(atendimento.codClinica);
     this.clinicaNome.set(atendimento.nomeClinica);
     this.parcelas.set(atendimento.parcelas ?? 1);
+    this.procedureResults.set([]);
+    this.procedureSearched.set(false);
+    this.totalProcedures.set(0);
+    this.firstProcedures.set(0);
 
     const dateParts = atendimento.dataConsultaExame?.split('-');
     const dateObj = dateParts
@@ -298,11 +306,20 @@ export class AtendimentoFormComponent implements OnInit {
 
   // --- Tab 2: Pesquisa de procedimentos ---
 
-  public searchProcedures(): void {
+  public searchProcedures(event?: any): void {
     const hasClinicFilter = !this.clinicaId() && this.filterClinicaNome().trim();
     const hasOtherFilter = this.filterProcedureNome().trim() || this.filterDoctorNome().trim();
 
     if (!hasClinicFilter && !hasOtherFilter && !this.clinicaId()) return;
+
+    if (event === undefined) {
+      if (this.firstProcedures() !== 0) {
+        this.firstProcedures.set(0);
+        return;
+      }
+    } else {
+      this.firstProcedures.set(event.first);
+    }
 
     this.procedureSearchLoading.set(true);
     const filter: ClinicDoctorProcedureFilter = {};
@@ -316,9 +333,13 @@ export class AtendimentoFormComponent implements OnInit {
     if (this.filterProcedureNome().trim()) filter.procedureName = this.filterProcedureNome().trim();
     if (this.filterDoctorNome().trim()) filter.doctorName = this.filterDoctorNome().trim();
 
-    this.clinicProcService.list(filter, 0, 50).subscribe({
+    const page = event ? event.first / event.rows : 0;
+    const size = event ? event.rows : 20;
+
+    this.clinicProcService.list(filter, page, size).subscribe({
       next: (res: any) => {
         this.procedureResults.set(res.content || []);
+        this.totalProcedures.set(res.page?.totalElements || 0);
         this.procedureSearched.set(true);
         this.procedureSearchLoading.set(false);
       },
