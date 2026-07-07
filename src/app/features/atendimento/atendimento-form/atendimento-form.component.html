@@ -335,6 +335,7 @@
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Clínica</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg">Procedimento</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Repasse</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Dinheiro</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Cartão</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Ação</th>
@@ -349,8 +350,19 @@
                 <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ proc.doctorName || '---' }}</div>
               </td>
               <td class="p-3 md:p-4 text-base text-cinza-medio hidden sm:table-cell">{{ proc.doctorName || '---' }}</td>
-              <td class="p-3 md:p-4 text-base font-semibold text-verde-teal text-right hidden md:table-cell">{{ proc.price | brlCurrency }}</td>
-              <td class="p-3 md:p-4 text-base font-semibold text-azul-prisma text-right hidden md:table-cell">{{ proc.priceCard | brlCurrency }}</td>
+              <td class="p-3 md:p-4 text-base font-semibold text-cinza-chumbo text-right hidden md:table-cell">{{ proc.transferValue | brlCurrency }}</td>
+              <td class="p-3 md:p-4 text-base font-semibold text-verde-teal text-right hidden md:table-cell"
+                  [pTooltip]="'Saldo para a empresa: ' + ((proc.price - proc.transferValue) | brlCurrency)"
+                  [tooltipDisabled]="!proc.price || proc.price === 0"
+                  tooltipPosition="top">
+                {{ proc.price | brlCurrency }}
+              </td>
+              <td class="p-3 md:p-4 text-base font-semibold text-azul-prisma text-right hidden md:table-cell"
+                  [pTooltip]="'Saldo para a empresa: ' + ((proc.priceCard - proc.transferValueCard) | brlCurrency)"
+                  [tooltipDisabled]="!proc.priceCard || proc.priceCard === 0"
+                  tooltipPosition="top">
+                {{ proc.priceCard | brlCurrency }}
+              </td>
               <td class="p-3 md:p-4 text-center">
                 <button
                   type="button"
@@ -366,7 +378,7 @@
 
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="6" class="p-8 text-center text-lg text-cinza-medio italic">
+              <td colspan="7" class="p-8 text-center text-lg text-cinza-medio italic">
                 @if (procedureSearched()) {
                   Nenhum procedimento encontrado.
                 } @else {

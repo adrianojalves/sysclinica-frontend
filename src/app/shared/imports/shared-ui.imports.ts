@@ -16,6 +16,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
 
 /** 
  * Centralized array of commonly used UI modules for Standalone Components.
@@ -39,5 +40,6 @@ export const SHARED_UI_IMPORTS = [
   RouterModule,
   TableModule,
   TabViewModule,
+  TooltipModule,
   PrinterIconComponent
 ] as const;
