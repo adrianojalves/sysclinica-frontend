@@ -539,11 +539,6 @@ export class AtendimentoFormComponent implements OnInit {
   public async excluir(): Promise<void> {
     if (!this.atendimentoId()) return;
 
-    if (!this.isAberto()) {
-      this.messageService.show('warning', 'Atenção', 'Não é possível excluir um atendimento com status ' + this.getStatusLabel() + '.');
-      return;
-    }
-
     const confirmed = await this.messageService.question(
       'Excluir Atendimento',
       `Deseja realmente excluir o atendimento #${this.atendimentoId()}? Esta ação não pode ser desfeita.`

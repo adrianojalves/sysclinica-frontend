@@ -116,5 +116,12 @@
                 </div>
             </div>
         }
+
+        @if (authService.hasAnyRole(['ROLE_ADMIN'])) {
+            <a routerLink="/logs" routerLinkActive="bg-verde-teal text-branco-puro" class="flex items-center gap-3 p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium mt-1">
+                <i class="pi pi-database text-xl"></i>
+                <span class="text-lg">Logs</span>
+            </a>
+        }
     </nav>
 </aside>

@@ -82,7 +82,7 @@
             icon="pi pi-trash"
             label="Excluir"
             [loading]="loading()"
-            [disabled]="!isAberto() || !atendimentoId()"
+            [disabled]="!atendimentoId()"
             (click)="excluir()"
             class="justify-center bg-vermelho-alerta hover:bg-red-700 text-branco-puro font-bold rounded-lg px-4 py-2.5 text-base transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
           </button>

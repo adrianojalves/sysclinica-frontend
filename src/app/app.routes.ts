@@ -22,6 +22,9 @@ import { RepasseReportComponent } from './features/relatorios/repasse-report/rep
 import { AbcReportComponent } from './features/relatorios/abc-report/abc-report.component';
 import { DesempenhoReportComponent } from './features/relatorios/desempenho-report/desempenho-report.component';
 import { HistoricoReportComponent } from './features/relatorios/historico-report/historico-report.component';
+import { LogListComponent } from './features/logs/log-list/log-list.component';
+
+
 
 export const routes: Routes = [
   {
@@ -174,6 +177,12 @@ export const routes: Routes = [
       {
         path: 'administracao',
         component: ImportarTabelaComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ROLE_ADMIN'] }
+      },
+      {
+        path: 'logs',
+        component: LogListComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN'] }
       },
