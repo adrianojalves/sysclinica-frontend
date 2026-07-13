@@ -41,21 +41,65 @@ body {
     background-color: var(--branco-puro) !important;
 }
 
-.aja-table-wrapper .p-datatable .p-paginator {
+/* --- GLOBAL PAGINATOR OVERRIDE --- */
+.p-paginator {
     background-color: var(--branco-puro) !important;
     border-top: 1px solid var(--cinza-contorno) !important;
     color: var(--cinza-chumbo) !important;
+    padding: 0.75rem 1rem !important;
 }
 
-.aja-table-wrapper .p-datatable .p-paginator .p-paginator-pages .p-paginator-page {
+/* Base style for all interactive elements in the paginator */
+.p-paginator .p-paginator-pages .p-paginator-page,
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+    border-radius: 8px !important;
+    min-width: 2.25rem !important;
+    height: 2.25rem !important;
+    margin: 0 0.15rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
     color: var(--cinza-chumbo) !important;
+    border: 1px solid transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease-in-out !important;
+    cursor: pointer !important;
 }
 
-.aja-table-wrapper .p-datatable .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+/* Hover style for non-disabled and non-active elements */
+.p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):not(.p-paginator-page-selected):not(.p-disabled):hover,
+.p-paginator .p-paginator-first:not(.p-disabled):hover,
+.p-paginator .p-paginator-prev:not(.p-disabled):hover,
+.p-paginator .p-paginator-next:not(.p-disabled):hover,
+.p-paginator .p-paginator-last:not(.p-disabled):hover {
     background-color: var(--fundo-offwhite) !important;
-    border-color: var(--verde-teal) !important;
-    color: var(--verde-teal) !important;
-    font-weight: bold !important;
+    border-color: var(--cinza-contorno) !important;
+    color: var(--azul-prisma) !important;
+}
+
+/* ACTIVE PAGE HIGHLIGHT - Rectangular background using brand primary blue */
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight,
+.p-paginator .p-paginator-pages .p-paginator-page.p-paginator-page-selected {
+    background-color: var(--azul-prisma) !important;
+    border-color: var(--azul-prisma) !important;
+    color: var(--branco-puro) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 8px rgba(0, 82, 147, 0.2) !important;
+}
+
+/* Disabled styling for navigation buttons */
+.p-paginator .p-paginator-first.p-disabled,
+.p-paginator .p-paginator-prev.p-disabled,
+.p-paginator .p-paginator-next.p-disabled,
+.p-paginator .p-paginator-last.p-disabled {
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
 }
 
 .p-inputtext,
