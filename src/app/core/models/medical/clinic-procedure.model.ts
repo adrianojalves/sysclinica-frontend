@@ -11,6 +11,7 @@ export interface ClinicDoctorProcedure {
   price: number;
   transferValueCard: number;
   priceCard: number;
+  pricePartner?: number;
 }
 
 export interface ClinicDoctorProcedureFilter {

@@ -337,7 +337,7 @@
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg hidden sm:table-cell">Médico</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Repasse</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Dinheiro</th>
-              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Cartão</th>
+              <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-right hidden md:table-cell">Vlr Clínica</th>
               <th class="p-3 md:p-4 text-azul-prisma font-bold text-base md:text-lg text-center w-20">Ação</th>
             </tr>
           </ng-template>
@@ -357,11 +357,8 @@
                   tooltipPosition="top">
                 {{ proc.price | brlCurrency }}
               </td>
-              <td class="p-3 md:p-4 text-base font-semibold text-azul-prisma text-right hidden md:table-cell"
-                  [pTooltip]="'Saldo para a empresa: ' + ((proc.priceCard - proc.transferValueCard) | brlCurrency)"
-                  [tooltipDisabled]="!proc.priceCard || proc.priceCard === 0"
-                  tooltipPosition="top">
-                {{ proc.priceCard | brlCurrency }}
+              <td class="p-3 md:p-4 text-base font-semibold text-azul-prisma text-right hidden md:table-cell">
+                {{ proc.pricePartner | brlCurrency }}
               </td>
               <td class="p-3 md:p-4 text-center">
                 <button

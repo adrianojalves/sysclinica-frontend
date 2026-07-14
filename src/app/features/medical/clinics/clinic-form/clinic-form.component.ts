@@ -79,7 +79,7 @@ public currentPage = signal<number>(0);
       transferValue: [0, [Validators.required, Validators.min(0)]],
       price: [0, [Validators.required, Validators.min(0)]],
       transferValueCard: [0, [Validators.required, Validators.min(0)]],
-      priceCard: [0, [Validators.required, Validators.min(0)]]
+      pricePartner: [0, [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -232,9 +232,11 @@ public currentPage = signal<number>(0);
   public saveProcedure(): void {
     if (this.procForm.invalid) return;
 
+    const rawData = this.procForm.getRawValue();
     const data: ClinicDoctorProcedure = {
-      ...this.procForm.getRawValue(),
-      clinicId: this.clinicId()!
+      ...rawData,
+      clinicId: this.clinicId()!,
+      priceCard: rawData.priceCard ?? 0
     };
 
     const request$ = this.editingProcId()
@@ -274,7 +276,7 @@ public currentPage = signal<number>(0);
 
   public resetProcForm(): void {
     this.editingProcId.set(null);
-    this.procForm.reset({ transferValue: 0, price: 0, transferValueCard: 0, priceCard: 0 });
+    this.procForm.reset({ transferValue: 0, price: 0, transferValueCard: 0, pricePartner: 0 });
   }
 
   private loadClinic(): void {
@@ -283,5 +285,39 @@ public currentPage = signal<number>(0);
 
   public cancel(): void {
     this.router.navigate(['/clinics']);
+  }
+
+  public downloadProceduresTemplate(): void {
+    if (!this.clinicId()) return;
+    this.clinicProcService.exportExcel(this.clinicId()!).subscribe({
+      next: () => {
+        this.messageService.show('success', 'Sucesso', 'O download do modelo de importação de procedimentos foi iniciado.');
+      },
+      error: (err) => {
+        console.error('Error exporting procedures template', err);
+        const errMsg = err.error?.message || 'Falha ao baixar o modelo de importação de procedimentos.';
+        this.messageService.show('error', 'Erro ao baixar arquivo', errMsg);
+      }
+    });
+  }
+
+  public importProcedures(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.clinicProcService.importExcel(file).subscribe({
+        next: () => {
+          this.messageService.show('success', 'Sucesso', 'Planilha de procedimentos importada com sucesso!');
+          this.loadClinicProcedures(this.currentPage(), this.rows());
+          input.value = ''; // Reset standard file input value
+        },
+        error: (err) => {
+          console.error('Error importing procedures spreadsheet', err);
+          const errMsg = err.error?.message || 'Falha ao importar o arquivo Excel.';
+          this.messageService.show('error', 'Erro na importação', errMsg);
+          input.value = ''; // Reset standard file input value
+        }
+      });
+    }
   }
 }

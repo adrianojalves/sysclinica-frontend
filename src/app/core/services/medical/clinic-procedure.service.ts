@@ -1,14 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { Observable, finalize } from 'rxjs';
 import { BaseCrudService } from '../base-crud.service';
 import { ClinicDoctorProcedure, ClinicDoctorProcedureFilter } from '../../models/medical/clinic-procedure.model';
+import { FileDownloadService } from '../common/file-download.service';
+import { FileUploadService } from '../common/file-upload.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClinicProcedureService extends BaseCrudService<ClinicDoctorProcedure, number> {
   protected readonly endpoint = 'clinica/clinic-procedures';
+
+  private readonly fileDownloadService = inject(FileDownloadService);
+  private readonly fileUploadService = inject(FileUploadService);
 
   /**
    * List procedures by clinic with pagination
@@ -27,6 +32,29 @@ export class ClinicProcedureService extends BaseCrudService<ClinicDoctorProcedur
     if (filter.procedureName) params = params.set('procedureName', filter.procedureName);
 
     return this.http.get<any>(this.apiUrl, { params }).pipe(
+      finalize(() => this.loading.set(false))
+    );
+  }
+
+  /**
+   * Exports clinic procedures template spreadsheet.
+   */
+  public exportExcel(clinicId: number): Observable<any> {
+    this.loading.set(true);
+    const url = `${this.apiUrl}/export`;
+    const filename = `procedimentos-clinica-${clinicId}.xlsx`;
+    return this.fileDownloadService.downloadFromUrl(url, filename, { clinicId }).pipe(
+      finalize(() => this.loading.set(false))
+    );
+  }
+
+  /**
+   * Imports clinic procedures spreadsheet.
+   */
+  public importExcel(file: File): Observable<any> {
+    this.loading.set(true);
+    const url = `${this.apiUrl}/import`;
+    return this.fileUploadService.upload(url, file).pipe(
       finalize(() => this.loading.set(false))
     );
   }

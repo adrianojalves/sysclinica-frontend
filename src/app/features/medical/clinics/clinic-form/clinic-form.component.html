@@ -107,7 +107,25 @@
       </p-tabPanel>
 
       <p-tabPanel header="Procedimentos" leftIcon="pi pi-list mr-2" [disabled]="!clinicId()">
-        <form [formGroup]="procForm" class="bg-fundo-offwhite p-8 rounded-xl border border-cinza-contorno mb-8 mt-4 shadow-inner">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6 mb-8 pb-4 border-b border-cinza-contorno">
+          <div>
+            <h3 class="text-2xl font-bold text-azul-prisma">Planilha de Procedimentos</h3>
+            <p class="text-cinza-medio text-base mt-1">Gerencie os procedimentos da clínica em lote importando ou baixando a planilha modelo.</p>
+          </div>
+          <div class="flex flex-wrap gap-4 w-full sm:w-auto">
+            <button type="button" (click)="downloadProceduresTemplate()" 
+                    class="bg-azul-prisma text-branco-puro px-6 py-3 rounded-lg font-bold text-base flex items-center gap-2 shadow-md cursor-pointer transition-all active:scale-95 hover:brightness-110 border-none">
+              <i class="pi pi-download"></i> Baixar XLSX Padrão
+            </button>
+            <input type="file" #fileImportInput accept=".xlsx, .xls" class="hidden" (change)="importProcedures($event)" />
+            <button type="button" (click)="fileImportInput.click()" 
+                    class="bg-verde-teal text-branco-puro px-6 py-3 rounded-lg font-bold text-base flex items-center gap-2 shadow-md cursor-pointer transition-all active:scale-95 hover:brightness-110 border-none">
+              <i class="pi pi-upload"></i> Importar XLSX
+            </button>
+          </div>
+        </div>
+
+        <form [formGroup]="procForm" class="bg-fundo-offwhite p-8 rounded-xl border border-cinza-contorno mb-8 shadow-inner">
             <h3 class="text-azul-prisma font-bold text-2xl mb-8 flex items-center gap-2">
             <i class="pi pi-plus-circle text-2xl"></i> 
             {{ editingProcId() ? 'Editar Associação' : 'Nova Associação' }}
@@ -161,9 +179,9 @@
                   </p-floatlabel>
 
                   <p-floatlabel>
-                  <p-inputNumber id="valTotCard" (onFocus)="selectOnFocus($event)" formControlName="priceCard" mode="currency" currency="BRL" locale="pt-BR"
+                  <p-inputNumber id="valPartner" (onFocus)="selectOnFocus($event)" formControlName="pricePartner" mode="currency" currency="BRL" locale="pt-BR"
                       inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold"></p-inputNumber>
-                  <label for="valTotCard" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Total Cartão*</label>
+                  <label for="valPartner" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Clínica *</label>
                   </p-floatlabel>
               </div>
             </div>
@@ -199,7 +217,7 @@
               <th class="p-4 text-azul-prisma font-bold text-lg">Procedimento</th>
               <th class="p-4 text-azul-prisma font-bold text-lg text-center">Repasse</th>
               <th class="p-4 text-azul-prisma font-bold text-lg text-center">Total</th>
-              <th class="p-4 text-azul-prisma font-bold text-lg text-center">Total Cartão</th>
+              <th class="p-4 text-azul-prisma font-bold text-lg text-center">Valor Clínica</th>
               <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[120px]">Ações</th>
             </tr>
           </ng-template>
@@ -209,7 +227,7 @@
               <td class="p-4 text-lg">{{ item.procedureName }}</td>
               <td class="p-4 text-center text-lg text-verde-confirmacao font-bold">{{ item.transferValue | brlCurrency}}</td>
               <td class="p-4 text-center text-lg font-bold">{{ item.price | brlCurrency}}</td>
-              <td class="p-4 text-center text-lg font-bold">{{ item.priceCard | brlCurrency}}</td>
+              <td class="p-4 text-center text-lg font-bold">{{ item.pricePartner | brlCurrency}}</td>
               <td class="p-4 text-center flex gap-3 justify-center">
                 <button type="button" (click)="editProc(item)" 
                         class="text-azul-prisma hover:bg-azul-prisma/10 p-2 rounded-full transition-all cursor-pointer border-none bg-transparent">
