@@ -29,6 +29,7 @@
       <tr class="bg-fundo-offwhite">
         <th class="text-azul-prisma font-bold py-4 px-4 text-xl">Nome</th>
         <th class="text-azul-prisma font-bold py-4 px-4 text-xl">CPF</th>
+        <th class="text-azul-prisma font-bold py-4 px-4 text-xl">Telefone</th>
         <th style="width: 100px"></th>
       </tr>
     </ng-template>
@@ -37,6 +38,7 @@
       <tr class="hover:bg-gray-50 transition-colors border-b border-cinza-contorno">
         <td class="font-bold py-4 px-4 text-lg text-cinza-chumbo">{{ client.name }}</td>
         <td class="py-4 px-4 text-lg text-cinza-medio font-mono">{{ client.cpf }}</td>
+        <td class="py-4 px-4 text-lg text-cinza-medio">{{ client.phone || '---' }}</td>
         <td class="py-4 px-4 text-center">
           <button
             pButton
@@ -51,7 +53,7 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="3" class="text-center p-10 text-xl text-cinza-medio italic">
+        <td colspan="4" class="text-center p-10 text-xl text-cinza-medio italic">
           @if (hasSearched()) {
             Nenhum cliente encontrado.
           } @else {
