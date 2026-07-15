@@ -85,7 +85,7 @@ export interface AtendimentoPagamentoResponse {
   valorDesconto?: number;
 }
 
-export type TipoRelatorio = 'SINTETICO' | 'ANALITICO_ITENS' | 'ANALITICO_FORMA_PAGAMENTO';
+export type TipoRelatorio = 'SINTETICO' | 'SINTETICO_ITENS' | 'ANALITICO_ITENS' | 'ANALITICO_FORMA_PAGAMENTO';
 
 export interface AtendimentoReportFilter {
   clinicaId?: number;

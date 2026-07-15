@@ -52,6 +52,7 @@ export class AtendimentoReportComponent {
 
   public readonly tipoOptions = [
     { label: 'Sintético', value: 'SINTETICO' },
+    { label: 'Sintético - Itens', value: 'SINTETICO_ITENS' },
     { label: 'Analítico - Itens', value: 'ANALITICO_ITENS' },
     { label: 'Analítico - Forma de Pagamento', value: 'ANALITICO_FORMA_PAGAMENTO' }
   ];
