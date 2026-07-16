@@ -61,6 +61,19 @@
         </div>
       </div>
 
+      <!-- Tipo de Relatório -->
+      <div class="flex flex-col gap-1">
+        <label for="reportType" class="text-cinza-chumbo font-bold text-lg">Tipo de Relatório</label>
+        <p-dropdown
+          id="reportType"
+          [options]="reportTypeOptions"
+          [(ngModel)]="reportType"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg h-[58px] flex items-center px-2">
+        </p-dropdown>
+      </div>
+
       <!-- Botão Imprimir -->
       <div class="flex justify-center pt-4">
         <button

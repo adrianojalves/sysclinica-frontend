@@ -10,6 +10,7 @@ export interface Clinic {
   email: string;
   active: boolean;
   percentual: number;
+  periodPayment?: string;
   address: AddressData;
 }
 

@@ -30,6 +30,12 @@ export class RepasseReportComponent {
 
   public dataInicial = signal<Date | null>(null);
   public dataFinal = signal<Date | null>(null);
+  public reportType = signal<string>('SINTETICO');
+
+  public readonly reportTypeOptions = [
+    { label: 'Sintético', value: 'SINTETICO' },
+    { label: 'Analítico', value: 'ANALITICO' }
+  ];
 
   public openClinicSearch(): void {
     this.searchService.open<Clinic>(ClinicSearchModalComponent, 'Pesquisar Clínica')
@@ -56,7 +62,8 @@ export class RepasseReportComponent {
         : undefined,
       dataEmissaoFinal: this.dataFinal()
         ? this.datePipe.transform(this.dataFinal(), 'yyyy-MM-dd')!
-        : undefined
+        : undefined,
+      tipoRelatorio: this.reportType() || undefined
     };
 
     this.repasseService.getRelatorio(filter).subscribe({

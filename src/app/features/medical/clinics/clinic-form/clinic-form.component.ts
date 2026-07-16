@@ -11,7 +11,7 @@ import { ProcedureSearchModalComponent } from '../../../../shared/components/pro
 import { Doctor } from '../../../../core/models/medical/doctor.model';
 import { ClinicDoctorProcedure, ClinicDoctorProcedureFilter } from '../../../../core/models/medical/clinic-procedure.model';
 import { SHARED_UI_IMPORTS } from '../../../../shared/imports/shared-ui.imports';
-import { STATUS_OPTIONS } from '../../../../shared/constants/ui.constants';
+import { STATUS_OPTIONS, PAYMENT_PERIOD_OPTIONS } from '../../../../shared/constants/ui.constants';
 import { MedicalProcedure } from '../../../../core/models/medical/procedure.model';
 
 @Component({
@@ -40,6 +40,7 @@ export class ClinicFormComponent implements OnInit {
   public editingProcId = signal<number | null>(null);
   public procedures = signal<ClinicDoctorProcedure[]>([]);
   public readonly statusOptions = STATUS_OPTIONS;
+  public readonly paymentPeriodOptions = PAYMENT_PERIOD_OPTIONS;
 
 public totalRecords = signal<number>(0);
 public rows = signal<number>(10);
@@ -59,6 +60,7 @@ public currentPage = signal<number>(0);
       site: [''],
       email: ['', [Validators.email]],
       percentual: [0, [Validators.min(0), Validators.max(100)]],
+      periodPayment: [null],
       active: [true],
       address: this.fb.group({
         cep: ['', [Validators.required]],
@@ -155,7 +157,11 @@ public currentPage = signal<number>(0);
   }
 
   public onSubmitClinic(): void {
-    if (this.clinicForm.invalid) return;
+    if (this.clinicForm.invalid) {
+      this.clinicForm.markAllAsTouched();
+      this.messageService.show('warning', 'Atenção', 'Por favor, preencha todos os campos obrigatórios corretamente.');
+      return;
+    }
 
     const request$ = this.clinicId() 
       ? this.clinicService.update(this.clinicId()!, this.clinicForm.value)

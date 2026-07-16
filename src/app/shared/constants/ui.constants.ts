@@ -14,3 +14,10 @@ export const PROCEDURE_TYPE_FILTER_OPTIONS: { label: string; value: string | und
   { label: 'Todos os Tipos', value: undefined },
   ...PROCEDURE_TYPE_OPTIONS
 ];
+
+export const PAYMENT_PERIOD_OPTIONS: { label: string; value: string }[] = [
+  { label: 'Diário', value: 'DIARIO' },
+  { label: 'Semanal', value: 'SEMANAL' },
+  { label: 'Quinzenal', value: 'QUINZENAL' },
+  { label: 'Mensal', value: 'MENSAL' }
+];
