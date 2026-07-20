@@ -6,11 +6,24 @@
         <h2 class="text-3xl font-bold text-azul-prisma">Procedimentos Médicos</h2>
         <p class="text-cinza-medio text-lg">Gerencie os exames e consultas oferecidos pela clínica.</p>
       </div>
-      <button routerLink="/procedures/new"
-        class="bg-azul-prisma hover:bg-blue-800 text-branco-puro px-6 py-3 rounded-lg font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm text-lg">
-        <i class="pi pi-plus font-bold"></i>
-        Novo Procedimento
-      </button>
+      <div class="flex flex-wrap gap-4 w-full md:w-auto">
+        <button (click)="downloadProceduresExcel()"
+          class="bg-azul-prisma hover:bg-blue-800 text-branco-puro px-5 py-3 rounded-lg font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm text-base">
+          <i class="pi pi-download font-bold"></i>
+          Baixar XLSX
+        </button>
+        <input type="file" #fileImportInput accept=".xlsx, .xls" class="hidden" (change)="importProcedures($event)" />
+        <button (click)="fileImportInput.click()"
+          class="bg-verde-teal hover:bg-teal-700 text-branco-puro px-5 py-3 rounded-lg font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm text-base">
+          <i class="pi pi-upload font-bold"></i>
+          Importar XLSX
+        </button>
+        <button routerLink="/procedures/new"
+          class="bg-azul-prisma hover:bg-blue-800 text-branco-puro px-5 py-3 rounded-lg font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-sm text-base">
+          <i class="pi pi-plus font-bold"></i>
+          Novo Procedimento
+        </button>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 p-6 bg-fundo-offwhite rounded-xl border border-cinza-contorno items-end">
@@ -57,7 +70,8 @@
         <tr class="bg-fundo-offwhite border-b-2 border-cinza-contorno">
           <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[10%]">ID</th>
           <th class="p-4 text-azul-prisma font-bold text-lg">Nome</th>
-          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[20%]">Tipo</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[15%]">Tag</th>
+          <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[15%]">Tipo</th>
           <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[15%]">Ativo</th>
           <th class="p-4 text-azul-prisma font-bold text-lg text-center w-[15%]">Ações</th>
         </tr>
@@ -67,6 +81,11 @@
         <tr [ngClass]="{'text-vermelho-alerta font-bold italic': !proc.active}" class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
           <td class="p-4 text-center text-lg">{{ proc.id }}</td>
           <td class="p-4 text-lg">{{ proc.name }}</td>
+          <td class="p-4 text-center text-lg">
+            <span class="px-2.5 py-1 rounded-md text-sm font-semibold bg-gray-100 text-cinza-chumbo border border-gray-200">
+              {{ proc.tag || '-' }}
+            </span>
+          </td>
           <td class="p-4 text-center text-lg">
             <span class="px-3 py-1 rounded-full text-sm font-bold border transition-colors" 
                   [ngClass]="proc.type === 'EXAME' 
@@ -91,7 +110,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5" class="p-8 text-center text-xl text-cinza-medio font-medium">
+          <td colspan="6" class="p-8 text-center text-xl text-cinza-medio font-medium">
             Nenhum procedimento encontrado com os filtros selecionados.
           </td>
         </tr>

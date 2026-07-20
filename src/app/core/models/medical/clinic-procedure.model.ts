@@ -7,11 +7,13 @@ export interface ClinicDoctorProcedure {
   medicalProcedureId: number;
   procedureName?: string;
   procedureType?: string;
+  procedureTag?: string;
   transferValue: number;
   price: number;
   transferValueCard: number;
   priceCard: number;
   pricePartner?: number;
+  codigoClinica?: string;
 }
 
 export interface ClinicDoctorProcedureFilter {

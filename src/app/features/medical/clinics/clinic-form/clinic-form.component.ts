@@ -61,6 +61,7 @@ public currentPage = signal<number>(0);
       email: ['', [Validators.email]],
       percentual: [0, [Validators.min(0), Validators.max(100)]],
       periodPayment: [null],
+      codigoGuia: [null],
       active: [true],
       address: this.fb.group({
         cep: ['', [Validators.required]],
@@ -81,7 +82,8 @@ public currentPage = signal<number>(0);
       transferValue: [0, [Validators.required, Validators.min(0)]],
       price: [0, [Validators.required, Validators.min(0)]],
       transferValueCard: [0, [Validators.required, Validators.min(0)]],
-      pricePartner: [0, [Validators.required, Validators.min(0)]]
+      pricePartner: [0, [Validators.required, Validators.min(0)]],
+      codigoClinica: ['']
     });
   }
 
@@ -282,7 +284,7 @@ public currentPage = signal<number>(0);
 
   public resetProcForm(): void {
     this.editingProcId.set(null);
-    this.procForm.reset({ transferValue: 0, price: 0, transferValueCard: 0, pricePartner: 0 });
+    this.procForm.reset({ transferValue: 0, price: 0, transferValueCard: 0, pricePartner: 0, codigoClinica: '' });
   }
 
   private loadClinic(): void {

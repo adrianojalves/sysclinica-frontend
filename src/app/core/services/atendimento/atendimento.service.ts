@@ -9,6 +9,7 @@ import {
   AtendimentoPagamentoRequest,
   AtendimentoPagamentoResponse,
   AtendimentoReportFilter,
+  AtendimentoDiarioReportFilter,
   AtendimentoRequest,
   AtendimentoResponse
 } from '../../models/atendimento/atendimento.model';
@@ -122,6 +123,26 @@ export class AtendimentoService extends BaseCrudService<AtendimentoResponse, num
     if (filter.dataEmissaoFinal) params = params.set('dataEmissaoFinal', filter.dataEmissaoFinal);
 
     return this.http.get(`${this.apiUrl}/relatorios`, {
+      params,
+      responseType: 'blob',
+      observe: 'response'
+    }).pipe(
+      catchError(this.handleHttpError),
+      finalize(() => this.loading.set(false))
+    );
+  }
+
+  getRelatorioDiario(filter: AtendimentoDiarioReportFilter): Observable<HttpResponse<Blob>> {
+    this.loading.set(true);
+    let params = new HttpParams();
+
+    if (filter.clinicaId) params = params.set('clinicaId', filter.clinicaId.toString());
+    if (filter.clienteId) params = params.set('clienteId', filter.clienteId.toString());
+    if (filter.usuarioId) params = params.set('usuarioId', filter.usuarioId.toString());
+    if (filter.dataEmissao) params = params.set('dataEmissao', filter.dataEmissao);
+    if (filter.status) params = params.set('status', filter.status);
+
+    return this.http.get(`${this.apiUrl}/relatorios/atendimento-diario`, {
       params,
       responseType: 'blob',
       observe: 'response'

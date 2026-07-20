@@ -39,6 +39,7 @@ export class ProcedureFormComponent implements OnInit {
       name: ['', [Validators.required]],
       description: [''],
       type: [ProcedureType.EXAME, [Validators.required]],
+      tag: [''],
       active: [true]
     });
   }

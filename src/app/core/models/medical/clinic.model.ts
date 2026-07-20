@@ -11,6 +11,7 @@ export interface Clinic {
   active: boolean;
   percentual: number;
   periodPayment?: string;
+  codigoGuia?: number;
   address: AddressData;
 }
 

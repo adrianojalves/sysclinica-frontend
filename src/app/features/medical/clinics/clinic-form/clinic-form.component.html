@@ -61,6 +61,14 @@
                 styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg h-[58px] flex items-center px-2">
               </p-dropdown>
             </div>
+
+            <div class="flex flex-col gap-1">
+              <label for="codigoGuia" class="text-cinza-chumbo font-bold text-base ml-1">Código Guia</label>
+              <p-inputNumber id="codigoGuia" formControlName="codigoGuia" [useGrouping]="false"
+                styleClass="w-full"
+                inputStyleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg h-[58px] px-4 font-bold">
+              </p-inputNumber>
+            </div>
           </div>
 
           <fieldset formGroupName="address" class="border-2 border-cinza-contorno/50 rounded-xl p-6">
@@ -196,6 +204,14 @@
                   <p-inputNumber id="valPartner" (onFocus)="selectOnFocus($event)" formControlName="pricePartner" mode="currency" currency="BRL" locale="pt-BR"
                       inputStyleClass="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg h-[58px] px-4 font-bold"></p-inputNumber>
                   <label for="valPartner" class="ml-2 text-cinza-chumbo font-medium text-lg">Valor Clínica *</label>
+                  </p-floatlabel>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                  <p-floatlabel>
+                  <input id="codigoClinica" type="text" pInputText formControlName="codigoClinica"
+                      class="w-full border-2 border-cinza-contorno bg-white rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-all" />
+                  <label for="codigoClinica" class="ml-2 text-cinza-chumbo font-medium text-lg">Código Clínica</label>
                   </p-floatlabel>
               </div>
             </div>

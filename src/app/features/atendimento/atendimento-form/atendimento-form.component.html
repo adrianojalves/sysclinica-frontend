@@ -345,7 +345,10 @@
           <ng-template pTemplate="body" let-proc>
             <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
               <td class="p-3 md:p-4 text-base text-cinza-medio">{{ proc.clinicName }}</td>
-              <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">
+              <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo"
+                  [pTooltip]="proc.procedureTag"
+                  [tooltipDisabled]="!proc.procedureTag"
+                  tooltipPosition="top">
                 {{ proc.procedureName }}
                 <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ proc.doctorName || '---' }}</div>
               </td>
@@ -417,7 +420,10 @@
 
             <ng-template pTemplate="body" let-item let-i="rowIndex">
               <tr class="border-b border-cinza-contorno hover:bg-gray-50 transition-colors">
-                <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo">
+                <td class="p-3 md:p-4 text-base font-medium text-cinza-chumbo"
+                    [pTooltip]="item.procedureTag"
+                    [tooltipDisabled]="!item.procedureTag"
+                    tooltipPosition="top">
                   {{ item.nomeMedicalProcedure }}
                   <div class="text-xs text-cinza-medio sm:hidden mt-0.5">{{ item.nomeMedico || '---' }}</div>
                 </td>

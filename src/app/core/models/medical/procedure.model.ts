@@ -13,4 +13,5 @@ export interface MedicalProcedure {
   description?: string;
   type: ProcedureType;
   active: boolean;
+  tag?: string;
 }

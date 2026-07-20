@@ -368,6 +368,7 @@ export class AtendimentoFormComponent implements OnInit {
       nomeMedico: proc.doctorName,
       codMedicalProcedure: proc.medicalProcedureId,
       nomeMedicalProcedure: proc.procedureName || '',
+      procedureTag: proc.procedureTag,
       transferValue: proc.transferValue,
       price: proc.price,
       transferValueCard: proc.transferValueCard,

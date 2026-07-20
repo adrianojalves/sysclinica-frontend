@@ -77,22 +77,27 @@
             </a>
         }
 
-        @if (authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_RELATORIOS'])) {
-            <button (click)="toggleRelatorios()" class="w-full flex items-center justify-between p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium mt-1">
-                <div class="flex items-center gap-3">
-                    <i class="pi pi-chart-bar text-xl"></i>
-                    <span class="text-lg">Relatórios</span>
-                </div>
-                <i class="pi text-sm transition-transform duration-300" [class.pi-chevron-down]="!isRelatoriosOpen" [class.pi-chevron-up]="isRelatoriosOpen"></i>
-            </button>
+        <button (click)="toggleRelatorios()" class="w-full flex items-center justify-between p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium mt-1">
+            <div class="flex items-center gap-3">
+                <i class="pi pi-chart-bar text-xl"></i>
+                <span class="text-lg">Relatórios</span>
+            </div>
+            <i class="pi text-sm transition-transform duration-300" [class.pi-chevron-down]="!isRelatoriosOpen" [class.pi-chevron-up]="isRelatoriosOpen"></i>
+        </button>
 
-            <div class="overflow-hidden transition-all duration-300 ease-in-out"
-                 [class.max-h-0]="!isRelatoriosOpen"
-                 [class.max-h-[500px]]="isRelatoriosOpen"
-                 [class.opacity-0]="!isRelatoriosOpen"
-                 [class.opacity-100]="isRelatoriosOpen">
-                 
-                <div class="flex flex-col gap-1 pl-8 pr-2 pb-2">
+        <div class="overflow-hidden transition-all duration-300 ease-in-out"
+             [class.max-h-0]="!isRelatoriosOpen"
+             [class.max-h-[600px]]="isRelatoriosOpen"
+             [class.opacity-0]="!isRelatoriosOpen"
+             [class.opacity-100]="isRelatoriosOpen">
+             
+            <div class="flex flex-col gap-1 pl-8 pr-2 pb-2">
+                <a routerLink="/relatorios/atendimento-diario" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                    <i class="pi pi-calendar text-xl"></i>
+                    <span class="text-lg">Atendimento Diário</span>
+                </a>
+
+                @if (authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_RELATORIOS'])) {
                     <a routerLink="/relatorios/atendimentos" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
                         <i class="pi pi-file text-xl"></i>
                         <span class="text-lg">Atendimentos</span>
@@ -113,9 +118,9 @@
                         <i class="pi pi-history text-xl"></i>
                         <span class="text-lg">Histórico de Paciente</span>
                     </a>
-                </div>
+                }
             </div>
-        }
+        </div>
 
         @if (authService.hasAnyRole(['ROLE_ADMIN'])) {
             <a routerLink="/logs" routerLinkActive="bg-verde-teal text-branco-puro" class="flex items-center gap-3 p-3 rounded-lg text-cinza-chumbo hover:bg-verde-teal hover:text-branco-puro transition-colors cursor-pointer font-medium mt-1">

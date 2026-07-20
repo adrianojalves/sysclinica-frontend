@@ -97,6 +97,14 @@ export interface AtendimentoReportFilter {
   tipo: TipoRelatorio;
 }
 
+export interface AtendimentoDiarioReportFilter {
+  clinicaId?: number;
+  clienteId?: number;
+  usuarioId?: number;
+  dataEmissao?: string;
+  status?: StatusAtendimento;
+}
+
 export interface AtendimentoItemLocal {
   clinicId: number;
   clinicName: string;
@@ -104,6 +112,7 @@ export interface AtendimentoItemLocal {
   nomeMedico?: string;
   codMedicalProcedure: number;
   nomeMedicalProcedure: string;
+  procedureTag?: string;
   transferValue: number;
   price: number;
   transferValueCard: number;
