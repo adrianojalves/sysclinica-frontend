@@ -1,27 +1,61 @@
 # SysClinica — Frontend
 
-Professional clinical management system focused on security, high performance, and user experience.
+Professional clinical management system focused on security, high performance, and user experience. The system is designed to streamline registrations, medical appointments, billing, doctor reimbursements, and comprehensive audit logs.
 
-## Tech Stack
+## Tech Stack & Libraries
 
 | Technology | Version | Purpose |
 |---|---|---|
-| **Angular** | 19 | Signals, native Control Flow, Standalone Components |
-| **PrimeNG** | 19 | UI component library (Aura theme) |
-| **Tailwind CSS** | 3 | Utility-first CSS with custom design tokens |
-| **RxJS** | 7.8 | Asynchronous streams and reactivity |
-| **TypeScript** | 5 | Static typing throughout |
+| **Angular** | 19.1.x | Modern reactive framework using Signals, native Control Flow, and Standalone Components |
+| **PrimeNG** | 19.1.x | Enterprise UI component library styled with the Aura theme |
+| **Tailwind CSS** | 3.4.x | Utility-first CSS with customized healthcare design tokens |
+| **RxJS** | 7.8.x | Reactive streams for HTTP requests and complex async operations |
+| **TypeScript** | 5.7.x | Static typing and interfaces for type safety throughout |
+
+## Key Capabilities & Features
+
+### 1. Registrations (Administration & Medical Catalog)
+- **Clients**: Full CRUD with full CPF digit validation, quick telephone-number search indexing, and automatic address autofill (CEP) integration using the public ViaCEP API.
+- **Doctors**: Registry of doctors with associated clinics and specific pricing/procedures.
+- **Clinics**: Medical facility configuration including custom billing/payment periods (`periodPayment`), prices charged by the clinic, and support for authorization guide code tracking (`guia`).
+- **Procedures**: Complete procedure catalog filtering by medical category (e.g., *Consulta* or *Exame*).
+- **Company Settings**: Management of a single-record organization profile.
+
+### 2. Appointments & Financials
+- **Atendimento (Appointments)**: Dynamic appointment booking utilizing interactive lookup dialogs for selecting client, doctor, clinic, and procedure.
+- **Enhanced Search**: Instant tags-based procedure lookup to accelerate selection.
+- **Financial Controls**: Tracking of individual payment methods, pricing details, custom clinic transfer values, and authorization guide codes (`guia`).
+- **Authorization Enforcement**: Admin authority to delete finalized appointments when correction is required.
+
+### 3. Rich Analytical Reports
+- **Daily Appointments & Receipt (Atendimento Diário)**: Access to daily billing details and payment receipts, viewable by all authenticated clinic personnel.
+- **Appointments Report**: Detailed multidimensional analysis grouped by clinic item and payment method.
+- **Doctor Reimbursement (Repasse)**: Summary and granular analytical reports tracking reimbursement amounts, payment dates, and clinic transfers.
+- **ABC Analysis**: Ranks and analyzes procedures based on volume and financial contribution.
+- **Clinic Performance**: Comprehensive dashboard metrics of clinic throughput and procedure revenues.
+- **Patient Medical History**: Aggregated timeline of all appointments, procedures, and attending doctors for any selected patient.
+
+*All reports support instant formatting and PDF export/download via `PdfDownloadService`.*
+
+### 4. Admin Auditing & Control
+- **System Activity Audit Logs**: High-security, paginated, and date-filtered audit log screen (`/logs`) enabling administrators to trace every transactional change and user action.
+- **Bulk Data Purge**: Secure admin capability to wipe transaction logs and reset demonstration environments.
+
+---
 
 ## Architecture & Security
 
-Built following **SOLID** principles with enterprise security practices:
+Built following **SOLID** principles, emphasizing low coupling, strong cohesion, and high-security enterprise practices:
 
-- **JWT Authentication** — Token stored in `localStorage`; attached via `Authorization: Bearer` header on every request.
-- **Silent Refresh** — Automatic token renewal on 401 using `HttpOnly` cookies (set by the backend) to prevent XSS exposure.
-- **RBAC** — Route-level access control enforced by functional guards (`authGuard`, `roleGuard`).
-- **Functional Interceptors** — Centralized HTTP handling with automatic refresh flow and logout on failure.
-- **Global Messaging** — Signal-driven modal system (`success`, `error`, `warning`, `info`, `question`) — no `alert()`/`confirm()` anywhere.
-- **BaseCrudService** — Generic abstract class providing `findAll`, `findById`, `save`, `update`, `delete` with loading signal and unified error handling.
+- **JWT Authentication**: Token stored locally and automatically attached using the `Authorization: Bearer` header on all API calls.
+- **Silent Refresh**: Robust token renewal on `401 Unauthorized` responses utilizing secure backend-managed HttpOnly cookies, guarding against XSS/CSRF token theft.
+- **Role-Based Access Control (RBAC)**: Fine-grained, route-level access control enforced via functional guards (`authGuard`, `roleGuard`).
+- **Functional Interceptors**: Centralized HTTP interceptors to handle token injection, error mapping, and automated logouts on session expiration.
+- **Signal-driven UI State**: Native Angular Signals manage component reactivity, dialogs, loaders, and page state.
+- **Global Messaging Modal**: Single dynamic modal system (`success`, `error`, `warning`, `info`, `question`) to standardize confirmations without native browser alerts.
+- **BaseCrudService**: Generic base class providing standardized CRUD operations, automated loading state signals, and global error handling.
+
+---
 
 ## Project Structure
 
@@ -31,68 +65,47 @@ src/app/
 │   ├── guards/          # authGuard, roleGuard
 │   ├── interceptors/    # authInterceptor (JWT attach + silent refresh)
 │   ├── layout/          # AppLayoutComponent, Sidebar, Topbar
-│   ├── models/          # Typed interfaces for all entities
-│   ├── services/        # BaseCrudService + all entity services
-│   └── utils/           # cpfValidator
+│   ├── models/          # Typed interfaces for all entities & logs
+│   ├── services/        # BaseCrudService, CepService, LogService, and entity APIs
+│   └── utils/           # cpfValidator and common functions
 ├── features/
-│   ├── auth/            # Login
-│   ├── dashboard/       # Home dashboard
-│   ├── clients/         # Client list & form
+│   ├── auth/            # Login and authentication views
+│   ├── dashboard/       # Home dashboard and summary metrics
+│   ├── clients/         # Client list & form with ViaCEP
 │   ├── medical/
-│   │   ├── clinics/     # Clinic list & form
-│   │   ├── doctors/     # Doctor list & form
-│   │   └── procedures/  # Procedure list & form
-│   ├── atendimento/     # Appointment form & search modal
-│   ├── users/           # User list & form (admin only)
-│   ├── company/         # Company settings form
-│   ├── relatorios/      # Reports module (5 reports)
-│   └── administracao/   # Table import (admin only)
+│   │   ├── clinics/     # Clinic profiles and custom payment rules
+│   │   ├── doctors/     # Doctor profiles and procedure associations
+│   │   └── procedures/  # Procedure catalog
+│   ├── atendimento/     # Appointment creation and search dialogs
+│   ├── users/           # User administration (admin only)
+│   ├── company/         # Organization settings Form
+│   ├── relatorios/      # Analytical report screens & PDF builders
+│   ├── logs/            # System audit logs viewer (admin only)
+│   └── administracao/   # Data tools and CSV/table importers
 └── shared/
-    ├── components/      # Search modals, message modal, global loader, toast
-    ├── constants/       # STATUS_OPTIONS, PROCEDURE_TYPE_OPTIONS
-    ├── imports/         # SHARED_UI_IMPORTS array
-    └── pipes/           # BrlCurrencyPipe
+    ├── components/      # Global loader, message dialog, search modal widgets
+    ├── constants/       # Global constants like STATUS_OPTIONS
+    ├── imports/         # Centralized SHARED_UI_IMPORTS for UI dependencies
+    └── pipes/           # Formatting pipes (e.g., BrlCurrencyPipe)
 ```
 
-## Feature Modules
+---
 
-### Registration (ROLE_ADMIN / ROLE_CADASTROS)
-- **Clients** — Full CRUD with CPF validation and CEP auto-fill via ViaCEP API.
-- **Doctors** — Registration with clinic and procedure associations.
-- **Clinics** — Clinic management with procedure pricing (`ClinicProcedure`).
-- **Procedures** — Procedure catalog with type filtering (Consulta / Exame).
-- **Company** — Single-record company settings form.
+## Access Control (RBAC Matrix)
 
-### Appointments (ROLE_ADMIN / ROLE_CADASTROS / ROLE_ATENDIMENTO)
-- **Atendimento** — Appointment form with client, doctor, clinic, and procedure lookup modals; payment method and status tracking.
-
-### Reports (ROLE_ADMIN / ROLE_RELATORIOS)
-| Route | Report |
+| Role | Access & Capabilities |
 |---|---|
-| `/relatorios/atendimentos` | Appointments — summary and analytical by item and payment method |
-| `/relatorios/repasse` | Doctor reimbursement report |
-| `/relatorios/abc` | ABC analysis of procedures |
-| `/relatorios/desempenho` | Clinic performance report |
-| `/relatorios/historico-paciente` | Patient history report |
+| `ROLE_ADMIN` | All features and administrative tools: User management, importing tables, system audit logs, deleting completed appointments, and data purge tools. |
+| `ROLE_CADASTROS` | Medical data management: Clinics, doctors, procedures, clients (list & edit), company details, and appointments. |
+| `ROLE_ATENDIMENTO` | Reception desk duties: Creating clients, booking appointments, and viewing daily receipt reports. |
+| `ROLE_RELATORIOS` | Analytical role: Full access to the financial, performance, ABC, repasse, and history reports. |
 
-All reports support PDF download via `PdfDownloadService`.
+---
 
-### Administration (ROLE_ADMIN only)
-- **Table Import** — Bulk data import from external table files.
-- **Users** — User management with role assignment.
+## Key Code Patterns
 
-## Access Control (RBAC)
-
-| Role | Access |
-|---|---|
-| `ROLE_ADMIN` | All routes |
-| `ROLE_CADASTROS` | Clients (list/edit), doctors, clinics, procedures, company, appointments |
-| `ROLE_ATENDIMENTO` | Client creation, appointments |
-| `ROLE_RELATORIOS` | All report routes |
-
-## Key Patterns
-
-**Extending BaseCrudService:**
+### Extending BaseCrudService
+Standardizes data flows for entity endpoints:
 ```ts
 @Injectable({ providedIn: 'root' })
 export class DoctorService extends BaseCrudService<Doctor> {
@@ -100,54 +113,49 @@ export class DoctorService extends BaseCrudService<Doctor> {
 }
 ```
 
-**Shared imports:**
+### Shared UI Imports
+Reduces boilerplate component imports:
 ```ts
-imports: [...SHARED_UI_IMPORTS, OtherModule]
+imports: [...SHARED_UI_IMPORTS, DatePickerModule]
 ```
 
-**Global messaging:**
+### Global Message Service
+Used for notifications and async user confirmations:
 ```ts
-this.messageService.show('success' | 'error' | 'warning' | 'info', 'Title', 'Text');
-const confirmed = await this.messageService.question('Title', 'Text'); // resolves true/false
+this.messageService.show('success', 'Sucesso', 'Operação concluída.');
+const confirmed = await this.messageService.question('Excluir?', 'Tem certeza?'); // resolves to true/false
 ```
 
-**Search modals** (PrimeNG `DynamicDialogRef`):
-```ts
-// Opened via DialogService; closed with:
-this.ref.close(selectedItem);
-```
+---
 
 ## Custom Design Tokens
 
-Defined in `tailwind.config.js`:
+Configured in `tailwind.config.js` for color palette harmony:
 
 | Token | Hex | Usage |
 |---|---|---|
 | `azul-prisma` | `#005293` | Primary brand blue |
-| `verde-teal` | `#009B8E` | Secondary accent |
+| `verde-teal` | `#009B8E` | Secondary medical accent |
 | `fundo-offwhite` | `#F4F7F8` | Page background |
-| `branco-puro` | `#FFFFFF` | Card/surface |
+| `branco-puro` | `#FFFFFF` | Card surfaces |
 | `cinza-chumbo` | `#2D3748` | Primary text |
 | `cinza-medio` | `#718096` | Secondary text |
 | `cinza-contorno` | `#CBD5E0` | Borders |
-| `verde-confirmacao` | `#2F855A` | Success states |
-| `vermelho-alerta` | `#C53030` | Error/danger states |
+| `verde-confirmacao` | `#2F855A` | Success messages |
+| `vermelho-alerta` | `#C53030` | Danger and error states |
 
-## Development
+---
 
-> The backend (Spring Boot) must be running on port **8080** for API calls to work locally.
-> In production, the Angular build is embedded inside the Spring Boot JAR and shares the same host/port (`apiUrl: '/api'`).
+## Development & Build
+
+> **Note**: The backend (Spring Boot) must run on port **8080** for development API requests to route correctly. In production, the built Angular assets are served statically from within the Spring Boot application jar (`apiUrl: '/api'`).
 
 ```bash
 npm install       # Install dependencies
-npm start         # Dev server at http://localhost:4200
-ng build          # Production build → dist/
-ng test           # Unit tests (Karma/Jasmine)
+npm start         # Run local dev server at http://localhost:4200
+ng build          # Compile production build assets to dist/
+ng test           # Run client unit tests
 ```
-
-## API Contract
-
-Backend API documentation is available at `docs/api-docs.json` (OpenAPI/Swagger format). All service models, endpoint paths, and request/response shapes are derived from this file.
 
 ---
 
