@@ -1,0 +1,133 @@
+<div class="p-6 w-full max-w-6xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-sm border border-cinza-contorno p-8">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start border-b border-cinza-contorno pb-6 mb-8 gap-4">
+      <div class="flex-1">
+        <h2 class="text-3xl font-bold text-azul-prisma">Texto do Recibo</h2>
+        <p class="text-cinza-medio text-lg mt-2">
+          Configure o modelo de texto padrão utilizado para a geração de recibos aos pacientes.
+        </p>
+      </div>
+      <div class="flex items-center gap-3 bg-fundo-offwhite py-2 px-4 rounded-lg border border-cinza-contorno shadow-inner">
+        <i class="pi pi-receipt text-2xl text-verde-teal"></i>
+        <span class="text-cinza-chumbo font-semibold">Configuração Geral</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Form Column -->
+      <div class="lg:col-span-2 flex flex-col gap-6">
+        <form [formGroup]="receiptForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+          <div class="flex flex-col gap-2">
+            <label for="receiptTextContent" class="text-cinza-chumbo font-bold text-lg">
+              Conteúdo do Recibo *
+            </label>
+            <p class="text-cinza-medio text-sm mb-2">
+              Escreva o texto padrão do recibo. Utilize as tags ao lado para preenchimento dinâmico dos dados.
+            </p>
+            <textarea
+              #textarea
+              id="receiptTextContent"
+              pTextarea
+              formControlName="text"
+              rows="12"
+              class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-lg py-3 px-4 focus:border-verde-teal transition-all resize-y shadow-inner focus:outline-none"
+              placeholder="Digite o texto do recibo aqui... Por exemplo: Recebi de {nome_cliente} a importância de {valor_total}...">
+            </textarea>
+            @if (receiptForm.get('text')?.invalid && receiptForm.get('text')?.touched) {
+              <small class="text-vermelho-alerta font-medium text-sm mt-1 flex items-center gap-1">
+                <i class="pi pi-exclamation-triangle"></i>
+                O texto do recibo é obrigatório.
+              </small>
+            }
+          </div>
+
+          <!-- Action Button -->
+          <div class="flex justify-end pt-4 border-t border-cinza-contorno">
+            <button
+              type="submit"
+              [disabled]="receiptForm.invalid"
+              class="px-8 py-3 rounded-lg text-lg font-bold text-white bg-verde-teal hover:bg-teal-700 flex items-center gap-2 cursor-pointer shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <i class="pi pi-save text-lg"></i>
+              Salvar Texto do Recibo
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Instructions & Tags Column -->
+      <div class="flex flex-col gap-6 bg-fundo-offwhite p-6 rounded-xl border border-cinza-contorno h-fit shadow-sm">
+        <div>
+          <h3 class="text-xl font-bold text-azul-prisma flex items-center gap-2">
+            <i class="pi pi-info-circle text-verde-teal"></i>
+            Instruções e Tags
+          </h3>
+          <p class="text-cinza-chumbo text-sm mt-3 leading-relaxed">
+            Você pode adicionar tags especiais no seu texto. Quando o recibo for gerado, o sistema substituirá as tags pelos valores reais do atendimento.
+          </p>
+        </div>
+
+        <!-- Alert Box -->
+        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg text-amber-900 text-sm">
+          <div class="flex items-start gap-2">
+            <i class="pi pi-exclamation-circle text-amber-600 mt-0.5 text-base"></i>
+            <div>
+              <p class="font-bold">Atenção sobre as Tags:</p>
+              <p class="mt-1">
+                O sistema só substituirá as tags se forem escritas <strong>exatamente iguais</strong> (respeitando maiúsculas, minúsculas e sublinhados). Exemplo: não use <code class="bg-amber-100 px-1 py-0.5 rounded font-mono">Valor Total</code> se a tag correta for <code class="bg-amber-100 px-1 py-0.5 rounded font-mono">valor_total</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tag List -->
+        <div class="flex flex-col gap-3">
+          <span class="text-cinza-chumbo font-bold text-sm">Tags Disponíveis:</span>
+          
+          @if (tags().length === 0) {
+            <p class="text-cinza-medio italic text-xs">Nenhuma tag disponível no momento.</p>
+          } @else {
+            <div class="flex flex-col gap-2">
+              @for (tag of tags(); track tag) {
+                <div class="flex items-center justify-between bg-branco-puro p-3 rounded-lg border border-cinza-contorno shadow-sm hover:border-verde-teal transition-all group">
+                  <code class="text-verde-teal font-mono font-bold text-sm bg-fundo-offwhite px-2 py-1 rounded">
+                    {{ tag }}
+                  </code>
+                  
+                  <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <!-- Insert Button -->
+                    <button
+                      type="button"
+                      (click)="insertTagAtCursor(tag)"
+                      pTooltip="Inserir no cursor"
+                      tooltipPosition="top"
+                      class="p-2 text-azul-prisma hover:bg-fundo-offwhite rounded-md transition-colors cursor-pointer border-0 bg-transparent flex items-center justify-center">
+                      <i class="pi pi-plus text-sm"></i>
+                    </button>
+                    <!-- Copy Button -->
+                    <button
+                      type="button"
+                      (click)="copyTag(tag)"
+                      pTooltip="Copiar Tag"
+                      tooltipPosition="top"
+                      class="p-2 text-cinza-chumbo hover:bg-fundo-offwhite rounded-md transition-colors cursor-pointer border-0 bg-transparent flex items-center justify-center">
+                      <i class="pi pi-copy text-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="text-xs text-cinza-medio border-t border-cinza-contorno pt-4">
+          <p class="italic">Dica: Posicione o cursor no texto do recibo e clique no botão <i class="pi pi-plus"></i> para inserir a tag desejada.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
