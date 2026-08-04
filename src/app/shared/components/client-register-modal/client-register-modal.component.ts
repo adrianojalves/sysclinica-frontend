@@ -7,11 +7,14 @@ import { CepService } from '../../../core/services/cep.service';
 import { MessageService } from '../../../core/services/message.service';
 import { cpfValidator } from '../../../core/utils/cpf.validator';
 import { Client } from '../../../core/models/client/client.model';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-client-register-modal',
   standalone: true,
-  imports: [...SHARED_UI_IMPORTS],
+  imports: [...SHARED_UI_IMPORTS, DatePickerModule],
+  providers: [DatePipe],
   templateUrl: './client-register-modal.component.html'
 })
 export class ClientRegisterModalComponent {
@@ -20,6 +23,7 @@ export class ClientRegisterModalComponent {
   private readonly cepService = inject(CepService);
   private readonly messageService = inject(MessageService);
   private readonly ref = inject(DynamicDialogRef);
+  private readonly datePipe = inject(DatePipe);
 
   @ViewChild('numeroInput') numeroInput!: ElementRef;
   @ViewChild('logradouroInput') logradouroInput!: ElementRef;
@@ -43,6 +47,7 @@ export class ClientRegisterModalComponent {
     cpf: ['', [Validators.required, cpfValidator()]],
     name: ['', Validators.required],
     socialName: [''],
+    birthDate: [null, Validators.required],
     rg: ['', Validators.required],
     phone: ['', Validators.required],
     email: ['', [Validators.email]],
@@ -115,9 +120,13 @@ export class ClientRegisterModalComponent {
       return;
     }
 
-    const formValue = { ...this.clientForm.value };
+    const formValue = { ...this.clientForm.getRawValue() };
     if (formValue.address?.cep) {
       formValue.address.cep = formValue.address.cep.replace(/\D/g, '');
+    }
+
+    if (formValue.birthDate instanceof Date) {
+      formValue.birthDate = this.datePipe.transform(formValue.birthDate, 'yyyy-MM-dd');
     }
 
     this.clientService.save(formValue).subscribe({
@@ -129,6 +138,27 @@ export class ClientRegisterModalComponent {
         this.messageService.show('error', 'Erro', err.error?.message || 'Erro ao cadastrar cliente.');
       }
     });
+  }
+
+  public onDateInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input) return;
+
+    let value = input.value.replace(/\D/g, ''); // Keep only digits
+    if (value.length > 8) value = value.substring(0, 8);
+
+    let formatted = '';
+    if (value.length > 0) {
+      formatted += value.substring(0, 2);
+    }
+    if (value.length > 2) {
+      formatted += '/' + value.substring(2, 4);
+    }
+    if (value.length > 4) {
+      formatted += '/' + value.substring(4, 8);
+    }
+
+    input.value = formatted;
   }
 
   public cancel(): void {

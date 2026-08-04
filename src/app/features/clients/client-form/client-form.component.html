@@ -49,6 +49,20 @@
           </p-floatlabel>
 
           <div class="flex flex-col gap-2">
+            <label for="birthDate" class="text-cinza-chumbo font-bold text-lg ml-1">Data de Nascimento *</label>
+            <p-datePicker 
+              id="birthDate" 
+              formControlName="birthDate" 
+              dateFormat="dd/mm/yy"
+              placeholder="Selecione..."
+              [showIcon]="true"
+              (input)="onDateInput($event)"
+              styleClass="w-full"
+              inputStyleClass="border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg px-4 py-3 h-[58px] w-full transition-colors">
+            </p-datePicker>
+          </div>
+
+          <div class="flex flex-col gap-2">
             <label for="biologicalSex" class="text-cinza-chumbo font-bold text-lg ml-1">Sexo Biológico *</label>
             <p-dropdown 
               id="biologicalSex" 
@@ -74,7 +88,7 @@
             </p-dropdown>
           </div>
 
-          <p-floatlabel>
+          <p-floatlabel class="md:mt-8">
             <p-inputMask id="phone" mask="(99) 99999-9999" formControlName="phone"
                          styleClass="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors"></p-inputMask>
             <label for="phone" class="text-cinza-chumbo font-medium text-lg ml-2">Telefone Principal *</label>
@@ -85,6 +99,22 @@
                    class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo focus:border-verde-teal focus:bg-branco-puro text-lg py-3 px-4 transition-colors" />
             <label for="email" class="text-cinza-chumbo font-medium text-lg ml-2">E-mail</label>
           </p-floatlabel>
+
+          <div></div>
+
+          @if (clientId()) {
+            <p-floatlabel>
+              <input id="firstAppointmentDate" type="text" pInputText formControlName="firstAppointmentDate" 
+                     class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo text-lg py-3 px-4 cursor-not-allowed opacity-80" />
+              <label for="firstAppointmentDate" class="text-cinza-chumbo font-medium text-lg ml-2">Data do Primeiro Atendimento</label>
+            </p-floatlabel>
+
+            <p-floatlabel>
+              <input id="lastAppointmentDate" type="text" pInputText formControlName="lastAppointmentDate" 
+                     class="w-full border-2 border-cinza-contorno bg-fundo-offwhite rounded-lg text-cinza-chumbo text-lg py-3 px-4 cursor-not-allowed opacity-80" />
+              <label for="lastAppointmentDate" class="text-cinza-chumbo font-medium text-lg ml-2">Data do Último Atendimento</label>
+            </p-floatlabel>
+          }
         </div>
       </fieldset>
 

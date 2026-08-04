@@ -7,11 +7,14 @@ import { CepService } from '../../../core/services/cep.service';
 import { MessageService } from '../../../core/services/message.service';
 import { LoadingService } from '../../../core/services/loading.service';
 import { cpfValidator } from '../../../core/utils/cpf.validator';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-client-form',
   standalone: true,
-  imports: [...SHARED_UI_IMPORTS],
+  imports: [...SHARED_UI_IMPORTS, DatePickerModule],
+  providers: [DatePipe],
   templateUrl: './client-form.component.html'
 })
 export class ClientFormComponent implements OnInit {
@@ -22,6 +25,7 @@ export class ClientFormComponent implements OnInit {
   private readonly loadingService = inject(LoadingService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly datePipe = inject(DatePipe);
 
   @ViewChild('numeroInput') numeroInput!: ElementRef;
   @ViewChild('logradouroInput') logradouroInput!: ElementRef;
@@ -56,11 +60,14 @@ export class ClientFormComponent implements OnInit {
       cpf: ['', [Validators.required, cpfValidator()]], // Starts with CPF as checkpoint
       name: ['', Validators.required],
       socialName: [''],
+      birthDate: [null, Validators.required],
       rg: ['', Validators.required],
       phone: ['', Validators.required],
       email: ['', [Validators.email]],
       biologicalSex: [null, Validators.required],
       sexualOrientation: ['NAO_INFORMADO'],
+      firstAppointmentDate: [{ value: null, disabled: true }],
+      lastAppointmentDate: [{ value: null, disabled: true }],
       address: this.fb.group({
         cep: ['', Validators.required],
         logradouro: ['', Validators.required],
@@ -109,7 +116,27 @@ export class ClientFormComponent implements OnInit {
     this.loadingService.show();
     this.clientService.findById(id).subscribe({
       next: (client) => {
-        this.clientForm.patchValue(client);
+        let birthDateObj: Date | null = null;
+        if (client.birthDate) {
+          const parts = client.birthDate.split('-');
+          if (parts.length === 3) {
+            birthDateObj = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+          }
+        }
+
+        const firstFormatted = client.firstAppointmentDate
+          ? (this.datePipe.transform(client.firstAppointmentDate, 'dd/MM/yyyy HH:mm') ?? '')
+          : '---';
+        const lastFormatted = client.lastAppointmentDate
+          ? (this.datePipe.transform(client.lastAppointmentDate, 'dd/MM/yyyy HH:mm') ?? '')
+          : '---';
+
+        this.clientForm.patchValue({
+          ...client,
+          birthDate: birthDateObj,
+          firstAppointmentDate: firstFormatted,
+          lastAppointmentDate: lastFormatted
+        });
         this.loadingService.hide();
       },
       error: () => this.loadingService.hide()
@@ -160,10 +187,14 @@ export class ClientFormComponent implements OnInit {
 
     this.loadingService.show();
 
-    const formValue = { ...this.clientForm.value };
+    const formValue = { ...this.clientForm.getRawValue() };
 
     if (formValue.address && formValue.address.cep) {
       formValue.address.cep = formValue.address.cep.replace(/\D/g, '');
+    }
+
+    if (formValue.birthDate instanceof Date) {
+      formValue.birthDate = this.datePipe.transform(formValue.birthDate, 'yyyy-MM-dd');
     }
 
     const request$ = this.clientId()
@@ -181,7 +212,28 @@ export class ClientFormComponent implements OnInit {
         this.messageService.show('error', 'Erro', err.error?.message || 'Erro ao processar solicitação.');
       }
     });
+  }
+
+  public onDateInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input) return;
+
+    let value = input.value.replace(/\D/g, ''); // Keep only digits
+    if (value.length > 8) value = value.substring(0, 8);
+
+    let formatted = '';
+    if (value.length > 0) {
+      formatted += value.substring(0, 2);
     }
+    if (value.length > 2) {
+      formatted += '/' + value.substring(2, 4);
+    }
+    if (value.length > 4) {
+      formatted += '/' + value.substring(4, 8);
+    }
+
+    input.value = formatted;
+  }
 
   public cancel(): void {
     this.router.navigate(['/clients']);

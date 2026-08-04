@@ -1,0 +1,55 @@
+<div class="p-6 w-full max-w-3xl mx-auto">
+  <div class="bg-branco-puro rounded-2xl shadow-md border border-cinza-contorno p-4 md:p-8">
+
+    <div class="mb-6 pb-4 border-b border-cinza-contorno">
+      <h2 class="text-2xl md:text-3xl font-bold text-azul-prisma">Relatório de Clientes</h2>
+      <p class="text-cinza-medio text-base md:text-lg mt-1">Preencha os filtros de data de nascimento para gerar o relatório em PDF.</p>
+    </div>
+
+    <div class="flex flex-col gap-5">
+
+      <!-- Data de Nascimento Inicial -->
+      <div class="flex flex-col gap-1">
+        <label class="text-cinza-chumbo font-bold text-lg">Data de Nascimento Inicial</label>
+        <p-datePicker
+          [(ngModel)]="birthDateStart"
+          dateFormat="dd/mm/yy"
+          placeholder="Selecione a data de nascimento inicial"
+          [showIcon]="true"
+          styleClass="w-full"
+          inputStyleClass="border-2 border-cinza-contorno rounded-lg text-lg px-4 py-3 w-full">
+        </p-datePicker>
+      </div>
+
+      <!-- Data de Nascimento Final -->
+      <div class="flex flex-col gap-1">
+        <label class="text-cinza-chumbo font-bold text-lg">Data de Nascimento Final</label>
+        <p-datePicker
+          [(ngModel)]="birthDateEnd"
+          dateFormat="dd/mm/yy"
+          placeholder="Selecione a data de nascimento final"
+          [showIcon]="true"
+          styleClass="w-full"
+          inputStyleClass="border-2 border-cinza-contorno rounded-lg text-lg px-4 py-3 w-full">
+        </p-datePicker>
+      </div>
+
+      <!-- Botão Imprimir -->
+      <div class="flex justify-center pt-4">
+        <button
+          type="button"
+          (click)="generate()"
+          [disabled]="loading()"
+          class="flex items-center gap-3 bg-azul-prisma hover:bg-blue-800 text-branco-puro font-bold rounded-xl px-8 py-4 text-xl transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+          @if (loading()) {
+            <i class="pi pi-spinner pi-spin text-2xl"></i>
+          } @else {
+            <app-printer-icon [size]="32"></app-printer-icon>
+          }
+          <span>Gerar Relatório</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

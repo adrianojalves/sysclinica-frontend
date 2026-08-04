@@ -1,9 +1,8 @@
-// client.service.ts
 import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, finalize } from 'rxjs';
 import { BaseCrudService } from '../base-crud.service';
-import { Client, ClientFilter } from '../../models/client/client.model';
+import { Client, ClientFilter, ClientReportFilter } from '../../models/client/client.model';
 import { Page } from '../../models/page.model';
 
 @Injectable({ providedIn: 'root' })
@@ -36,6 +35,25 @@ export class ClientService extends BaseCrudService<Client, number> {
   public getByCpf(cpf: string): Observable<Client> {
     this.loading.set(true);
     return this.http.get<Client>(`${this.apiUrl}/by-cpf/${cpf}`).pipe(
+      finalize(() => this.loading.set(false))
+    );
+  }
+
+  /**
+   * Generates the client birth date report.
+   */
+  public getRelatorio(filter: ClientReportFilter): Observable<HttpResponse<Blob>> {
+    this.loading.set(true);
+    let params = new HttpParams();
+
+    if (filter.birthDateStart) params = params.set('birthDateStart', filter.birthDateStart);
+    if (filter.birthDateEnd) params = params.set('birthDateEnd', filter.birthDateEnd);
+
+    return this.http.get(`${this.apiUrl}/relatorios`, {
+      params,
+      responseType: 'blob',
+      observe: 'response'
+    }).pipe(
       finalize(() => this.loading.set(false))
     );
   }

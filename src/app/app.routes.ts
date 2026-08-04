@@ -25,6 +25,7 @@ import { AbcReportComponent } from './features/relatorios/abc-report/abc-report.
 import { DesempenhoReportComponent } from './features/relatorios/desempenho-report/desempenho-report.component';
 import { HistoricoReportComponent } from './features/relatorios/historico-report/historico-report.component';
 import { LogListComponent } from './features/logs/log-list/log-list.component';
+import { ClientReportComponent } from './features/relatorios/client-report/client-report.component';
 
 
 
@@ -186,6 +187,11 @@ export const routes: Routes = [
         component: HistoricoReportComponent,
         canActivate: [roleGuard],
         data: { roles: ['ROLE_ADMIN', 'ROLE_RELATORIOS'] }
+      },
+      {
+        path: 'relatorios/clientes',
+        component: ClientReportComponent,
+        canActivate: [authGuard]
       },
       {
         path: 'administracao',

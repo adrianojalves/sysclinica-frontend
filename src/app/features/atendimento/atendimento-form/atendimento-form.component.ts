@@ -579,7 +579,7 @@ export class AtendimentoFormComponent implements OnInit {
         a.rel = 'noopener noreferrer';
         a.download = filename;
         a.click();
-        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        setTimeout(() => URL.revokeObjectURL(url), 300000);
         this.loadingPrint.set(false);
       },
       error: () => this.loadingPrint.set(false)

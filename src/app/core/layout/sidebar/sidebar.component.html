@@ -102,6 +102,11 @@
                     <span class="text-lg">Atendimento Diário</span>
                 </a>
 
+                <a routerLink="/relatorios/clientes" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
+                    <i class="pi pi-users text-xl"></i>
+                    <span class="text-lg">Relatório de Clientes</span>
+                </a>
+
                 @if (authService.hasAnyRole(['ROLE_ADMIN', 'ROLE_RELATORIOS'])) {
                     <a routerLink="/relatorios/atendimentos" routerLinkActive="text-verde-teal bg-fundo-offwhite" class="flex items-center gap-3 p-2 rounded-lg text-cinza-chumbo hover:text-verde-teal hover:bg-fundo-offwhite transition-colors cursor-pointer font-medium">
                         <i class="pi pi-file text-xl"></i>
