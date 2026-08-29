@@ -21,3 +21,8 @@ export const PAYMENT_PERIOD_OPTIONS: { label: string; value: string }[] = [
   { label: 'Quinzenal', value: 'QUINZENAL' },
   { label: 'Mensal', value: 'MENSAL' }
 ];
+
+export const YES_NO_OPTIONS: { label: string; value: boolean }[] = [
+  { label: 'Sim', value: true },
+  { label: 'Não', value: false }
+];

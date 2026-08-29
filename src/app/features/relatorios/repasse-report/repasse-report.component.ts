@@ -8,6 +8,7 @@ import { SearchDialogService } from '../../../core/services/common/search-dialog
 import { MessageService } from '../../../core/services/message.service';
 import { ClinicSearchModalComponent } from '../../../shared/components/clinic-search-modal/clinic-search-modal.component';
 import { Clinic } from '../../../core/models/medical/clinic.model';
+import { YES_NO_OPTIONS } from '../../../shared/constants/ui.constants';
 
 @Component({
   selector: 'app-repasse-report',
@@ -31,11 +32,14 @@ export class RepasseReportComponent {
   public dataInicial = signal<Date | null>(null);
   public dataFinal = signal<Date | null>(null);
   public reportType = signal<string>('SINTETICO');
+  public onlyTransfer = signal<boolean>(false);
 
   public readonly reportTypeOptions = [
     { label: 'Sintético', value: 'SINTETICO' },
     { label: 'Analítico', value: 'ANALITICO' }
   ];
+
+  public readonly yesNoOptions = YES_NO_OPTIONS;
 
   public openClinicSearch(): void {
     this.searchService.open<Clinic>(ClinicSearchModalComponent, 'Pesquisar Clínica')
@@ -63,7 +67,8 @@ export class RepasseReportComponent {
       dataEmissaoFinal: this.dataFinal()
         ? this.datePipe.transform(this.dataFinal(), 'yyyy-MM-dd')!
         : undefined,
-      tipoRelatorio: this.reportType() || undefined
+      tipoRelatorio: this.reportType() || undefined,
+      somenteRepasse: this.onlyTransfer()
     };
 
     this.repasseService.getRelatorio(filter).subscribe({

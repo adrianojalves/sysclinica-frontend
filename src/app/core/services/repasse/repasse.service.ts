@@ -9,6 +9,7 @@ export interface RepasseReportFilter {
   dataEmissaoInicial?: string;
   dataEmissaoFinal?: string;
   tipoRelatorio?: string;
+  somenteRepasse?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -25,6 +26,7 @@ export class RepasseService extends BaseCrudService<never> {
     if (filter.dataEmissaoInicial) params = params.set('dataEmissaoInicial', filter.dataEmissaoInicial);
     if (filter.dataEmissaoFinal) params = params.set('dataEmissaoFinal', filter.dataEmissaoFinal);
     if (filter.tipoRelatorio) params = params.set('tipoRelatorio', filter.tipoRelatorio);
+    if (filter.somenteRepasse !== undefined) params = params.set('somenteRepasse', filter.somenteRepasse.toString());
 
     return this.http.get(`${this.apiUrl}/relatorios`, {
       params,
